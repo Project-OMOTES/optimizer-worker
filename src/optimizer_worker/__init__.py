@@ -1,2 +1,5 @@
-from nwnsdk import setup_logging
-setup_logging("optimizer_worker")
+import os
+
+from nwnsdk import setup_logging, LogLevel
+
+setup_logging(LogLevel.parse(os.environ.get('LOG_LEVEL', 'INFO')), 'optimizer_worker')

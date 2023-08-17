@@ -1,0 +1,9 @@
+version: "3.8"
+
+services:
+    optimization_worker:
+        build:
+            context: .
+        env_file: .env
+        deploy:
+            replicas: 2

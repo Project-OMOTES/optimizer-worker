@@ -21,7 +21,7 @@ requires-python = ">=3.10"
 
 dependencies = [
     "python-dotenv == 1.0.0",
-    "nwnsdk ~= 0.0.1"
+    #"nwnsdk ~= 0.0.1"
 ]
 
 [project.urls]

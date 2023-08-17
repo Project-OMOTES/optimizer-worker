@@ -22,9 +22,14 @@ RUN pip install /app/warmingup-mpc.tar.gz
 COPY target/warmingup-mpc-requirements.txt /app/warmingup-mpc-requirements.txt
 RUN pip3 install -r /app/warmingup-mpc-requirements.txt
 
-COPY target/test.py /app/test.py
-RUN python3 "/app/test.py"
-
 RUN mkdir /app/input_esdl_files/ /app/output_esdl_files/
+ENV PYTHONPATH='/app/'
 
-#CMD ["python3", "-u", "/app/warmingup-mpc/tests/models/test_case_small_network_with_ates_optional_assets/src/run_small_network_with_ates_optional_assets.py"]
+COPY requirements.txt /app/optimizer_worker/requirements.txt
+RUN pip install -r /app/optimizer_worker/requirements.txt
+
+COPY compute-engine-sdk-python/src/nwnsdk /app/nwnsdk/
+COPY src/optimizer_worker                 /app/optimizer_worker/
+COPY src/optimization_runner              /app/optimization_runner/
+
+CMD ["python3", "-u", "-m", "optimizer_worker.main"]
