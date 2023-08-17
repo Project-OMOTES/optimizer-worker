@@ -2,3 +2,4 @@
 .idea/
 ci/
 .env
+*.egg-info/
