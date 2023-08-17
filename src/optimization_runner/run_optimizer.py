@@ -7,7 +7,7 @@ from warmingup_mpc.run_scenario_sizing_v2 import HeatProblemCBC
 
 def run_calculation(input_esdl: str) -> str:
     base_folder = Path(__file__).resolve().parent.parent
-    solution = run_optimization_problem(HeatProblemCBC, base_folder=base_folder, esdl_string=input_esdl_string)
+    solution = run_optimization_problem(HeatProblemCBC, base_folder=base_folder, esdl_string=input_esdl)
     esh = solution.get_optimized_esh()
 
     return esh
