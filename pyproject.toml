@@ -1,0 +1,29 @@
+[project]
+name = "nwn-optimizer-worker"
+version = "0.0.1"
+authors = [{ name = "Sebastiaan la Fleur (TNO)", email = "sebastiaan.lafleur@tno.nl" }]
+description = "Nieuwe Warmte Nu - Optimizer Worker"
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "python-dotenv == 1.0.0",
+    "nwnsdk ~= 0.0.1"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pypa/sampleproject"
+"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
