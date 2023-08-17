@@ -6,6 +6,7 @@ import subprocess
 from typing import Optional
 import uuid
 
+import pika as pika
 from dotenv import load_dotenv
 from nwnsdk import NwnClient, JobStatus, PostgresConfig, RabbitmqConfig, Queue
 
@@ -60,7 +61,13 @@ class OptimizationWorker:
 
         self.nwn_client = NwnClient(postgres_config=postgres_config, rabbitmq_config=rabbitmq_config)
 
-    def on_message(self, ch, method, properties, body: bytes):
+    def on_message(
+        self,
+        ch: pika.adapters.blocking_connection.BlockingChannel,
+        method: pika.spec.Basic.Deliver,
+        properties: pika.spec.BasicProperties,
+        body: bytes,
+    ):
         message = json.loads(body.decode("utf-8"))
         job_id = uuid.UUID(message.get("job_id"))
         if job_id is None:
@@ -71,6 +78,7 @@ class OptimizationWorker:
             self.nwn_client.db_client.set_job_running(job_id)
             calculation_result = self.run_optimizer_calculation(job_id, input_esdl_string)
             self.store_calculation_result(calculation_result)
+        ch.basic_ack(method.delivery_tag)
 
     def work(self):
         self.nwn_client.broker_client.wait_for_data({Queue.StartWorkflowOptimizer: self.on_message})
