@@ -11,10 +11,10 @@ FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-COPY target/dist/rtc-tools-heat-network-0.1.8+10.g3a7c647.tar.gz rtc-tools-heat-network.tar.gz
-COPY target/dist/rtc_tools_heat_network-0.1.8+10.g3a7c647-py3-none-any.whl rtc-tools-heat-network.whl
-COPY target/dist/WarmingUP-MPC-0.1.6+77.gccb989f.tar.gz warmingup-mpc.tar.gz
-COPY target/dist/WarmingUP_MPC-0.1.6+77.gccb989f-py3-none-any.whl warmingup-mpc.whl
+COPY target/dist/rtc-tools-heat-network-0.1.8+17.g64af588.tar.gz rtc-tools-heat-network.tar.gz
+COPY target/dist/rtc_tools_heat_network-0.1.8+17.g64af588-py3-none-any.whl rtc-tools-heat-network.whl
+COPY target/dist/WarmingUP-MPC-0.1.6+81.gc710cc9.tar.gz warmingup-mpc.tar.gz
+COPY target/dist/WarmingUP_MPC-0.1.6+81.gc710cc9-py3-none-any.whl warmingup-mpc.whl
 
 RUN pip install /app/rtc-tools-heat-network.tar.gz
 RUN pip install /app/warmingup-mpc.tar.gz
