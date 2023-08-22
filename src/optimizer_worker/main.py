@@ -74,7 +74,7 @@ class OptimizationWorker:
             LOGGER.error("Received a message which did not contain a job id. Message: %s", message)
         else:
             LOGGER.info("Received message to work on job %s", job_id)
-            input_esdl_string = self.nwn_client.db_client.retrieve_input_esdl(job_id)
+            input_esdl_string = self.nwn_client.db_client.get_job_input_esdl(job_id)
             self.nwn_client.db_client.set_job_running(job_id)
             calculation_result = self.run_optimizer_calculation(job_id, input_esdl_string)
             self.store_calculation_result(calculation_result)

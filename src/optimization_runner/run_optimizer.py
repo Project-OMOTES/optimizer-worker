@@ -20,13 +20,9 @@ if __name__ == "__main__":
     with open(input_esdl_file_path) as open_input_esdl_file:
         input_esdl_string = open_input_esdl_file.read()
 
-    # print("I AM DOING OPTIMIZATION MAGIC RIGHT NOW (not really, just printing this message for testing purposes.")
     print("Received input esdl file:")
     print(input_esdl_string)
-    # import time
 
-    # time.sleep(300)
-    # output_esdl = "TEST DATA!!"
     output_esdl = run_calculation(input_esdl_string)
     print("Done with calculation")
     print("Output esdl: ", output_esdl)

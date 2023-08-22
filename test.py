@@ -29,11 +29,13 @@ rabbitmq_config = RabbitmqConfig(
 
 nwn_client = NwnClient(postgres_config=postgres_config, rabbitmq_config=rabbitmq_config)
 
-job_id = nwn_client.start_work_flow(work_flow_type=WorkFlowType.GROWTH_OPTIMIZER,
-                                    job_name="job2",
-                                    esdl_str=input_esdl_no_influx,
-                                    user_name="fleursl",
-                                    project_name='some-project')
+job_id = nwn_client.start_work_flow(
+    work_flow_type=WorkFlowType.GROWTH_OPTIMIZER,
+    job_name="job2",
+    esdl_str=input_esdl_no_influx,
+    user_name="fleursl",
+    project_name="some-project",
+)
 
 print(f"Polling status of job {job_id} until finished.")
 
@@ -42,7 +44,7 @@ while unfinished:
     time.sleep(5)
     job = nwn_client.db_client.get_job(job_id)
     print("Status: ", job.status)
-    unfinished = job.status is JobStatus.RUNNING
+    unfinished = job.status in [JobStatus.RUNNING, JobStatus.REGISTERED]
 
 print(f"Added at", job.added_at)
 print(f"Running at", job.running_at)
