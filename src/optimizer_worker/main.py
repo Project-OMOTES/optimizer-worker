@@ -1,3 +1,4 @@
+import signal
 from dataclasses import dataclass
 import json
 import logging
@@ -81,7 +82,18 @@ class OptimizationWorker:
         ch.basic_ack(method.delivery_tag)
 
     def work(self):
-        self.nwn_client.broker_client.wait_for_data({Queue.StartWorkflowOptimizer: self.on_message})
+        signal.signal(signal.SIGQUIT, self.signal_handler)
+        signal.signal(signal.SIGINT, self.signal_handler)
+        signal.signal(signal.SIGTERM, self.signal_handler)
+        self.nwn_client.connect()
+        self.nwn_client.wait_for_work({Queue.StartWorkflowOptimizer: self.on_message})
+
+    def signal_handler(self, signal, frame):
+        LOGGER.info("Received signal %s. Stopping..", signal)
+        self.stop()
+
+    def stop(self):
+        self.nwn_client.stop()
 
     def store_calculation_result(self, calculation_result: CalculationResult) -> None:
         new_status = JobStatus.FINISHED if calculation_result.exit_code == 0 else JobStatus.ERROR
