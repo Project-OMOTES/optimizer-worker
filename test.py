@@ -43,7 +43,7 @@ try:
     unfinished = True
     while unfinished:
         time.sleep(5)
-        job = nwn_client.db_client.get_job(job_id)
+        job = nwn_client.get_job(job_id)
         print("Status: ", job.status)
         unfinished = job.status in [JobStatus.RUNNING, JobStatus.REGISTERED]
 

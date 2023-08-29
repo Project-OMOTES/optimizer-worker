@@ -75,8 +75,8 @@ class OptimizationWorker:
             LOGGER.error("Received a message which did not contain a job id. Message: %s", message)
         else:
             LOGGER.info("Received message to work on job %s", job_id)
-            input_esdl_string = self.nwn_client.db_client.get_job_input_esdl(job_id)
-            self.nwn_client.db_client.set_job_running(job_id)
+            input_esdl_string = self.nwn_client.get_job_input_esdl(job_id)
+            self.nwn_client.set_job_running(job_id)
             calculation_result = self.run_optimizer_calculation(job_id, input_esdl_string)
             self.store_calculation_result(calculation_result)
         ch.basic_ack(method.delivery_tag)
@@ -98,7 +98,7 @@ class OptimizationWorker:
     def store_calculation_result(self, calculation_result: CalculationResult) -> None:
         new_status = JobStatus.FINISHED if calculation_result.exit_code == 0 else JobStatus.ERROR
 
-        self.nwn_client.db_client.store_job_result(
+        self.nwn_client.store_job_result(
             job_id=calculation_result.job_id,
             new_logs=calculation_result.logs,
             new_status=new_status,
