@@ -1,3 +1,4 @@
+import signal
 from dataclasses import dataclass
 import json
 import logging
@@ -74,19 +75,30 @@ class OptimizationWorker:
             LOGGER.error("Received a message which did not contain a job id. Message: %s", message)
         else:
             LOGGER.info("Received message to work on job %s", job_id)
-            input_esdl_string = self.nwn_client.db_client.get_job_input_esdl(job_id)
-            self.nwn_client.db_client.set_job_running(job_id)
+            input_esdl_string = self.nwn_client.get_job_input_esdl(job_id)
+            self.nwn_client.set_job_running(job_id)
             calculation_result = self.run_optimizer_calculation(job_id, input_esdl_string)
             self.store_calculation_result(calculation_result)
         ch.basic_ack(method.delivery_tag)
 
     def work(self):
-        self.nwn_client.broker_client.wait_for_data({Queue.StartWorkflowOptimizer: self.on_message})
+        signal.signal(signal.SIGQUIT, self.signal_handler)
+        signal.signal(signal.SIGINT, self.signal_handler)
+        signal.signal(signal.SIGTERM, self.signal_handler)
+        self.nwn_client.connect()
+        self.nwn_client.wait_for_work({Queue.StartWorkflowOptimizer: self.on_message})
+
+    def signal_handler(self, signal, frame):
+        LOGGER.info("Received signal %s. Stopping..", signal)
+        self.stop()
+
+    def stop(self):
+        self.nwn_client.stop()
 
     def store_calculation_result(self, calculation_result: CalculationResult) -> None:
         new_status = JobStatus.FINISHED if calculation_result.exit_code == 0 else JobStatus.ERROR
 
-        self.nwn_client.db_client.store_job_result(
+        self.nwn_client.store_job_result(
             job_id=calculation_result.job_id,
             new_logs=calculation_result.logs,
             new_status=new_status,
