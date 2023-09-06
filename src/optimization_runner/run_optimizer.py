@@ -3,12 +3,14 @@ import os
 from pathlib import Path
 
 from rtctools.util import run_optimization_problem
-from warmingup_mpc.run_scenario_sizing_v2 import HeatProblemCBC
+from rtctools_heat_network.workflows.grow_workflow import EndScenarioSizingCBC
 
 
 def run_calculation(input_esdl: str) -> str:
     base_folder = Path(__file__).resolve().parent.parent
-    solution: HeatProblemCBC = run_optimization_problem(HeatProblemCBC, base_folder=base_folder, esdl_string=input_esdl)
+    solution: EndScenarioSizingCBC = run_optimization_problem(
+        EndScenarioSizingCBC, base_folder=base_folder, esdl_string=input_esdl
+    )
     return solution.optimized_esdl_string
 
 
@@ -20,15 +22,10 @@ if __name__ == "__main__":
     with open(input_esdl_file_path) as open_input_esdl_file:
         input_esdl_string = open_input_esdl_file.read()
 
-    print("Received input esdl file:")
-    print(input_esdl_string)
-
     output_esdl = run_calculation(input_esdl_string)
-    print("Done with calculation")
-    print("Output esdl: ", output_esdl)
+    print("Done with calculation. Writing output")
     encoded_output = base64.b64encode(output_esdl.encode("utf-8"))
-    print("Writing to output file: ", output_esdl)
 
     with open(output_esdl_file_path, "w+") as open_output_esdl_file:
         open_output_esdl_file.write(output_esdl)
-    print("Done")
+    print("Done. Shutting down...")
