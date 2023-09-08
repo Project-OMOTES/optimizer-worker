@@ -13,7 +13,7 @@ input_esdl_no_influx = "PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPGVz
 
 postgres_config = PostgresConfig(
     host=os.environ.get("POSTGRES_HOST", "localhost"),
-    port=os.environ.get("POSTGRES_PORT", "5432"),
+    port=os.environ.get("POSTGRES_PORT", "6432"),
     database_name=os.environ["POSTGRES_DATABASE_NAME"],
     user_name=os.environ["POSTGRES_ROOT_USER"],
     password=os.environ["POSTGRES_ROOT_PASSWORD"],
