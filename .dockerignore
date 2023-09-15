@@ -3,3 +3,4 @@
 ci/
 .env
 *.egg-info/
+temp/
