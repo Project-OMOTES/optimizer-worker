@@ -38,7 +38,7 @@ nwnsdk==0.0.7
     # via nwn-optimizer-worker (./pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
-pandas==2.0.3
+pandas==1.5.3
     # via rtc-tools-heat-network
 pika==1.3.2
     # via
@@ -79,7 +79,7 @@ rtc-tools==2.5.2
     # via rtc-tools-heat-network
 rtc-tools-channel-flow==1.1.2
     # via rtc-tools
-rtc-tools-heat-network==0.2.0
+rtc-tools-heat-network==0.2.2.dev1
     # via nwn-optimizer-worker (./pyproject.toml)
 scipy==1.10.1
     # via rtc-tools
@@ -98,7 +98,5 @@ typing-extensions==4.7.1
     #   mypy
     #   sqlalchemy
     #   sqlalchemy-stubs
-tzdata==2023.3
-    # via pandas
 urllib3==2.0.4
     # via requests
