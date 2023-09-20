@@ -80,7 +80,7 @@ rtc-tools==2.6.0a3
     # via rtc-tools-heat-network
 rtc-tools-channel-flow==1.1.2
     # via rtc-tools
-rtc-tools-heat-network==0.3.0
+rtc-tools-heat-network==0.3.1
     # via nwn-optimizer-worker (./pyproject.toml)
 scipy==1.10.1
     # via rtc-tools
