@@ -6,7 +6,7 @@
 #
 antlr4-python3-runtime==4.7.2
     # via pymoca
-casadi==3.5.5
+casadi==3.6.3
     # via rtc-tools
 certifi==2023.7.22
     # via requests
@@ -30,6 +30,7 @@ mypy-extensions==1.0.0
     # via mypy
 numpy==1.22.4
     # via
+    #   casadi
     #   pandas
     #   pymoca
     #   rtc-tools
@@ -75,11 +76,11 @@ requests==2.31.0
     # via influxdb
 restrictedpython==7.0a1.dev1
     # via pyecore
-rtc-tools==2.5.2
+rtc-tools==2.6.0a3
     # via rtc-tools-heat-network
 rtc-tools-channel-flow==1.1.2
     # via rtc-tools
-rtc-tools-heat-network==0.2.2.dev1
+rtc-tools-heat-network==0.3.0
     # via nwn-optimizer-worker (./pyproject.toml)
 scipy==1.10.1
     # via rtc-tools

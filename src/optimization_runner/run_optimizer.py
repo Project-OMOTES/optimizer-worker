@@ -3,13 +3,13 @@ import os
 from pathlib import Path
 
 from rtctools.util import run_optimization_problem
-from rtctools_heat_network.workflows.grow_workflow import EndScenarioSizingCBC
+from rtctools_heat_network.workflows.grow_workflow import EndScenarioSizingHIGHS
 
 
 def run_calculation(input_esdl: str) -> str:
     base_folder = Path(__file__).resolve().parent.parent
-    solution: EndScenarioSizingCBC = run_optimization_problem(
-        EndScenarioSizingCBC, base_folder=base_folder, esdl_string=input_esdl
+    solution: EndScenarioSizingHIGHS = run_optimization_problem(
+        EndScenarioSizingHIGHS, base_folder=base_folder, esdl_string=input_esdl
     )
     return solution.optimized_esdl_string
 

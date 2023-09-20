@@ -103,6 +103,7 @@ class PerformCalculation(threading.Thread):
 
         with TempEnvVar("INPUT_ESDL_FILE_NAME", str(input_file)):
             with TempEnvVar("OUTPUT_ESDL_FILE_NAME", str(output_file)):
+                LOGGER.info("Starting optimization for %s  in subprocess", job_id)
                 process_result = subprocess.run(
                     ["python3", "-m", "optimization_runner.run_optimizer"],
                     stderr=subprocess.STDOUT,
