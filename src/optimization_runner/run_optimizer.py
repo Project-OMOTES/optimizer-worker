@@ -1,16 +1,30 @@
 import base64
 import os
 from pathlib import Path
+from typing import Union, Type
 
 from rtctools.util import run_optimization_problem
 from rtctools_heat_network.workflows.grow_workflow import EndScenarioSizingHIGHS
+from rtctools_heat_network.workflows.simulator_workflow import NetworkSimulatorHIGHSWeeklyTimeStep
+from nwnsdk import WorkFlowType
+
+GROWProblem = Union[Type[EndScenarioSizingHIGHS], Type[NetworkSimulatorHIGHSWeeklyTimeStep]]
 
 
-def run_calculation(input_esdl: str) -> str:
+def get_problem_type(
+    workflow_type: WorkFlowType,
+) -> GROWProblem:
+    if workflow_type == WorkFlowType.GROW_OPTIMIZER:
+        return EndScenarioSizingHIGHS
+    elif workflow_type == WorkFlowType.GROW_SIMULATOR:
+        return NetworkSimulatorHIGHSWeeklyTimeStep
+    else:
+        raise RuntimeError(f"Unknown workflow type, please implement {workflow_type}")
+
+
+def run_calculation(input_esdl: str, grow_problem: GROWProblem) -> str:
     base_folder = Path(__file__).resolve().parent.parent
-    solution: EndScenarioSizingHIGHS = run_optimization_problem(
-        EndScenarioSizingHIGHS, base_folder=base_folder, esdl_string=input_esdl
-    )
+    solution: GROWProblem = run_optimization_problem(grow_problem, base_folder=base_folder, esdl_string=input_esdl)
     return solution.optimized_esdl_string
 
 
@@ -19,10 +33,11 @@ if __name__ == "__main__":
 
     input_esdl_file_path = os.environ.get("INPUT_ESDL_FILE_NAME")
     output_esdl_file_path = os.environ.get("OUTPUT_ESDL_FILE_NAME")
+    workflow_type = os.environ.get("WORKFLOW_TYPE")
     with open(input_esdl_file_path) as open_input_esdl_file:
         input_esdl_string = open_input_esdl_file.read()
 
-    output_esdl = run_calculation(input_esdl_string)
+    output_esdl = run_calculation(input_esdl_string, get_problem_type(WorkFlowType(workflow_type)))
     print("Done with calculation. Writing output")
     encoded_output = base64.b64encode(output_esdl.encode("utf-8"))
 

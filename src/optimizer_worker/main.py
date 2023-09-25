@@ -11,8 +11,7 @@ import uuid
 
 import pika as pika
 from dotenv import load_dotenv
-from nwnsdk import NwnClient, JobStatus, PostgresConfig, RabbitmqConfig, Queue
-
+from nwnsdk import NwnClient, JobStatus, PostgresConfig, RabbitmqConfig, Queue, WorkFlowType
 
 LOGGER = logging.getLogger("optimizer_worker")
 
@@ -49,6 +48,7 @@ class PerformCalculation(threading.Thread):
     job_id: uuid.UUID
     channel: pika.adapters.blocking_connection.BlockingChannel
     method: pika.spec.Basic.Deliver
+    workflow_type: WorkFlowType
 
     def __init__(
         self,
@@ -58,6 +58,7 @@ class PerformCalculation(threading.Thread):
         job_id: uuid.UUID,
         channel: pika.adapters.blocking_connection.BlockingChannel,
         method: pika.spec.Basic.Deliver,
+        workflow_type: WorkFlowType,
     ):
         super().__init__()
 
@@ -67,13 +68,14 @@ class PerformCalculation(threading.Thread):
         self.job_id = job_id
         self.channel = channel
         self.method = method
+        self.workflow_type = workflow_type
 
     def run(self) -> None:
         LOGGER.info("Starting calculation for job %s", self.job_id)
         input_esdl_string = self.nwn_client.get_job_input_esdl(self.job_id)
         self.nwn_client.set_job_running(self.job_id)
         calculation_result = self.run_optimizer_calculation(
-            self.input_files_dir, self.output_files_dir, self.job_id, input_esdl_string
+            self.input_files_dir, self.output_files_dir, self.job_id, input_esdl_string, self.workflow_type
         )
         self.store_calculation_result(calculation_result)
         if self.channel.is_open:
@@ -93,7 +95,7 @@ class PerformCalculation(threading.Thread):
 
     @staticmethod
     def run_optimizer_calculation(
-        input_files_dir: Path, output_files_dir: Path, job_id: uuid.uuid4, esdl_string: str
+        input_files_dir: Path, output_files_dir: Path, job_id: uuid.uuid4, esdl_string: str, workflow_type: WorkFlowType
     ) -> CalculationResult:
         input_file = input_files_dir / f"{job_id}.esdl"
         output_file = output_files_dir / f"{job_id}.esdl"
@@ -101,15 +103,16 @@ class PerformCalculation(threading.Thread):
         with open(input_file, "w+") as open_esdl_input_file:
             open_esdl_input_file.write(esdl_string)
 
-        with TempEnvVar("INPUT_ESDL_FILE_NAME", str(input_file)):
-            with TempEnvVar("OUTPUT_ESDL_FILE_NAME", str(output_file)):
-                LOGGER.info("Starting optimization for %s  in subprocess", job_id)
-                process_result = subprocess.run(
-                    ["python3", "-m", "optimization_runner.run_optimizer"],
-                    stderr=subprocess.STDOUT,
-                    stdout=subprocess.PIPE,
-                    text=True,
-                )
+        with TempEnvVar("INPUT_ESDL_FILE_NAME", str(input_file)), TempEnvVar(
+            "OUTPUT_ESDL_FILE_NAME", str(output_file)
+        ), TempEnvVar("WORKFLOW_TYPE", workflow_type.value):
+            LOGGER.info("Starting optimization for %s  in subprocess", job_id)
+            process_result = subprocess.run(
+                ["python3", "-m", "optimization_runner.run_optimizer"],
+                stderr=subprocess.STDOUT,
+                stdout=subprocess.PIPE,
+                text=True,
+            )
 
         if process_result.returncode == 0:
             with open(output_file) as open_esdl_output_file:
@@ -156,7 +159,7 @@ class OptimizationWorker:
         self.nwn_client = NwnClient(postgres_config=postgres_config, rabbitmq_config=rabbitmq_config)
         self.running_calculation = None
 
-    def on_start_workflow_message(
+    def on_start_workflow_optimizer_message(
         self,
         ch: pika.adapters.blocking_connection.BlockingChannel,
         method: pika.spec.Basic.Deliver,
@@ -172,7 +175,39 @@ class OptimizationWorker:
         else:
             LOGGER.info("Received message to work on job %s", job_id)
             self.running_calculation = PerformCalculation(
-                self.nwn_client, self.input_files_dir, self.output_files_dir, job_id, ch, method
+                self.nwn_client,
+                self.input_files_dir,
+                self.output_files_dir,
+                job_id,
+                ch,
+                method,
+                WorkFlowType.GROW_OPTIMIZER,
+            )
+            self.running_calculation.start()
+
+    def on_start_workflow_grow_simulator_message(
+        self,
+        ch: pika.adapters.blocking_connection.BlockingChannel,
+        method: pika.spec.Basic.Deliver,
+        properties: pika.spec.BasicProperties,
+        body: bytes,
+    ):
+        message = json.loads(body.decode("utf-8"))
+        job_id = uuid.UUID(message.get("job_id"))
+
+        if job_id is None:
+            LOGGER.error("Received a message which did not contain a job id. Message: %s", message)
+            ch.connection.add_callback_threadsafe(lambda: ch.basic_ack(method.delivery_tag))
+        else:
+            LOGGER.info("Received message to work on job %s", job_id)
+            self.running_calculation = PerformCalculation(
+                self.nwn_client,
+                self.input_files_dir,
+                self.output_files_dir,
+                job_id,
+                ch,
+                method,
+                WorkFlowType.GROW_SIMULATOR,
             )
             self.running_calculation.start()
 
@@ -181,7 +216,12 @@ class OptimizationWorker:
         signal.signal(signal.SIGINT, self.signal_handler)
         signal.signal(signal.SIGTERM, self.signal_handler)
         self.nwn_client.connect()
-        self.nwn_client.set_callbacks({Queue.StartWorkflowOptimizer: self.on_start_workflow_message})
+        self.nwn_client.set_callbacks(
+            {
+                Queue.StartWorkflowOptimizer: self.on_start_workflow_optimizer_message,
+                Queue.StartWorkflowGrowSimulator: self.on_start_workflow_grow_simulator_message,
+            }
+        )
         self.nwn_client.join()
 
     def signal_handler(self, signal, frame):
