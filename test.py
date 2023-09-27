@@ -30,7 +30,7 @@ nwn_client = NwnClient(postgres_config=postgres_config, rabbitmq_config=rabbitmq
 try:
     nwn_client.connect()
     job_id = nwn_client.start_work_flow(
-        work_flow_type=WorkFlowType.GROWTH_OPTIMIZER,
+        work_flow_type=WorkFlowType.GROW_OPTIMIZER,
         job_name="job2",
         esdl_str=input_esdl_no_influx,
         user_name="fleursl",
