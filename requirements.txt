@@ -35,7 +35,7 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-nwnsdk==0.0.10
+nwnsdk==0.0.11
     # via nwn-optimizer-worker (./pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
