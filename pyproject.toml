@@ -23,7 +23,7 @@ dependencies = [
     "python-dotenv ~= 1.0.0",
     "pika",
     "nwnsdk ~= 0.0.11",
-    "rtc-tools-heat-network ~= 0.3.4"
+    "rtc-tools-heat-network ~= 0.3.5"
 ]
 
 [project.urls]
