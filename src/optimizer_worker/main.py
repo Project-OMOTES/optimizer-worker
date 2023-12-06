@@ -79,6 +79,7 @@ class PerformCalculation(threading.Thread):
         )
         self.store_calculation_result(calculation_result)
         if self.channel.is_open:
+            LOGGER.info("Notifying to broker that job has been processed by acknowledging message")
             self.channel.connection.add_callback_threadsafe(lambda: self.channel.basic_ack(self.method.delivery_tag))
         else:
             LOGGER.warning("Rabbitmq channel was closed so could not ack that job %s was performed.", self.job_id)
