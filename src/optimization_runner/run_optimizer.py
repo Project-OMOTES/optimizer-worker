@@ -24,7 +24,24 @@ def get_problem_type(
 
 def run_calculation(input_esdl: str, grow_problem: GROWProblem) -> str:
     base_folder = Path(__file__).resolve().parent.parent
-    solution: GROWProblem = run_optimization_problem(grow_problem, base_folder=base_folder, esdl_string=input_esdl)
+    write_result_db_profiles = "INFLUXDB_HOST" in os.environ
+    influxdb_host = os.environ.get("INFLUXDB_HOST", "localhost")
+    influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
+
+    print(f"Will write result profiles to influx: {write_result_db_profiles}. At {influxdb_host}:{influxdb_port}")
+
+    solution: GROWProblem = run_optimization_problem(
+        grow_problem,
+        base_folder=base_folder,
+        esdl_string=input_esdl,
+        write_result_db_profiles=write_result_db_profiles,
+        influxdb_host=influxdb_host,
+        influxdb_port=influxdb_port,
+        influxdb_username=os.environ.get("INFLUXDB_USERNAME"),
+        influxdb_password=os.environ.get("INFLUXDB_PASSWORD"),
+        influxdb_ssl=False,
+        influxdb_verify_ssl=False,
+    )
     return solution.optimized_esdl_string
 
 
