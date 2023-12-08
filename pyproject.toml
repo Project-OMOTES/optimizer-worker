@@ -24,7 +24,6 @@ dependencies = [
     "jsonpickle ~= 3.0.2",
     "python-dotenv ~= 1.0.0",
     "pika",
-    "nwnsdk ~= 0.0.12",
     "rtc-tools-heat-network ~= 0.4.1"
 ]
 

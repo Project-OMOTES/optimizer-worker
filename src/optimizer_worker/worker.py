@@ -7,9 +7,10 @@ from pathlib import Path
 from celery import Celery
 from dataclasses import dataclass
 import subprocess
-from nwnsdk import WorkFlowType
 
-LOGGER = logging.getLogger("optimizer_worker")
+from optimization_runner.types import WorkFlowType
+
+LOGGER = logging.getLogger("grow_worker")
 
 app = Celery(
     "omotes",
