@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 from typing import Union, Type
 
-from rtctools.util import run_optimization_problem
 from rtctools_heat_network.workflows.grow_workflow import EndScenarioSizingHIGHS
+from rtctools_heat_network.workflows import run_end_scenario_sizing
 from rtctools_heat_network.workflows.simulator_workflow import NetworkSimulatorHIGHSWeeklyTimeStep
 from nwnsdk import WorkFlowType
 
@@ -30,7 +30,7 @@ def run_calculation(input_esdl: str, grow_problem: GROWProblem) -> str:
 
     print(f"Will write result profiles to influx: {write_result_db_profiles}. At {influxdb_host}:{influxdb_port}")
 
-    solution: GROWProblem = run_optimization_problem(
+    solution: GROWProblem = run_end_scenario_sizing(
         grow_problem,
         base_folder=base_folder,
         esdl_string=input_esdl,
