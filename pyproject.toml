@@ -20,6 +20,8 @@ readme = "README.md"
 requires-python = ">=3.10"
 
 dependencies = [
+    "celery ~= 5.3.6",
+    "jsonpickle ~= 3.0.2",
     "python-dotenv ~= 1.0.0",
     "pika",
     "nwnsdk ~= 0.0.12",
