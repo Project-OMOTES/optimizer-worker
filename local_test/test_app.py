@@ -12,16 +12,23 @@ app = Celery(
     backend="rpc://user:bitnami@rabbitmq",
 )
 print("Celery started")
-q_name = "rtc"
 
-job_id: uuid4 = uuid4()
+q_name = "grow"
+optimizer_job_id: uuid4 = uuid4()
 
-optimizer_task = app.signature("optimizer-task", (job_id, input_esdl_no_influx), queue=q_name).delay()
-simulator_task = app.signature("simulator-task", (job_id, input_esdl_no_influx), queue=q_name).delay()
+optimizer_task = app.signature("optimizer-task", (optimizer_job_id, input_esdl_no_influx), queue=q_name).delay()
 
-print("waiting for tasks")
+test_simulator = False  # takes a long time
+simulator_task = None
+if test_simulator:
+    simulator_job_id: uuid4 = uuid4()
+    simulator_task = app.signature("simulator-task", (simulator_job_id, input_esdl_no_influx), queue=q_name).delay()
 
+print("waiting for tasks...")
 optimizer_result = jsonpickle.decode(optimizer_task.get())
-print(f"Received result: '{optimizer_result['job_id']}' from optimizer-task, from queue: {q_name}")
-simulator_result = simulator_task.get()
-print(f"Received result: '{simulator_result['job_id']}' from simulator-task, from queue: {q_name}")
+print(f"Received exit code: '{optimizer_result['exit_code']}' from optimizer-task, from queue: {q_name}")
+
+if simulator_task:
+    print("waiting for simulator task...")
+    simulator_result = jsonpickle.decode(simulator_task.get())
+    print(f"Received exit code: '{simulator_result['exit_code']}' from simulator-task, from queue: {q_name}")

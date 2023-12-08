@@ -14,7 +14,6 @@ casadi==3.6.3
     # via
     #   rtc-tools
     #   rtc-tools-heat-network
-    # via rtc-tools
 celery==5.3.6
     # via nwn-optimizer-worker (./pyproject.toml)
 certifi==2023.7.22
@@ -74,6 +73,8 @@ pika==1.3.2
     #   nwnsdk
 pika-stubs==0.1.3
     # via nwnsdk
+prompt-toolkit==3.0.41
+    # via click-repl
 psycopg2-binary==2.9.7
     # via nwnsdk
 pyecore==0.12.1

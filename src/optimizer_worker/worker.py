@@ -9,8 +9,6 @@ from dataclasses import dataclass
 import subprocess
 from nwnsdk import WorkFlowType
 
-from optimizer_worker import main
-
 LOGGER = logging.getLogger("optimizer_worker")
 
 app = Celery(

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WORKER_TYPE='rtc'
+WORKER_TYPE='grow'
 CELERY_SCALE=1
 
 mkdir -p /var/run/celery /var/log/celery
