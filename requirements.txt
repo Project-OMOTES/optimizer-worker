@@ -59,8 +59,6 @@ ordered-set==4.1.0
     # via pyecore
 pandas==1.5.3
     # via rtc-tools-heat-network
-pika==1.3.2
-    # via nwn-optimizer-worker (./pyproject.toml)
 prompt-toolkit==3.0.41
     # via click-repl
 pyecore==0.12.1
@@ -93,7 +91,7 @@ rtc-tools==2.6.0a3
     # via rtc-tools-heat-network
 rtc-tools-channel-flow==1.1.2
     # via rtc-tools
-rtc-tools-heat-network==0.4.1
+rtc-tools-heat-network==0.4.5
     # via nwn-optimizer-worker (./pyproject.toml)
 scipy==1.10.1
     # via rtc-tools

@@ -8,7 +8,7 @@ from celery import Celery
 from dataclasses import dataclass
 import subprocess
 
-from optimization_runner.types import WorkFlowType
+from grow_runner.types import WorkFlowType
 
 LOGGER = logging.getLogger("grow_worker")
 
@@ -79,7 +79,7 @@ def run_rtc_calculation(job_id: uuid4, esdl_string: str, workflow_type: WorkFlow
     ), TempEnvVar("WORKFLOW_TYPE", workflow_type.value):
         LOGGER.info("Starting optimization for %s  in subprocess", job_id)
         process_result = subprocess.run(
-            ["python3", "-m", "optimization_runner.run_optimizer"],
+            ["python3", "-m", "grow_runner.run_grow"],
             stderr=subprocess.STDOUT,
             stdout=subprocess.PIPE,
             text=True,

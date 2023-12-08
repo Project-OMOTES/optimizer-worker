@@ -26,9 +26,9 @@ if test_simulator:
 
 print("waiting for tasks...")
 optimizer_result = jsonpickle.decode(optimizer_task.get())
-print(f"Received exit code: '{optimizer_result['exit_code']}' from optimizer-task, from queue: {q_name}")
+print(f"Received logs: '{optimizer_result['logs']}' from optimizer-task, from queue: {q_name}")
 
 if simulator_task:
     print("waiting for simulator task...")
     simulator_result = jsonpickle.decode(simulator_task.get())
-    print(f"Received exit code: '{simulator_result['exit_code']}' from simulator-task, from queue: {q_name}")
+    print(f"Received logs: '{simulator_result['logs']}' from simulator-task, from queue: {q_name}")

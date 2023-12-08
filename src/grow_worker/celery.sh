@@ -5,7 +5,7 @@ CELERY_SCALE=1
 
 mkdir -p /var/run/celery /var/log/celery
 
-exec celery --app=optimizer_worker.worker worker \
+exec celery --app=grow_worker.worker worker \
             --autoscale ${CELERY_SCALE} \
             --loglevel=INFO \
             --hostname=worker-${WORKER_TYPE}@%h \

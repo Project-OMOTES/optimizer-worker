@@ -1,5 +1,5 @@
 [project]
-name = "nwn-optimizer-worker"
+name = "omotes-grow-worker"
 version = "0.0.1"
 authors = [{ name = "Sebastiaan la Fleur (TNO)", email = "sebastiaan.lafleur@tno.nl" }]
 description = "Nieuwe Warmte Nu - Optimizer Worker"
@@ -23,8 +23,7 @@ dependencies = [
     "celery ~= 5.3.6",
     "jsonpickle ~= 3.0.2",
     "python-dotenv ~= 1.0.0",
-    "pika",
-    "rtc-tools-heat-network ~= 0.4.1"
+    "rtc-tools-heat-network ~= 0.4.5"
 ]
 
 [project.urls]
