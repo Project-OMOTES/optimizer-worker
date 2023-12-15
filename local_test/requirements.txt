@@ -1,0 +1,2 @@
+celery==5.3.5
+jsonpickle==3.0.2

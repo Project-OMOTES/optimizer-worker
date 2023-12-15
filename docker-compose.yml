@@ -1,9 +1,69 @@
 version: "3.8"
 
+networks:
+  omotes:
+
+volumes:
+  db-data:
+  broker-data:
+  influxdb_storage:
+
 services:
-    optimization_worker:
-        build:
-            context: .
-        env_file: .env
-        deploy:
-            replicas: 2
+  rabbitmq:
+    image: bitnami/rabbitmq:3.8.27
+    ports:
+      - "15672:15672"
+      - "5673:5672"
+    networks:
+      - omotes
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  omotes_influxdb:
+    image: influxdb:1.7
+    ports:
+      - "${INFLUXDB_PORT}:${INFLUXDB_PORT}"
+      - "${INFLUXDB_RPC_PORT}:${INFLUXDB_RPC_PORT}"
+    networks:
+      - omotes
+    environment:
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_ADMIN_USER}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
+      - INFLUXDB_HTTP_BIND_ADDRESS=:${INFLUXDB_PORT}
+      - INFLUXDB_BIND_ADDRESS=:${INFLUXDB_RPC_PORT}
+      - INFLUXDB_DB=omotes_timeseries
+      - INFLUXDB_WRITE_USER=${INFLUXDB_WRITE_USER}
+      - INFLUXDB_WRITE_USER_PASSWORD=${INFLUXDB_WRITE_USER_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://omotes_influxdb:${INFLUXDB_PORT}/ping" ]
+      interval: 10s
+      timeout: 5s
+    volumes:
+      - influxdb_storage:/var/lib/influxdb
+
+  grow_worker:
+    build:
+      context: .
+    env_file: .env
+    networks:
+      - omotes
+    deploy:
+      replicas: 1
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      omotes_influxdb:
+        condition: service_healthy
+
+  local_test:
+    build:
+      context: ./local_test
+      dockerfile: Dockerfile
+    networks:
+      - omotes
+    depends_on:
+      grow_worker:
+        condition: service_started
