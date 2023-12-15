@@ -1,3 +1,5 @@
+import sys
+import threading
 from uuid import uuid4
 import jsonpickle
 from celery import Celery
@@ -10,8 +12,48 @@ app = Celery(
     "omotes",
     broker="amqp://user:bitnami@rabbitmq",
     backend="rpc://user:bitnami@rabbitmq",
+    worker_prefetch_multiplier=1,
+    task_acks_late=True,
+    task_reject_on_worker_lost=True,
+    # task_serializer="pickle",
+    # result_serializer="pickle",
+    # accept_content=["application/json", "application/x-python-serialize"],
 )
 print("Celery started")
+
+
+def task_monitor():
+    def on_event(event):
+        print("EVENT HAPPENED: ", event["type"])
+
+    def on_progress_update(event):
+        print("################################  TASK PROGRESS UPDATED: ", event["progress"]["fraction"] * 100)
+
+    while True:
+        try:
+            with app.connection() as conn:
+                recv = app.events.Receiver(
+                    conn,
+                    handlers={
+                        "task-failed": on_event,
+                        "task-succeeded": on_event,
+                        "task-sent": on_event,
+                        "task-received": on_event,
+                        "task-revoked": on_event,
+                        "task-started": on_event,
+                        "task-progress-update": on_progress_update,
+                        # OR: '*' : on_event
+                    },
+                )
+                recv.capture(limit=None, timeout=None)
+        except (KeyboardInterrupt, SystemExit):
+            print("EXCEPTION KEYBOARD INTERRUPT")
+            sys.exit()
+
+
+t = threading.Thread(target=task_monitor)
+t.daemon = True
+t.start()
 
 q_name = "grow"
 optimizer_job_id: uuid4 = uuid4()
@@ -25,10 +67,19 @@ if test_simulator:
     simulator_task = app.signature("simulator-task", (simulator_job_id, input_esdl_no_influx), queue=q_name).delay()
 
 print("waiting for tasks...")
-optimizer_result = jsonpickle.decode(optimizer_task.get())
-print(f"Received logs: '{optimizer_result['logs']}' from optimizer-task, from queue: {q_name}")
+
+
+def print_result(result, task_name):
+    if "error" in result:
+        print(f"Error message: {result['error']}, exit code: {result['exit_code']} from task: {task_name}")
+        print(f"logs: {result['logs']} from task: {task_name}")
+    else:
+        print(f"Received logs: '{result['logs']}' from task: {task_name}")
+        print(f"Output ESDL: '{result['output_esdl']}' from task: {task_name}")
+
+
+print_result(jsonpickle.decode(optimizer_task.get()), "optimizer-task")
 
 if simulator_task:
     print("waiting for simulator task...")
-    simulator_result = jsonpickle.decode(simulator_task.get())
-    print(f"Received logs: '{simulator_result['logs']}' from simulator-task, from queue: {q_name}")
+    print_result(jsonpickle.decode(simulator_task.get()), "simulator-task")
