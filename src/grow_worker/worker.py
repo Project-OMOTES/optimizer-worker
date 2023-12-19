@@ -1,5 +1,4 @@
 import io
-
 import jsonpickle
 import os
 import logging
@@ -10,6 +9,7 @@ from celery import Celery
 from celery.signals import after_setup_logger
 from dataclasses import dataclass
 
+from grow_worker.task_util import TaskUtil
 from grow_worker.types import WorkFlowType, GROWProblem, get_problem_type
 from rtctools_heat_network.workflows import run_end_scenario_sizing
 
@@ -21,9 +21,6 @@ app = Celery(
     worker_prefetch_multiplier=1,
     task_acks_late=True,
     task_reject_on_worker_lost=True,
-    # task_serializer="pickle",
-    # result_serializer="pickle",
-    # accept_content=["application/json", "application/x-python-serialize"],
 )
 
 logger = logging.getLogger(__name__)
@@ -45,20 +42,14 @@ def setup_loggers(logger, *args, **kwargs):
 
 @app.task(name="optimizer-task", bind=True)
 def optimize(self, job_id: uuid4, esdl_string: str):
-    def update_progress(fraction: float, message: str) -> None:
-        self.send_event("task-progress-update", progress={"fraction": fraction, "message": message})
-
     logger.info("optimizer worker started")
-    return rtc_calculate(job_id, esdl_string, WorkFlowType.GROW_OPTIMIZER, update_progress)
+    return rtc_calculate(job_id, esdl_string, WorkFlowType.GROW_OPTIMIZER, TaskUtil(self).update_progress)
 
 
 @app.task(name="simulator-task", bind=True)
 def simulate(self, job_id: uuid4, esdl_string: str):
-    def update_progress(fraction: float, message: str) -> None:
-        self.send_event("task-progress-update", progress={"fraction": fraction, "message": message})
-
     logger.info("simulation worker started")
-    return rtc_calculate(job_id, esdl_string, WorkFlowType.GROW_SIMULATOR, update_progress)
+    return rtc_calculate(job_id, esdl_string, WorkFlowType.GROW_SIMULATOR, TaskUtil(self).update_progress)
 
 
 @dataclass
@@ -70,7 +61,9 @@ class CalculationResult:
     output_esdl: Optional[str]
 
 
-def rtc_calculate(job_id: uuid4, esdl_string: str, workflow_type: WorkFlowType, update_progress: Callable) -> Any:
+def rtc_calculate(
+    job_id: uuid4, esdl_string: str, workflow_type: WorkFlowType, update_progress: Callable[[float, str], None]
+) -> Any:
     try:
         base_folder = Path(__file__).resolve().parent.parent
         write_result_db_profiles = "INFLUXDB_HOST" in os.environ
