@@ -70,8 +70,8 @@ print("waiting for tasks...")
 
 
 def print_result(result, task_name):
-    if "error" in result:
-        print(f"Error message: {result['error']}, exit code: {result['exit_code']} from task: {task_name}")
+    if "error_message" in result:
+        print(f"Error message: {result['error_message']}, exit code: {result['exit_code']} from task: {task_name}")
         print(f"logs: {result['logs']} from task: {task_name}")
     else:
         print(f"Received logs: '{result['logs']}' from task: {task_name}")

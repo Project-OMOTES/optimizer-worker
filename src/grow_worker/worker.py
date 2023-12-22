@@ -24,7 +24,7 @@ app = Celery(
 )
 
 logger = logging.getLogger(__name__)
-logging_string = None
+logging_string = io.StringIO()
 
 
 @after_setup_logger.connect
@@ -72,7 +72,7 @@ def rtc_calculate(
 
         print(f"Will write result profiles to influx: {write_result_db_profiles}. At {influxdb_host}:{influxdb_port}")
 
-        # raise Exception("final crash", 200)
+        raise Exception("final crash", 200)
 
         solution: GROWProblem = run_end_scenario_sizing(
             get_problem_type(workflow_type),
@@ -99,4 +99,10 @@ def rtc_calculate(
         )
         return jsonpickle.encode(result)
     except Exception as ex:
-        return jsonpickle.encode({"error": ex.args[0], "exit_code": ex.args[1], "logs": logging_string.getvalue()})
+        if len(ex.args) == 1:
+            exit_code = 1
+        else:
+            exit_code = ex.args[1]
+        return jsonpickle.encode(
+            {"error_message": ex.args[0], "exit_code": exit_code, "logs": logging_string.getvalue()}
+        )
