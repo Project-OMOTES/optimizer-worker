@@ -4,6 +4,10 @@
 #
 #    pip-compile --output-file=requirements.txt ./pyproject.toml
 #
+aio-pika==9.3.1
+    # via omotes-job-tools
+aiormq==6.7.7
+    # via aio-pika
 amqp==5.2.0
     # via kombu
 antlr4-python3-runtime==4.7.2
@@ -41,7 +45,9 @@ future-fstrings==1.2.0
 greenlet==3.0.3
     # via sqlalchemy
 idna==3.4
-    # via requests
+    # via
+    #   requests
+    #   yarl
 influxdb==5.3.1
     # via rtc-tools-heat-network
 jsonpickle==3.0.2
@@ -52,6 +58,8 @@ lxml==4.9.3
     # via pyecore
 msgpack==1.0.5
     # via influxdb
+multidict==6.0.5
+    # via yarl
 numpy==1.22.4
     # via
     #   casadi
@@ -59,8 +67,12 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
+omotes-job-tools==0.0.1
+    # via omotes-grow-worker (./pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
+pamqp==3.2.1
+    # via aiormq
 pandas==1.5.3
     # via rtc-tools-heat-network
 prompt-toolkit==3.0.41
@@ -124,3 +136,7 @@ vine==5.1.0
     #   kombu
 wcwidth==0.2.12
     # via prompt-toolkit
+yarl==1.9.4
+    # via
+    #   aio-pika
+    #   aiormq
