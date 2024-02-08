@@ -1,7 +1,7 @@
 #!/bin/bash
 
 . .venv/bin/activate
-. ci/_load_dot_env.sh .env.local
+. ci/linux/_load_dot_env.sh .env.local
 
 mkdir -p ./temp/input_files
 mkdir -p ./temp/output_files
