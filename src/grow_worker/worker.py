@@ -58,22 +58,17 @@ WORKER: "Worker" = None
 
 
 class WrappedTask(CeleryTask):
-    WORKER: "Worker"
-
     def on_timeout(self, soft, timeout):
         super().on_timeout(soft, timeout)
         if not soft:
             logger.warning("A hard timeout was enforced for task %s", self.task.name)
 
-    def on_failure(self, *args, **kwargs):
-        super().on_failure(*args, **kwargs)
-        # print("Failure detected for task %s", self.task.name)
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        super().on_failure(exc, task_id, args, kwargs, einfo)
+        logger.error("Failure detected for celery task %s", task_id)
         # TODO Entrypoint to notify orchestrator & sdk of failure of task. At least in case where
-        #  Celery itself triggers an error. Otherwise task is dropped but an error is published
-        #  to logs.
-
-        # TODO for tomorrow, self is now a Worker, not the task. Celery does not funky stuff.
-        #  Need a reference to task though for Worker._grow_worker_task
+        #  Celery itself or the task triggers an error. This is necessary as task is dropped but an
+        #  error is published to logs. SDK wouldn't be notified otherwise.
 
 
 class Worker:
@@ -97,15 +92,17 @@ class Worker:
             "omotes",
             broker=f"amqp://{config.rabbitmq.username}:{config.rabbitmq.password}@{config.rabbitmq.host}:{config.rabbitmq.port}/{config.rabbitmq.virtual_host}",
             backend=f"db+postgresql://{config.postgresql.username}:{config.postgresql.password}@{config.postgresql.host}:{config.postgresql.port}/{config.postgresql.database}",
-            broker_connection_retry_on_startup=True,
-            worker_prefetch_multiplier=1,
-            task_acks_late=True,
-            task_reject_on_worker_lost=True,
-            task_acks_on_failure_or_timeout=False,
         )
+
+        # Config of celery app
         self.celery_app.conf.task_queues = (
             KombuQueue(config.task_type.value, routing_key=config.task_type.value),
         )  # Tell the worker to listen to a specific queue for 1 workflow type.
+        self.celery_app.conf.task_acks_late = True
+        self.celery_app.conf.task_reject_on_worker_lost = True
+        self.celery_app.conf.task_acks_on_failure_or_timeout = False
+        self.celery_app.conf.worker_prefetch_multiplier = 1
+        self.celery_app.conf.broker_connection_retry_on_startup = True
         # app.conf.worker_send_task_events = True  # Tell the worker to send task events.
         WrappedTask.worker = self
         self.celery_app.task(_grow_worker_task, base=WrappedTask, name=config.task_type.value, bind=True)
