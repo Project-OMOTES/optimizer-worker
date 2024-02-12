@@ -1,18 +1,13 @@
 import base64
 
-import jsonpickle
 import os
 import logging
-from typing import Optional, Callable, Any
+from typing import Any
 from uuid import uuid4
 from pathlib import Path
 from celery.signals import after_setup_logger, worker_shutting_down
 
-from omotes_sdk.internal.orchestrator_worker_events.messages import (
-    StatusUpdateMessage,
-    TaskStatus,
-    CalculationResult,
-)
+from omotes_sdk.internal.orchestrator_worker_events.messages import CalculationResult
 from omotes_sdk.internal.worker.worker import WorkerTask, initialize_worker, UpdateProgressHandler
 from rtctools_heat_network.workflows import run_end_scenario_sizing
 
@@ -39,7 +34,7 @@ def grow_worker_task(
     :return: Pickled Calculation result
     """
     result = rtc_calculate(job_id, esdl_string, update_progress_handler)
-    return jsonpickle.encode(result)
+    return result
 
 
 def rtc_calculate(job_id: uuid4, encoded_esdl: bytes, update_progress: UpdateProgressHandler) -> CalculationResult:
