@@ -15,7 +15,7 @@ from grow_worker.worker_types import GrowTaskType, GROWProblem, get_problem_type
 
 
 logger = logging.getLogger("grow_worker")
-GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_WORKER_TASK_TYPE"))
+GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
 def grow_worker_task(

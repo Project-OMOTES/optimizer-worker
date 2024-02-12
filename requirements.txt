@@ -5,7 +5,7 @@
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
 aio-pika==9.3.1
-    # via omotes-job-tools
+    # via omotes-sdk-python
 aiormq==6.7.7
     # via aio-pika
 amqp==5.2.0
@@ -23,7 +23,7 @@ casadi==3.6.3
     #   rtc-tools
     #   rtc-tools-heat-network
 celery[sqlalchemy]==5.3.6
-    # via omotes-grow-worker (pyproject.toml)
+    # via omotes-sdk-python
 certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
@@ -40,6 +40,8 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.3.0
     # via celery
+colorama==0.4.6
+    # via click
 future-fstrings==1.2.0
     # via pyecore
 greenlet==3.0.3
@@ -51,7 +53,7 @@ idna==3.4
 influxdb==5.3.1
     # via rtc-tools-heat-network
 jsonpickle==3.0.2
-    # via omotes-grow-worker (pyproject.toml)
+    # via omotes-sdk-python
 kombu==5.3.4
     # via celery
 lxml==4.9.3
@@ -67,7 +69,9 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-job-tools==0.0.1
+omotes-sdk-protocol==0.0.3
+    # via omotes-sdk-python
+omotes-sdk-python==0.0.3
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
@@ -77,8 +81,10 @@ pandas==1.5.3
     # via rtc-tools-heat-network
 prompt-toolkit==3.0.41
     # via click-repl
+protobuf==4.25.2
+    # via omotes-sdk-protocol
 psycopg2==2.9.9
-    # via omotes-grow-worker (pyproject.toml)
+    # via omotes-sdk-python
 pyecore==0.12.1
     # via
     #   pyesdl
