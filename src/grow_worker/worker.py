@@ -32,13 +32,12 @@ def grow_worker_task(
     :return: GROW optimized or simulated ESDL
     """
     base_folder = Path(__file__).resolve().parent.parent
-    write_result_db_profiles = "INFLUXDB_HOST" in os.environ
-    influxdb_host = os.environ.get("INFLUXDB_HOST", "localhost")
+    write_result_db_profiles = "INFLUXDB_HOSTNAME" in os.environ
+    influxdb_host = os.environ.get("INFLUXDB_HOSTNAME", "localhost")
     influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
 
     logger.info(
-        f"Will write result profiles to influx: {write_result_db_profiles}. "
-        f"At {influxdb_host}:{influxdb_port}"
+        f"Will write result profiles to influx: {write_result_db_profiles}. " f"At {influxdb_host}:{influxdb_port}"
     )
 
     solution: GROWProblem = run_end_scenario_sizing(
