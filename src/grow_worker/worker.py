@@ -2,25 +2,23 @@ import base64
 
 import os
 import logging
-from typing import Any
 from uuid import uuid4
 from pathlib import Path
 from celery.signals import after_setup_logger, worker_shutting_down
 
-from omotes_sdk.internal.orchestrator_worker_events.messages import CalculationResult
+from omotes_sdk.internal.orchestrator_worker_events.messages.task_pb2 import TaskResult
 from omotes_sdk.internal.worker.worker import WorkerTask, initialize_worker, UpdateProgressHandler
 from rtctools_heat_network.workflows import run_end_scenario_sizing
 
 from grow_worker.worker_types import GrowTaskType, GROWProblem, get_problem_type
-
 
 logger = logging.getLogger("grow_worker")
 GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
 def grow_worker_task(
-    task: WorkerTask, job_id: uuid4, esdl_string: bytes, update_progress_handler: UpdateProgressHandler
-) -> Any:
+    task: WorkerTask, job_id: uuid4, encoded_esdl: bytes, update_progress_handler: UpdateProgressHandler
+) -> TaskResult:
     """
 
     Note: Be careful! This spawns within a subprocess and gains a copy of memory from parent
@@ -33,11 +31,6 @@ def grow_worker_task(
     :param esdl_string:
     :return: Pickled Calculation result
     """
-    result = rtc_calculate(job_id, esdl_string, update_progress_handler)
-    return result
-
-
-def rtc_calculate(job_id: uuid4, encoded_esdl: bytes, update_progress: UpdateProgressHandler) -> CalculationResult:
     # try:
     esdl_string = encoded_esdl.decode()
     base_folder = Path(__file__).resolve().parent.parent
@@ -58,28 +51,16 @@ def rtc_calculate(job_id: uuid4, encoded_esdl: bytes, update_progress: UpdatePro
         influxdb_password=os.environ.get("INFLUXDB_PASSWORD"),
         influxdb_ssl=False,
         influxdb_verify_ssl=False,
-        update_progress_function=update_progress,
+        update_progress_function=update_progress_handler,
     )
 
-    update_progress(0.99, "Almost done.")
-
-    result = CalculationResult(
+    return TaskResult(
         job_id=job_id,
-        logs="",  # TODO captured_logging_string.getvalue(),
-        exit_code=0,
-        input_esdl=esdl_string,
+        celery_task_id=task.request.id,
+        result_type=TaskResult.ResultType.SUCCEEDED,
         output_esdl=solution.optimized_esdl_string,
+        logs="",  # TODO captured_logging_string.getvalue(),
     )
-    update_progress(1.0, "Done.")
-    return result
-    # except Exception as ex:
-    #     if len(ex.args) == 1:
-    #         exit_code = 1
-    #     else:
-    #         exit_code = ex.args[1]
-    #     return jsonpickle.encode(
-    #         {"error_message": ex.args[0], "exit_code": exit_code, "logs": logging_string.getvalue()}
-    #     )
 
 
 @after_setup_logger.connect
