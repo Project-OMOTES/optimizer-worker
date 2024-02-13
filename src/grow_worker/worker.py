@@ -2,12 +2,12 @@ import base64
 
 import os
 import logging
-from uuid import uuid4
 from pathlib import Path
-from celery.signals import after_setup_logger, worker_shutting_down
+from typing import Dict
 
-from omotes_sdk.internal.orchestrator_worker_events.messages.task_pb2 import TaskResult
-from omotes_sdk.internal.worker.worker import WorkerTask, initialize_worker, UpdateProgressHandler
+from celery.signals import after_setup_logger
+
+from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
 from rtctools_heat_network.workflows import run_end_scenario_sizing
 
 from grow_worker.worker_types import GrowTaskType, GROWProblem, get_problem_type
@@ -17,8 +17,8 @@ GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
 def grow_worker_task(
-    task: WorkerTask, job_id: uuid4, encoded_esdl: bytes, update_progress_handler: UpdateProgressHandler
-) -> TaskResult:
+    input_esdl: str, workflow_config: Dict[str, str], update_progress_handler: UpdateProgressHandler
+) -> str:
     """
 
     Note: Be careful! This spawns within a subprocess and gains a copy of memory from parent
@@ -26,24 +26,25 @@ def grow_worker_task(
     it to be copied to subprocess. Any resources e.g. connections/sockets need to be opened
     in this task by the subprocess.
 
-    :param task:
-    :param job_id:
-    :param esdl_string:
-    :return: Pickled Calculation result
+    :param input_esdl:
+    :param workflow_config:
+    :param update_progress_handler:
+    :return: GROW optimized or simulated ESDL
     """
-    # try:
-    esdl_string = encoded_esdl.decode()
     base_folder = Path(__file__).resolve().parent.parent
     write_result_db_profiles = "INFLUXDB_HOST" in os.environ
     influxdb_host = os.environ.get("INFLUXDB_HOST", "localhost")
     influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
 
-    logger.info(f"Will write result profiles to influx: {write_result_db_profiles}. At {influxdb_host}:{influxdb_port}")
+    logger.info(
+        f"Will write result profiles to influx: {write_result_db_profiles}. "
+        f"At {influxdb_host}:{influxdb_port}"
+    )
 
     solution: GROWProblem = run_end_scenario_sizing(
         get_problem_type(GROW_TASK_TYPE),
         base_folder=base_folder,
-        esdl_string=base64.encodebytes(esdl_string.encode("utf-8")),
+        esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
         write_result_db_profiles=write_result_db_profiles,
         influxdb_host=influxdb_host,
         influxdb_port=influxdb_port,
@@ -54,14 +55,7 @@ def grow_worker_task(
         update_progress_function=update_progress_handler,
     )
 
-    return TaskResult(
-        job_id=str(job_id),
-        celery_task_id=task.request.id,
-        celery_task_type=GROW_TASK_TYPE.value,
-        result_type=TaskResult.ResultType.SUCCEEDED,
-        output_esdl=solution.optimized_esdl_string.encode(),
-        logs="",  # TODO captured_logging_string.getvalue(),
-    )
+    return solution.optimized_esdl_string
 
 
 @after_setup_logger.connect
