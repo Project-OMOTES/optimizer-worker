@@ -55,10 +55,11 @@ def grow_worker_task(
     )
 
     return TaskResult(
-        job_id=job_id,
+        job_id=str(job_id),
         celery_task_id=task.request.id,
+        celery_task_type=GROW_TASK_TYPE.value,
         result_type=TaskResult.ResultType.SUCCEEDED,
-        output_esdl=solution.optimized_esdl_string,
+        output_esdl=solution.optimized_esdl_string.encode(),
         logs="",  # TODO captured_logging_string.getvalue(),
     )
 
