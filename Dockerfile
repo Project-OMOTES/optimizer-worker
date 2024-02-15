@@ -7,4 +7,4 @@ RUN pip install -r /app/grow_worker/requirements.txt --no-cache-dir
 
 COPY src/grow_worker                 /app/grow_worker/
 
-ENTRYPOINT grow_worker/celery.sh
+CMD ["python3", "-m", "grow_worker.worker"]
