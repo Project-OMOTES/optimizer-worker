@@ -146,7 +146,7 @@ omotes-sdk-protocol==0.0.6
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-omotes-sdk-python==0.0.8
+omotes-sdk-python==0.0.9
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
