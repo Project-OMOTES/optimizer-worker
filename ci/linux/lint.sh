@@ -1,4 +1,7 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
-. .venv/bin/activate
-flake8 ./src/grow_worker
+if [[ "$OSTYPE" != "win32" && "$OSTYPE" != "msys" ]]; then
+  echo "Activating .venv first."
+  . .venv/bin/activate
+fi
+flake8 ./src/grow_worker ./unit_test/
