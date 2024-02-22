@@ -81,7 +81,10 @@ ignore = [
     'D104', # Missing docstring in public package
     'D100'  # Missing docstring in public module
 ]
-per-file-ignores = ['__init__.py:F401', 'test_main.py:D100,D101,D102,D103']
+per-file-ignores = [
+    '__init__.py:F401',
+    './unit_test/*:D100,D101,D102,D103'
+]
 max-line-length = 100
 count = true
 
