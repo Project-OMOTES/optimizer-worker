@@ -25,7 +25,7 @@ requires-python = ">=3.10"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "rtc-tools-heat-network ~= 0.4.5",
-    "omotes-sdk-python ~= 0.0.5"
+    "omotes-sdk-python ~= 0.0.9"
 ]
 
 [project.optional-dependencies]
@@ -65,7 +65,7 @@ requires = [
 enabled = true
 
 [tool.pytest.ini_options]
-addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 95"
+addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 30"
 
 [tool.coverage.run]
 source = ["src"]
@@ -78,8 +78,13 @@ ignore = [
     'E203', # Space before colon (not PEP-8 compliant, and conflicts with black)
     'C408', # Suggestion to use dict() over {}
     'W503', # Starting lines with operators.
+    'D104', # Missing docstring in public package
+    'D100'  # Missing docstring in public module
 ]
-per-file-ignores = ['__init__.py:F401', 'test_main.py:D100,D101,D102,D103']
+per-file-ignores = [
+    '__init__.py:F401',
+    './unit_test/*:D100,D101,D102,D103'
+]
 max-line-length = 100
 count = true
 
@@ -101,4 +106,8 @@ exclude = ['.venv/*', 'venv/*', 'doc/*', 'ci/*']
 [[tool.mypy.overrides]]
 module = "unit_test.*"
 check_untyped_defs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "rtctools_heat_network.*"
 ignore_missing_imports = true

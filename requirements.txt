@@ -63,9 +63,9 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.0.4
+omotes-sdk-protocol==0.0.6
     # via omotes-sdk-python
-omotes-sdk-python==0.0.5
+omotes-sdk-python==0.0.9
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
