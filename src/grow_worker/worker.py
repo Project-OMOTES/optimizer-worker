@@ -5,6 +5,10 @@ import logging
 from pathlib import Path
 from typing import Dict, cast
 
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+
 # from celery.signals import after_setup_logger
 
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
@@ -16,9 +20,7 @@ logger = logging.getLogger("grow_worker")
 GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
-def grow_worker_task(
-    input_esdl: str, workflow_config: Dict[str, str], update_progress_handler: UpdateProgressHandler
-) -> str:
+def grow_worker_task(input_esdl: str, params_dict: dict, update_progress_handler: UpdateProgressHandler) -> str:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
     Note: Be careful! This spawns within a subprocess and gains a copy of memory from parent
@@ -27,7 +29,7 @@ def grow_worker_task(
     in this task by the subprocess.
 
     :param input_esdl: The input ESDL XML string.
-    :param workflow_config: Extra parameters to configure this run.
+    :param params_dict: Extra parameters to configure this run.
     :param update_progress_handler: Handler to notify of any progress changes.
     :return: GROW optimized or simulated ESDL
     """
@@ -37,9 +39,9 @@ def grow_worker_task(
     influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
 
     logger.info(
-        f"Will write result profiles to influx: {write_result_db_profiles}. "
-        f"At {influxdb_host}:{influxdb_port}"
+        f"Will write result profiles to influx: {write_result_db_profiles}. " f"At {influxdb_host}:{influxdb_port}"
     )
+    print(f"params dict: '{params_dict}'")
 
     solution: GROWProblem = run_end_scenario_sizing(
         get_problem_type(GROW_TASK_TYPE),

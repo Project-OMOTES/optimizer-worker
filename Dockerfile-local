@@ -1,0 +1,15 @@
+FROM python:3.8-slim-buster
+
+WORKDIR /app
+
+COPY requirements.txt /app/grow_worker/requirements.txt
+RUN pip install -r /app/grow_worker/requirements.txt --no-cache-dir
+
+COPY ../omotes-sdk-python                 /deps/omotes-sdk-python
+RUN pip install -e /deps/omotes-sdk-python
+COPY ../omotes-sdk-protocol/python                 /deps/omotes-sdk-protocol/python
+RUN pip install -e /deps/omotes-sdk-protocol/python
+
+COPY src/grow_worker                 /app/grow_worker/
+
+CMD ["python3", "-m", "grow_worker.worker"]
