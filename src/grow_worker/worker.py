@@ -8,9 +8,13 @@ from typing import Dict, cast
 # from celery.signals import after_setup_logger
 
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
-from rtctools_heat_network.workflows import run_end_scenario_sizing
 
-from grow_worker.worker_types import GrowTaskType, GROWProblem, get_problem_type
+from grow_worker.worker_types import (
+    GrowTaskType,
+    GROWProblem,
+    get_problem_type,
+    get_problem_function,
+)
 
 logger = logging.getLogger("grow_worker")
 GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
@@ -41,7 +45,7 @@ def grow_worker_task(
         f"At {influxdb_host}:{influxdb_port}"
     )
 
-    solution: GROWProblem = run_end_scenario_sizing(
+    solution: GROWProblem = get_problem_function(GROW_TASK_TYPE)(
         get_problem_type(GROW_TASK_TYPE),
         base_folder=base_folder,
         esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
