@@ -24,7 +24,9 @@ logger = logging.getLogger("grow_worker")
 GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
-def grow_worker_task(input_esdl: str, params_dict: Dict, update_progress_handler: UpdateProgressHandler) -> str:
+def grow_worker_task(
+        input_esdl: str, params_dict: Dict, update_progress_handler: UpdateProgressHandler
+) -> str:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
     Note: Be careful! This spawns within a subprocess and gains a copy of memory from parent
@@ -43,7 +45,8 @@ def grow_worker_task(input_esdl: str, params_dict: Dict, update_progress_handler
     influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
 
     logger.info(
-        f"Will write result profiles to influx: {write_result_db_profiles}. " f"At {influxdb_host}:{influxdb_port}"
+        f"Will write result profiles to influx: {write_result_db_profiles}. "
+        f"At {influxdb_host}:{influxdb_port}"
     )
 
     solution: GROWProblem = get_problem_function(GROW_TASK_TYPE)(
