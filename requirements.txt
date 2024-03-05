@@ -40,6 +40,8 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.3.0
     # via celery
+colorama==0.4.6
+    # via click
 future-fstrings==1.2.0
     # via pyecore
 idna==3.4
@@ -63,9 +65,9 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.0.6
+omotes-sdk-protocol==0.0.7
     # via omotes-sdk-python
-omotes-sdk-python==0.0.9
+omotes-sdk-python==0.0.10
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore

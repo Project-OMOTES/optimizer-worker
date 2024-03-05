@@ -21,7 +21,7 @@ GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
 def grow_worker_task(
-    input_esdl: str, workflow_config: Dict[str, str], update_progress_handler: UpdateProgressHandler
+        input_esdl: str, params_dict: Dict, update_progress_handler: UpdateProgressHandler
 ) -> str:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
@@ -31,7 +31,7 @@ def grow_worker_task(
     in this task by the subprocess.
 
     :param input_esdl: The input ESDL XML string.
-    :param workflow_config: Extra parameters to configure this run.
+    :param params_dict: Extra parameters to configure this run.
     :param update_progress_handler: Handler to notify of any progress changes.
     :return: GROW optimized or simulated ESDL
     """
