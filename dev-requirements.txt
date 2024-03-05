@@ -75,6 +75,12 @@ click-repl==0.3.0
     # via
     #   -c requirements.txt
     #   celery
+colorama==0.4.6
+    # via
+    #   -c requirements.txt
+    #   build
+    #   click
+    #   pytest
 coverage[toml]==7.4.1
     # via pytest-cov
 exceptiongroup==1.2.0
@@ -142,11 +148,11 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.0.6
+omotes-sdk-protocol==0.0.7
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-omotes-sdk-python==0.0.9
+omotes-sdk-python==0.0.10
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
