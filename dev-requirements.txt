@@ -198,7 +198,7 @@ pyecore==0.12.1
     #   -c requirements.txt
     #   pyesdl
     #   rtc-tools-heat-network
-pyesdl==23.11.1
+pyesdl==24.2
     # via
     #   -c requirements.txt
     #   rtc-tools-heat-network
@@ -249,7 +249,7 @@ rtc-tools-channel-flow==1.1.2
     # via
     #   -c requirements.txt
     #   rtc-tools
-rtc-tools-heat-network==0.4.5
+rtc-tools-heat-network==0.4.6
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
