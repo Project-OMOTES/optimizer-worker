@@ -5,10 +5,6 @@ import logging
 from pathlib import Path
 from typing import Dict, cast
 
-from dotenv import load_dotenv
-
-load_dotenv(verbose=True)
-
 # from celery.signals import after_setup_logger
 
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
