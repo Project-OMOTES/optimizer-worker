@@ -40,20 +40,26 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.3.0
     # via celery
-colorama==0.4.6
-    # via click
 future-fstrings==1.2.0
     # via pyecore
 idna==3.4
     # via
     #   requests
     #   yarl
+importlib-metadata==7.0.2
+    # via markdown
 influxdb==5.3.1
     # via rtc-tools-heat-network
 kombu==5.3.4
     # via celery
 lxml==4.9.3
     # via pyecore
+mako==1.3.2
+    # via pdoc3
+markdown==3.5.2
+    # via pdoc3
+markupsafe==2.1.5
+    # via mako
 msgpack==1.0.5
     # via influxdb
 multidict==6.0.5
@@ -65,9 +71,9 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.0.7
+omotes-sdk-protocol==0.0.8
     # via omotes-sdk-python
-omotes-sdk-python==0.0.10
+omotes-sdk-python==0.0.11
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
@@ -75,6 +81,8 @@ pamqp==3.2.1
     # via aiormq
 pandas==1.5.3
     # via rtc-tools-heat-network
+pdoc3==0.10.0
+    # via streamcapture
 prompt-toolkit==3.0.41
     # via click-repl
 protobuf==4.25.2
@@ -117,6 +125,8 @@ six==1.16.0
     # via
     #   influxdb
     #   python-dateutil
+streamcapture==1.2.2
+    # via omotes-sdk-python
 typing-extensions==4.9.0
     # via kombu
 tzdata==2023.3
@@ -136,3 +146,8 @@ yarl==1.9.4
     # via
     #   aio-pika
     #   aiormq
+zipp==3.18.0
+    # via importlib-metadata
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
