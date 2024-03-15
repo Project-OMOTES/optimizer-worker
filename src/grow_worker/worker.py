@@ -5,8 +5,6 @@ import logging
 from pathlib import Path
 from typing import Dict, cast
 
-# from celery.signals import after_setup_logger
-
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
 
 from grow_worker.worker_types import (
@@ -21,7 +19,7 @@ GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
 def grow_worker_task(
-        input_esdl: str, params_dict: Dict, update_progress_handler: UpdateProgressHandler
+    input_esdl: str, params_dict: Dict, update_progress_handler: UpdateProgressHandler
 ) -> str:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
@@ -60,23 +58,6 @@ def grow_worker_task(
     )
 
     return cast(str, solution.optimized_esdl_string)
-
-
-# @after_setup_logger.connect
-# def setup_loggers(logger, *args, **kwargs):
-# formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-#
-# # add filehandler
-# stream_handler = logging.StreamHandler(logging_string)
-# stream_handler.setLevel(config.log_level)
-# stream_handler.setFormatter(formatter)
-# logger.addHandler(stream_handler)
-
-
-# @worker_shutting_down.connect
-# def shutdown(*args, **kwargs):
-#     print(args, kwargs)
-#     broker_if.stop()
 
 
 if __name__ == "__main__":
