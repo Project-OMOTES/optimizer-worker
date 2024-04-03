@@ -3,9 +3,10 @@ import base64
 import os
 import logging
 from pathlib import Path
-from typing import Dict, cast
+from typing import cast
 
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
+from omotes_sdk.types import ParamsDict
 
 from grow_worker.worker_types import (
     GrowTaskType,
@@ -19,7 +20,7 @@ GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
 
 
 def grow_worker_task(
-    input_esdl: str, params_dict: Dict, update_progress_handler: UpdateProgressHandler
+    input_esdl: str, params_dict: ParamsDict, update_progress_handler: UpdateProgressHandler
 ) -> str:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
