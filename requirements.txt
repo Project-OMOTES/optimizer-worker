@@ -73,7 +73,7 @@ numpy==1.22.4
     #   scipy
 omotes-sdk-protocol==0.0.8
     # via omotes-sdk-python
-omotes-sdk-python==0.0.12
+omotes-sdk-python==0.0.13
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
