@@ -40,8 +40,8 @@ bump2version==1.0.1
 casadi==3.6.3
     # via
     #   -c requirements.txt
+    #   mesido
     #   rtc-tools
-    #   rtc-tools-heat-network
 celery==5.3.6
     # via
     #   -c requirements.txt
@@ -75,6 +75,10 @@ click-repl==0.3.0
     # via
     #   -c requirements.txt
     #   celery
+coolprop==6.6.0
+    # via
+    #   -c requirements.txt
+    #   mesido
 coverage[toml]==7.4.1
     # via pytest-cov
 exceptiongroup==1.2.0
@@ -95,6 +99,10 @@ future-fstrings==1.2.0
     # via
     #   -c requirements.txt
     #   pyecore
+iapws==1.5.3
+    # via
+    #   -c requirements.txt
+    #   mesido
 idna==3.4
     # via
     #   -c requirements.txt
@@ -108,7 +116,7 @@ importlib-metadata==7.0.2
 influxdb==5.3.1
     # via
     #   -c requirements.txt
-    #   rtc-tools-heat-network
+    #   mesido
 iniconfig==2.0.0
     # via pytest
 isort==5.13.2
@@ -135,6 +143,10 @@ markupsafe==2.1.5
     #   mako
 mccabe==0.7.0
     # via flake8
+mesido==0.1.1
+    # via
+    #   -c requirements.txt
+    #   omotes-grow-worker (pyproject.toml)
 msgpack==1.0.5
     # via
     #   -c requirements.txt
@@ -181,7 +193,7 @@ pamqp==3.2.1
 pandas==1.5.3
     # via
     #   -c requirements.txt
-    #   rtc-tools-heat-network
+    #   mesido
 pathspec==0.12.1
     # via black
 pdoc3==0.10.0
@@ -209,20 +221,20 @@ pydocstyle==6.3.0
 pyecore==0.12.1
     # via
     #   -c requirements.txt
+    #   mesido
     #   pyesdl
-    #   rtc-tools-heat-network
 pyesdl==24.2
     # via
     #   -c requirements.txt
-    #   rtc-tools-heat-network
+    #   mesido
 pyflakes==3.1.0
     # via flake8
 pymoca==0.9.0
     # via
     #   -c requirements.txt
+    #   mesido
     #   rtc-tools
     #   rtc-tools-channel-flow
-    #   rtc-tools-heat-network
 pyproject-hooks==1.0.0
     # via build
 pytest==7.3.2
@@ -257,18 +269,15 @@ restrictedpython==7.0a1.dev1
 rtc-tools==2.6.0a3
     # via
     #   -c requirements.txt
-    #   rtc-tools-heat-network
+    #   mesido
 rtc-tools-channel-flow==1.1.2
     # via
     #   -c requirements.txt
     #   rtc-tools
-rtc-tools-heat-network==0.4.6
-    # via
-    #   -c requirements.txt
-    #   omotes-grow-worker (pyproject.toml)
 scipy==1.10.1
     # via
     #   -c requirements.txt
+    #   iapws
     #   rtc-tools
 setuptools-git-versioning==1.13.6
     # via omotes-grow-worker (pyproject.toml)
@@ -283,6 +292,10 @@ streamcapture==1.2.2
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
+strenum==0.4.15
+    # via
+    #   -c requirements.txt
+    #   mesido
 toml==0.10.2
     # via setuptools-git-versioning
 tomli==2.0.1

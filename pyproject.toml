@@ -24,7 +24,7 @@ requires-python = ">=3.10"
 
 dependencies = [
     "python-dotenv ~= 1.0.0",
-    "rtc-tools-heat-network ~= 0.4.6",
+    "mesido ~= 0.1.1",
     "omotes-sdk-python ~= 0.0.14"
 ]
 
@@ -109,5 +109,5 @@ check_untyped_defs = true
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "rtctools_heat_network.*"
+module = "mesido.*"
 ignore_missing_imports = true

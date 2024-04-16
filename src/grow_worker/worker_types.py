@@ -1,13 +1,12 @@
 from enum import Enum
 from typing import Type, Union, Callable
 
-from rtctools_heat_network.workflows import (
-    EndScenarioSizingHIGHS,
-    NetworkSimulatorHIGHSWeeklyTimeStep,
-    EndScenarioSizingStagedHIGHS,
-    EndScenarioSizingDiscountedHIGHS,
+from mesido.workflows import NetworkSimulatorHIGHSWeeklyTimeStep
+from mesido.workflows.grow_workflow import (
+    EndScenarioSizingDiscountedStagedHIGHS,
+    EndScenarioSizingHeadLossDiscountedStaged,
 )
-from rtctools_heat_network.workflows import (
+from mesido.workflows import (
     run_end_scenario_sizing,
     run_end_scenario_sizing_no_heat_losses,
 )
@@ -16,23 +15,20 @@ from rtctools_heat_network.workflows import (
 class GrowTaskType(Enum):
     """Grow task types."""
 
-    GROW_OPTIMIZER = "grow_optimizer"
+    GROW_OPTIMIZER_DEFAULT = "grow_optimizer_default"
     """Run the Grow Optimizer."""
     GROW_SIMULATOR = "grow_simulator"
     """Run the Grow Simulator."""
     GROW_OPTIMIZER_NO_HEAT_LOSSES = "grow_optimizer_no_heat_losses"
     """Run the Grow Optimizer without heat losses."""
-    GROW_OPTIMIZER_NO_HEAT_LOSSES_DISCOUNTED_CAPEX = (
-        "grow_optimizer_no_heat_losses_discounted_capex"
-    )
-    """Run the Grow Optimizer without heat losses and a discounted CAPEX."""
+    GROW_OPTIMIZER_WITH_PRESSURE = "grow_optimizer_with_pressure"
+    """Run the Grow Optimizer with pump pressure."""
 
 
 GROWProblem = Union[
-    Type[EndScenarioSizingHIGHS],
+    Type[EndScenarioSizingHeadLossDiscountedStaged],
+    Type[EndScenarioSizingDiscountedStagedHIGHS],
     Type[NetworkSimulatorHIGHSWeeklyTimeStep],
-    Type[EndScenarioSizingStagedHIGHS],
-    Type[EndScenarioSizingDiscountedHIGHS],
 ]
 
 
@@ -43,14 +39,14 @@ def get_problem_type(task_type: GrowTaskType) -> GROWProblem:
     :return: Grow problem class.
     """
     result: GROWProblem
-    if task_type == GrowTaskType.GROW_OPTIMIZER:
-        result = EndScenarioSizingHIGHS
+    if task_type == GrowTaskType.GROW_OPTIMIZER_DEFAULT:
+        result = EndScenarioSizingDiscountedStagedHIGHS
     elif task_type == GrowTaskType.GROW_SIMULATOR:
         result = NetworkSimulatorHIGHSWeeklyTimeStep
     elif task_type == GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES:
-        result = EndScenarioSizingStagedHIGHS
-    elif task_type == GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES_DISCOUNTED_CAPEX:
-        result = EndScenarioSizingDiscountedHIGHS
+        result = EndScenarioSizingDiscountedStagedHIGHS
+    elif task_type == GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE:
+        result = EndScenarioSizingHeadLossDiscountedStaged
     else:
         raise RuntimeError(f"Unknown workflow type, please implement {task_type}")
 
@@ -66,12 +62,13 @@ def get_problem_function(
     :return: Grow problem function.
     """
     result: GROWProblem
-    if task_type in [GrowTaskType.GROW_OPTIMIZER, GrowTaskType.GROW_SIMULATOR]:
-        result = run_end_scenario_sizing
-    elif task_type in [
-        GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES,
-        GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES_DISCOUNTED_CAPEX,
+    if task_type in [
+        GrowTaskType.GROW_OPTIMIZER_DEFAULT,
+        GrowTaskType.GROW_SIMULATOR,
+        GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE,
     ]:
+        result = run_end_scenario_sizing
+    elif task_type == GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES:
         result = run_end_scenario_sizing_no_heat_losses
     else:
         raise RuntimeError(f"Unknown workflow type, please implement {task_type}")
