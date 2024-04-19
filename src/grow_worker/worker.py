@@ -7,6 +7,8 @@ from typing import cast
 
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
 from omotes_sdk.types import ParamsDict
+from mesido.esdl.esdl_parser import ESDLStringParser
+from mesido.esdl.profile_parser import InfluxDBProfileReader
 
 from grow_worker.worker_types import (
     GrowTaskType,
@@ -48,6 +50,7 @@ def grow_worker_task(
         get_problem_type(GROW_TASK_TYPE),
         base_folder=base_folder,
         esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
+        esdl_parser=ESDLStringParser,
         write_result_db_profiles=write_result_db_profiles,
         influxdb_host=influxdb_host,
         influxdb_port=influxdb_port,
@@ -56,6 +59,7 @@ def grow_worker_task(
         influxdb_ssl=False,
         influxdb_verify_ssl=False,
         update_progress_function=update_progress_handler,
+        profile_reader=InfluxDBProfileReader,
     )
 
     return cast(str, solution.optimized_esdl_string)

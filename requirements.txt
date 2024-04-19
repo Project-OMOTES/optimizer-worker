@@ -20,8 +20,8 @@ billiard==4.2.0
     # via celery
 casadi==3.6.3
     # via
+    #   mesido
     #   rtc-tools
-    #   rtc-tools-heat-network
 celery==5.3.6
     # via omotes-sdk-python
 certifi==2023.7.22
@@ -40,8 +40,12 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.3.0
     # via celery
+coolprop==6.6.0
+    # via mesido
 future-fstrings==1.2.0
     # via pyecore
+iapws==1.5.3
+    # via mesido
 idna==3.4
     # via
     #   requests
@@ -49,7 +53,7 @@ idna==3.4
 importlib-metadata==7.0.2
     # via markdown
 influxdb==5.3.1
-    # via rtc-tools-heat-network
+    # via mesido
 kombu==5.3.4
     # via celery
 lxml==4.9.3
@@ -60,6 +64,8 @@ markdown==3.5.2
     # via pdoc3
 markupsafe==2.1.5
     # via mako
+mesido==0.1.1
+    # via omotes-grow-worker (pyproject.toml)
 msgpack==1.0.5
     # via influxdb
 multidict==6.0.5
@@ -80,7 +86,7 @@ ordered-set==4.1.0
 pamqp==3.2.1
     # via aiormq
 pandas==1.5.3
-    # via rtc-tools-heat-network
+    # via mesido
 pdoc3==0.10.0
     # via streamcapture
 prompt-toolkit==3.0.41
@@ -89,15 +95,15 @@ protobuf==4.25.2
     # via omotes-sdk-protocol
 pyecore==0.12.1
     # via
+    #   mesido
     #   pyesdl
-    #   rtc-tools-heat-network
 pyesdl==24.2
-    # via rtc-tools-heat-network
+    # via mesido
 pymoca==0.9.0
     # via
+    #   mesido
     #   rtc-tools
     #   rtc-tools-channel-flow
-    #   rtc-tools-heat-network
 python-dateutil==2.8.2
     # via
     #   celery
@@ -114,19 +120,21 @@ requests==2.31.0
 restrictedpython==7.0a1.dev1
     # via pyecore
 rtc-tools==2.6.0a3
-    # via rtc-tools-heat-network
+    # via mesido
 rtc-tools-channel-flow==1.1.2
     # via rtc-tools
-rtc-tools-heat-network==0.4.6
-    # via omotes-grow-worker (pyproject.toml)
 scipy==1.10.1
-    # via rtc-tools
+    # via
+    #   iapws
+    #   rtc-tools
 six==1.16.0
     # via
     #   influxdb
     #   python-dateutil
 streamcapture==1.2.2
     # via omotes-sdk-python
+strenum==0.4.15
+    # via mesido
 typing-extensions==4.9.0
     # via kombu
 tzdata==2023.3
