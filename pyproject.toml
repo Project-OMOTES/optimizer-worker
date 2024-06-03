@@ -20,12 +20,13 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
 ]
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.10"
 
 dependencies = [
     "python-dotenv ~= 1.0.0",
-    "mesido ~= 0.1.3",
-    "omotes-sdk-python ~= 0.0.14"
+    "mesido ~= 0.1.3.1",
+    "omotes-sdk-python ~= 0.0.15"
 ]
 
 [project.optional-dependencies]
