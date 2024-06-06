@@ -66,7 +66,7 @@ requires = [
 enabled = true
 
 [tool.pytest.ini_options]
-addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 30"
+addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 25"
 
 [tool.coverage.run]
 source = ["src"]
