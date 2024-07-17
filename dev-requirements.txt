@@ -172,7 +172,6 @@ packaging==23.2
     # via
     #   build
     #   pytest
-    #   setuptools-git-versioning
 pamqp==3.2.1
     # via
     #   -c requirements.txt
@@ -262,8 +261,6 @@ scipy==1.10.1
     #   -c requirements.txt
     #   iapws
     #   rtc-tools
-setuptools-git-versioning==1.13.6
-    # via omotes-grow-worker (pyproject.toml)
 six==1.16.0
     # via
     #   -c requirements.txt
@@ -275,8 +272,6 @@ strenum==0.4.15
     # via
     #   -c requirements.txt
     #   mesido
-toml==0.10.2
-    # via setuptools-git-versioning
 tomli==2.0.1
     # via
     #   black
