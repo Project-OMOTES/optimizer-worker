@@ -7,8 +7,8 @@ RUN pip install -r /app/grow_worker/requirements.txt --no-cache-dir
 
 COPY ../omotes-sdk-protocol/python/ /omotes-sdk-protocol/python/
 COPY ../omotes-sdk-python/ /omotes-sdk-python/
-RUN pip install -e /omotes-sdk-python/
-RUN pip install -e /omotes-sdk-protocol/python/
+RUN pip install /omotes-sdk-python/
+RUN pip install /omotes-sdk-protocol/python/
 
 COPY optimizer-worker/src/grow_worker                 /app/grow_worker/
 
