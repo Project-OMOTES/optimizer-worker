@@ -4,11 +4,11 @@
 #
 #    pip-compile --constraint=requirements.txt --extra=dev --output-file=dev-requirements.txt pyproject.toml
 #
-aio-pika==9.3.1
+aio-pika==9.4.2
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-aiormq==6.7.7
+aiormq==6.8.0
     # via
     #   -c requirements.txt
     #   aio-pika
@@ -80,7 +80,9 @@ coolprop==6.6.0
     #   -c requirements.txt
     #   mesido
 coverage[toml]==7.4.1
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 exceptiongroup==1.2.0
     # via pytest
 flake8==6.1.0
@@ -154,11 +156,11 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.0.8
+omotes-sdk-protocol==0.1.1
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-omotes-sdk-python==0.0.16
+omotes-sdk-python==2.0.0
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
@@ -170,7 +172,7 @@ packaging==23.2
     # via
     #   build
     #   pytest
-pamqp==3.2.1
+pamqp==3.3.0
     # via
     #   -c requirements.txt
     #   aiormq
@@ -266,6 +268,10 @@ six==1.16.0
     #   python-dateutil
 snowballstemmer==2.2.0
     # via pydocstyle
+streamcapture==1.2.4
+    # via
+    #   -c requirements.txt
+    #   omotes-sdk-python
 strenum==0.4.15
     # via
     #   -c requirements.txt
@@ -280,12 +286,13 @@ tomli==2.0.1
     #   pip-tools
     #   pyproject-hooks
     #   pytest
-typing-extensions==4.9.0
+typing-extensions==4.11.0
     # via
     #   -c requirements.txt
     #   black
     #   kombu
     #   mypy
+    #   omotes-sdk-python
 tzdata==2023.3
     # via
     #   -c requirements.txt
