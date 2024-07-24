@@ -54,7 +54,7 @@ def run_mesido(input_esdl: str) -> str:
     influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
 
     logger.info(
-        "Will write result profiles to influx: {}. At {}:{}",
+        "Will write result profiles to influx: %s. At %s:%s",
         write_result_db_profiles,
         influxdb_host,
         influxdb_port,
