@@ -26,7 +26,7 @@ requires-python = ">=3.10"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.5.2",
-    "omotes-sdk-python ~= 0.0.16"
+    "omotes-sdk-python ~= 2.0.2"
 ]
 
 [project.optional-dependencies]

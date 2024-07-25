@@ -4,9 +4,9 @@
 #
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
-aio-pika==9.3.1
+aio-pika==9.4.2
     # via omotes-sdk-python
-aiormq==6.7.7
+aiormq==6.8.0
     # via aio-pika
 amqp==5.2.0
     # via kombu
@@ -69,13 +69,13 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.0.8
+omotes-sdk-protocol==0.1.1
     # via omotes-sdk-python
-omotes-sdk-python==0.0.16
+omotes-sdk-python==2.0.2
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
-pamqp==3.2.1
+pamqp==3.3.0
     # via aiormq
 pandas==1.5.3
     # via mesido
@@ -121,10 +121,14 @@ six==1.16.0
     # via
     #   influxdb
     #   python-dateutil
+streamcapture==1.2.4
+    # via omotes-sdk-python
 strenum==0.4.15
     # via mesido
-typing-extensions==4.9.0
-    # via kombu
+typing-extensions==4.11.0
+    # via
+    #   kombu
+    #   omotes-sdk-python
 tzdata==2023.3
     # via
     #   backports-zoneinfo
@@ -142,3 +146,6 @@ yarl==1.9.4
     # via
     #   aio-pika
     #   aiormq
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
