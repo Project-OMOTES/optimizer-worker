@@ -44,8 +44,6 @@ coolprop==6.6.0
     # via mesido
 future-fstrings==1.2.0
     # via pyecore
-iapws==1.5.3
-    # via mesido
 idna==3.4
     # via
     #   requests
@@ -56,7 +54,7 @@ kombu==5.3.4
     # via celery
 lxml==4.9.3
     # via pyecore
-mesido==0.1.5.2
+mesido==0.1.7
     # via omotes-grow-worker (pyproject.toml)
 msgpack==1.0.5
     # via influxdb
@@ -114,9 +112,7 @@ rtc-tools==2.6.0a3
 rtc-tools-channel-flow==1.1.2
     # via rtc-tools
 scipy==1.10.1
-    # via
-    #   iapws
-    #   rtc-tools
+    # via rtc-tools
 six==1.16.0
     # via
     #   influxdb
