@@ -67,14 +67,16 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.1.1
+omotes-sdk-protocol==0.1.5
     # via omotes-sdk-python
-omotes-sdk-python==2.0.2
+omotes-sdk-python==3.1.2
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
 pamqp==3.3.0
-    # via aiormq
+    # via
+    #   aiormq
+    #   omotes-sdk-python
 pandas==1.5.3
     # via mesido
 prompt-toolkit==3.0.41
