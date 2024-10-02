@@ -224,3 +224,4 @@ test-results.xml
 .env.*
 
 temp/
+gurobi/
