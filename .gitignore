@@ -225,3 +225,4 @@ test-results.xml
 
 temp/
 gurobi/
+.idea/
