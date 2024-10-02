@@ -1,0 +1,33 @@
+networks:
+  omotes:
+    external: true
+
+services:
+  grow_worker:
+    build:
+      context: .
+    environment:
+      INFLUXDB_HOSTNAME: omotes_influxdb
+      INFLUXDB_PORT: 8096
+      INFLUXDB_USERNAME: root
+      INFLUXDB_PASSWORD: 9012
+
+      RABBITMQ_HOSTNAME: rabbitmq-nwn
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: root
+      RABBITMQ_PASSWORD: 5678
+      RABBITMQ_VIRTUALHOST: omotes_celery
+
+      GROW_TASK_TYPE: grow_optimizer_default
+      LOG_LEVEL: DEBUG
+    volumes:
+      - "./gurobi.lic:/app/gurobi/gurobi.lic"
+    networks:
+      - omotes
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4gb
+    memswap_limit: 4gb
