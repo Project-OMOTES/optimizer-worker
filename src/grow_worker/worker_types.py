@@ -3,7 +3,7 @@ from typing import Type, Union, Callable
 
 from mesido.workflows import NetworkSimulatorHIGHSWeeklyTimeStep
 from mesido.workflows.grow_workflow import (
-    EndScenarioSizingDiscountedStagedHIGHS,
+    EndScenarioSizingDiscountedStaged,
     EndScenarioSizingHeadLossDiscountedStaged,
 )
 from mesido.workflows import (
@@ -27,7 +27,7 @@ class GrowTaskType(Enum):
 
 GROWProblem = Union[
     Type[EndScenarioSizingHeadLossDiscountedStaged],
-    Type[EndScenarioSizingDiscountedStagedHIGHS],
+    Type[EndScenarioSizingDiscountedStaged],
     Type[NetworkSimulatorHIGHSWeeklyTimeStep],
 ]
 
@@ -40,11 +40,11 @@ def get_problem_type(task_type: GrowTaskType) -> GROWProblem:
     """
     result: GROWProblem
     if task_type == GrowTaskType.GROW_OPTIMIZER_DEFAULT:
-        result = EndScenarioSizingDiscountedStagedHIGHS
+        result = EndScenarioSizingDiscountedStaged
     elif task_type == GrowTaskType.GROW_SIMULATOR:
         result = NetworkSimulatorHIGHSWeeklyTimeStep
     elif task_type == GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES:
-        result = EndScenarioSizingDiscountedStagedHIGHS
+        result = EndScenarioSizingDiscountedStaged
     elif task_type == GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE:
         result = EndScenarioSizingHeadLossDiscountedStaged
     else:

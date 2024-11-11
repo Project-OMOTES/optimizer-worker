@@ -54,7 +54,7 @@ kombu==5.3.4
     # via celery
 lxml==4.9.3
     # via pyecore
-mesido==0.1.7
+mesido==0.1.8.1
     # via omotes-grow-worker (pyproject.toml)
 msgpack==1.0.5
     # via influxdb
