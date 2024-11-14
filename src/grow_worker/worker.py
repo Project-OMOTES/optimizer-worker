@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import cast
 
 from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
-from omotes_sdk.types import ParamsDict
+from omotes_sdk.types import ProtobufDict
 from mesido.esdl.esdl_parser import ESDLStringParser
 from mesido.esdl.profile_parser import InfluxDBProfileReader
 
@@ -113,7 +113,7 @@ def kill_pool(pool: multiprocessing.pool.Pool) -> None:
 
 
 def grow_worker_task(
-    input_esdl: str, params_dict: ParamsDict, update_progress_handler: UpdateProgressHandler
+    input_esdl: str, workflow_config: ProtobufDict, update_progress_handler: UpdateProgressHandler
 ) -> str:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
@@ -123,7 +123,7 @@ def grow_worker_task(
     in this task by the subprocess.
 
     :param input_esdl: The input ESDL XML string.
-    :param params_dict: Extra parameters to configure this run.
+    :param workflow_config: Extra parameters to configure this run.
     :param update_progress_handler: Handler to notify of any progress changes.
     :return: GROW optimized or simulated ESDL
     """
