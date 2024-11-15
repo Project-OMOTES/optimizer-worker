@@ -126,7 +126,7 @@ lxml==4.9.3
     #   pyecore
 mccabe==0.7.0
     # via flake8
-mesido==0.1.8.1
+mesido==0.1.8.2
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
