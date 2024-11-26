@@ -48,7 +48,7 @@ def run_mesido(input_esdl: str) -> Tuple[Optional[str], List[EsdlMessage]]:
     causes starved thread issues.
 
     :param input_esdl: The input ESDL XML string.
-    :return: GROW optimized or simulated ESDL
+    :return: GROW optimized or simulated ESDL and a list of ESDL feedback messages.
     """
     mesido_func = get_problem_function(GROW_TASK_TYPE)
     mesido_workflow = get_problem_type(GROW_TASK_TYPE)
@@ -101,7 +101,7 @@ def parse_mesido_esdl_messages(
 
     :param general_message: general message (not related to a specific ESDL object).
     :param object_messages: esdl object messages per object id.
-    :return: list of EsdlMessage protobuf objects.
+    :return: list of EsdlMessage dataclass objects.
     """
     # TODO get severity from esdl message and add list of general messages after mesido update.
     esdl_messages = []
@@ -165,7 +165,7 @@ def grow_worker_task(
     :param input_esdl: The input ESDL XML string.
     :param workflow_config: Extra parameters to configure this run.
     :param update_progress_handler: Handler to notify of any progress changes.
-    :return: GROW optimized or simulated ESDL
+    :return: GROW optimized or simulated ESDL and a list of ESDL feedback messages.
     """
     # TODO Very nasty hack. Celery unfortunately starts the worker subprocesses as 'daemons'
     #  which prevents this process from creating any other subprocesses. Therefore, we
