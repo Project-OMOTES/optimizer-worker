@@ -80,9 +80,7 @@ coolprop==6.6.0
     #   -c requirements.txt
     #   mesido
 coverage[toml]==7.4.1
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 exceptiongroup==1.2.0
     # via pytest
 flake8==6.1.0
@@ -152,11 +150,11 @@ numpy==1.22.4
     #   pymoca
     #   rtc-tools
     #   scipy
-omotes-sdk-protocol==0.1.6
+omotes-sdk-protocol==0.1.13
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-omotes-sdk-python==3.2.4
+omotes-sdk-python==3.2.5
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
