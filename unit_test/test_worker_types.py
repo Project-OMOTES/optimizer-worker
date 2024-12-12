@@ -2,7 +2,7 @@ import unittest
 from grow_worker.worker_types import (
     get_problem_type,
     GrowTaskType,
-    EndScenarioSizingDiscountedStaged,
+    EndScenarioSizingStaged,
 )
 
 
@@ -15,5 +15,5 @@ class TestModule(unittest.TestCase):
         result = get_problem_type(task_type)
 
         # Assert
-        expected_result = EndScenarioSizingDiscountedStaged
+        expected_result = EndScenarioSizingStaged
         self.assertEqual(expected_result, result)
