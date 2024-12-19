@@ -1,5 +1,8 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-python3.8 -m venv ./.venv
-. .venv/bin/activate
+python3.10 -m venv ./.venv
+if [[ "$OSTYPE" != "win32" && "$OSTYPE" != "msys" ]]; then
+  echo "Activating .venv first."
+  . .venv/bin/activate
+fi
 pip3 install pip-tools
