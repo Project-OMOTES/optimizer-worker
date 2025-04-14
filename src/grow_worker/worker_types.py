@@ -50,13 +50,25 @@ def get_problem_type(task_type: GrowTaskType) -> GROWProblem:
     :return: Grow problem class.
     """
     result: GROWProblem
-    if task_type == GrowTaskType.GROW_OPTIMIZER_DEFAULT:
+    if task_type == [
+        GrowTaskType.GROW_OPTIMIZER_DEFAULT,
+        GrowTaskType.GROW_OPTIMIZER_DEFAULT_GUROBI,
+    ]:
         result = EndScenarioSizingStaged
-    elif task_type == GrowTaskType.GROW_SIMULATOR:
+    elif task_type in [
+        GrowTaskType.GROW_SIMULATOR,
+        GrowTaskType.GROW_SIMULATOR_GUROBI,
+    ]:
         result = NetworkSimulatorHIGHSWeeklyTimeStep
-    elif task_type == GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES:
+    elif task_type in [
+        GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES,
+        GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES_GUROBI,
+    ]:
         result = EndScenarioSizingStaged
-    elif task_type == GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE:
+    elif task_type in [
+        GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE,
+        GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE_GUROBI,
+    ]:
         result = EndScenarioSizingHeadLossStaged
     else:
         raise RuntimeError(f"Unknown workflow type, please implement {task_type}")
@@ -77,9 +89,15 @@ def get_problem_function(
         GrowTaskType.GROW_OPTIMIZER_DEFAULT,
         GrowTaskType.GROW_SIMULATOR,
         GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE,
+        GrowTaskType.GROW_OPTIMIZER_DEFAULT_GUROBI,
+        GrowTaskType.GROW_SIMULATOR_GUROBI,
+        GrowTaskType.GROW_OPTIMIZER_WITH_PRESSURE_GUROBI,
     ]:
         result = run_end_scenario_sizing
-    elif task_type == GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES:
+    elif task_type in [
+        GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES,
+        GrowTaskType.GROW_OPTIMIZER_NO_HEAT_LOSSES_GUROBI,
+    ]:
         result = run_end_scenario_sizing_no_heat_losses
     else:
         raise RuntimeError(f"Unknown workflow type, please implement {task_type}")

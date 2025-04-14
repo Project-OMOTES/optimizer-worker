@@ -23,7 +23,8 @@ from grow_worker.worker_types import (
     GrowTaskType,
     GROWProblem,
     get_problem_type,
-    get_problem_function, get_solver_class,
+    get_problem_function,
+    get_solver_class,
 )
 
 logger = logging.getLogger("grow_worker")
