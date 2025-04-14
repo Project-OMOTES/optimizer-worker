@@ -23,7 +23,7 @@ from grow_worker.worker_types import (
     GrowTaskType,
     GROWProblem,
     get_problem_type,
-    get_problem_function,
+    get_problem_function, get_solver_class,
 )
 
 logger = logging.getLogger("grow_worker")
@@ -55,6 +55,7 @@ def run_mesido(input_esdl: str, workflow_type_name: str) -> Tuple[Optional[str],
     workflow_type = GrowTaskType(workflow_type_name)
     mesido_func = get_problem_function(workflow_type)
     mesido_workflow = get_problem_type(workflow_type)
+    mesido_solver = get_solver_class(workflow_type)
 
     base_folder = Path(__file__).resolve().parent.parent
     write_result_db_profiles = "INFLUXDB_HOSTNAME" in os.environ
@@ -70,6 +71,7 @@ def run_mesido(input_esdl: str, workflow_type_name: str) -> Tuple[Optional[str],
     try:
         solution: GROWProblem = mesido_func(
             mesido_workflow,
+            solver_class=mesido_solver,
             base_folder=base_folder,
             esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
             esdl_parser=ESDLStringParser,
