@@ -50,7 +50,7 @@ def get_problem_type(task_type: GrowTaskType) -> GROWProblem:
     :return: Grow problem class.
     """
     result: GROWProblem
-    if task_type == [
+    if task_type in [
         GrowTaskType.GROW_OPTIMIZER_DEFAULT,
         GrowTaskType.GROW_OPTIMIZER_DEFAULT_GUROBI,
     ]:
