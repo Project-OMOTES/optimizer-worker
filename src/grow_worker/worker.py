@@ -30,7 +30,7 @@ from grow_worker.worker_types import (
 logger = logging.getLogger("grow_worker")
 
 GROW_TASK_TYPES = [
-    GrowTaskType(task_type) for task_type in os.environ.get("GROW_TASK_TYPE").split(",")
+    GrowTaskType(task_type) for task_type in os.environ["GROW_TASK_TYPE"].split(",")
 ]
 
 

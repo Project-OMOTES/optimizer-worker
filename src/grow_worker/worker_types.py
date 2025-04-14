@@ -111,6 +111,7 @@ def get_solver_class(task_type: GrowTaskType) -> Union[Type[SolverHIGHS], Type[S
     :param task_type: Grow task type.
     :return: Grow solver class.
     """
+    result: Union[Type[SolverHIGHS], Type[SolverGurobi]]
     if task_type in [
         GrowTaskType.GROW_OPTIMIZER_DEFAULT,
         GrowTaskType.GROW_SIMULATOR,
