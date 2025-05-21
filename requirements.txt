@@ -18,13 +18,13 @@ casadi-gil-comp==3.6.7
     # via
     #   mesido
     #   rtc-tools-gil-comp
-celery==5.5.1
+celery==5.5.2
     # via omotes-sdk-python
-certifi==2025.1.31
+certifi==2025.4.26
     # via requests
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
     # via requests
-click==8.1.8
+click==8.2.1
     # via
     #   celery
     #   click-didyoumean
@@ -48,15 +48,15 @@ idna==3.10
     #   yarl
 influxdb==5.3.2
     # via mesido
-kombu==5.5.2
+kombu==5.5.3
     # via celery
-lxml==5.3.2
+lxml==5.4.0
     # via pyecore
-mesido==0.1.8.5
+mesido==0.1.11
     # via omotes-grow-worker (pyproject.toml)
 msgpack==1.1.0
     # via influxdb
-multidict==6.4.3
+multidict==6.4.4
     # via yarl
 numpy==1.25.2
     # via
@@ -65,9 +65,9 @@ numpy==1.25.2
     #   pymoca
     #   rtc-tools-gil-comp
     #   scipy
-omotes-sdk-protocol==1.1.0
+omotes-sdk-protocol==1.2.0
     # via omotes-sdk-python
-omotes-sdk-python==4.1.0
+omotes-sdk-python==4.2.1
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
@@ -77,17 +77,17 @@ pamqp==3.3.0
     #   omotes-sdk-python
 pandas==1.5.3
     # via mesido
-prompt-toolkit==3.0.50
+prompt-toolkit==3.0.51
     # via click-repl
 propcache==0.3.1
     # via yarl
 protobuf==5.29.4
     # via omotes-sdk-protocol
-pyecore==0.12.1
+pyecore==0.13.2
     # via
     #   mesido
     #   pyesdl
-pyesdl==24.2
+pyesdl==25.5.1
     # via
     #   mesido
     #   omotes-sdk-python
@@ -109,7 +109,7 @@ pytz==2025.2
     #   pandas
 requests==2.32.3
     # via influxdb
-restrictedpython==8.1a1.dev0
+restrictedpython==8.0
     # via pyecore
 rtc-tools-channel-flow==1.2.0
     # via rtc-tools-gil-comp
@@ -140,7 +140,7 @@ vine==5.1.0
     #   kombu
 wcwidth==0.2.13
     # via prompt-toolkit
-yarl==1.19.0
+yarl==1.20.0
     # via
     #   aio-pika
     #   aiormq
