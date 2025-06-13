@@ -29,11 +29,11 @@ class GrowTaskType(Enum):
     GROW_OPTIMIZER_DEFAULT_GUROBI = "grow_optimizer_default_gurobi"
     """Run the Grow Optimizer with Gurobi solver."""
     GROW_SIMULATOR_GUROBI = "grow_simulator_gurobi"
-    """Run the Grow Simulator with HIGHS solver."""
+    """Run the Grow Simulator with Gurobi solver."""
     GROW_OPTIMIZER_NO_HEAT_LOSSES_GUROBI = "grow_optimizer_no_heat_losses_gurobi"
     """Run the Grow Optimizer without heat losses with Gurobi solver."""
     GROW_OPTIMIZER_WITH_PRESSURE_GUROBI = "grow_optimizer_with_pressure_gurobi"
-    """Run the Grow Optimizer with pump pressure with HIGHS solver."""
+    """Run the Grow Optimizer with pump pressure with Gurobi solver."""
 
 
 GROWProblem = Union[

@@ -5,7 +5,8 @@ networks:
 services:
   grow_worker:
     build:
-      context: .
+      context: ..
+      dockerfile: optimizer-worker/dev.Dockerfile
     environment:
       INFLUXDB_HOSTNAME: omotes_influxdb
       INFLUXDB_PORT: 8096
@@ -18,14 +19,14 @@ services:
       RABBITMQ_PASSWORD: 5678
       RABBITMQ_VIRTUALHOST: omotes_celery
 
-      GROW_TASK_TYPE: grow_optimizer_default
-      LOG_LEVEL: DEBUG
+      GROW_TASK_TYPE: grow_optimizer_no_heat_losses_gurobi
+      LOG_LEVEL: INFO
     volumes:
       - "./gurobi/gurobi.lic:/app/gurobi/gurobi.lic"
     networks:
       - omotes
     deploy:
-      replicas: 3
+      replicas: 1
       resources:
         limits:
           cpus: '4'
