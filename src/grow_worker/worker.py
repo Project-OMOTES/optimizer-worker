@@ -19,11 +19,12 @@ from grow_worker.worker_types import (
     GROWProblem,
     get_problem_type,
     get_problem_function,
+    get_solver_class,
 )
 
 logger = logging.getLogger("grow_worker")
 
-GROW_TASK_TYPE = GrowTaskType(os.environ.get("GROW_TASK_TYPE"))
+GROW_TASK_TYPES = [GrowTaskType(task_type) for task_type in os.environ["GROW_TASK_TYPE"].split(",")]
 
 
 class EarlySystemExit(Exception):
@@ -37,7 +38,10 @@ class EarlySystemExit(Exception):
 
 
 def grow_worker_task(
-    input_esdl: str, workflow_config: ProtobufDict, update_progress_handler: UpdateProgressHandler
+    input_esdl: str,
+    workflow_config: ProtobufDict,
+    update_progress_handler: UpdateProgressHandler,
+    workflow_type_name: str,
 ) -> Tuple[Optional[str], List[EsdlMessage]]:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 
@@ -49,10 +53,13 @@ def grow_worker_task(
     :param input_esdl: The input ESDL XML string.
     :param workflow_config: Extra parameters to configure this run.
     :param update_progress_handler: Handler to notify of any progress changes.
+    :param workflow_type_name: Name of the workflow.
     :return: GROW optimized or simulated ESDL and a list of ESDL feedback messages.
     """
-    mesido_func = get_problem_function(GROW_TASK_TYPE)
-    mesido_workflow = get_problem_type(GROW_TASK_TYPE)
+    workflow_type = GrowTaskType(workflow_type_name)
+    mesido_func = get_problem_function(workflow_type)
+    mesido_workflow = get_problem_type(workflow_type)
+    mesido_solver = get_solver_class(workflow_type)
 
     base_folder = Path(__file__).resolve().parent.parent
     write_result_db_profiles = "INFLUXDB_HOSTNAME" in os.environ
@@ -68,6 +75,7 @@ def grow_worker_task(
     try:
         solution: GROWProblem = mesido_func(
             mesido_workflow,
+            solver_class=mesido_solver,
             base_folder=base_folder,
             esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
             esdl_parser=ESDLStringParser,
@@ -123,4 +131,4 @@ def parse_mesido_esdl_messages(
 
 
 if __name__ == "__main__":
-    initialize_worker(GROW_TASK_TYPE.value, grow_worker_task)
+    initialize_worker([task_type.value for task_type in GROW_TASK_TYPES], grow_worker_task)
