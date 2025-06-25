@@ -20,7 +20,7 @@ casadi-gil-comp==3.6.7
     #   rtc-tools-gil-comp
 celery==5.5.3
     # via omotes-sdk-python
-certifi==2025.4.26
+certifi==2025.6.15
     # via requests
 charset-normalizer==3.4.2
     # via requests
@@ -32,7 +32,7 @@ click==8.2.1
     #   click-repl
 click-didyoumean==0.3.1
     # via celery
-click-plugins==1.1.1
+click-plugins==1.1.1.2
     # via celery
 click-repl==0.3.0
     # via celery
@@ -56,7 +56,7 @@ mesido==0.1.12
     # via omotes-grow-worker (pyproject.toml)
 msgpack==1.1.1
     # via influxdb
-multidict==6.4.4
+multidict==6.5.1
     # via yarl
 numpy==1.25.2
     # via
@@ -67,7 +67,7 @@ numpy==1.25.2
     #   scipy
 omotes-sdk-protocol==1.2.0
     # via omotes-sdk-python
-omotes-sdk-python==4.2.1
+omotes-sdk-python==4.3.0
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
@@ -133,7 +133,7 @@ typing-extensions==4.14.0
     #   omotes-sdk-python
 tzdata==2025.2
     # via kombu
-urllib3==2.4.0
+urllib3==2.5.0
     # via requests
 vine==5.1.0
     # via

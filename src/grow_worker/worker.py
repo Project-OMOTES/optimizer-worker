@@ -24,9 +24,7 @@ from grow_worker.worker_types import (
 
 logger = logging.getLogger("grow_worker")
 
-GROW_TASK_TYPES = [
-    GrowTaskType(task_type) for task_type in os.environ["GROW_TASK_TYPE"].split(",")
-]
+GROW_TASK_TYPES = [GrowTaskType(task_type) for task_type in os.environ["GROW_TASK_TYPE"].split(",")]
 
 
 class EarlySystemExit(Exception):
@@ -40,7 +38,10 @@ class EarlySystemExit(Exception):
 
 
 def grow_worker_task(
-    input_esdl: str, workflow_config: ProtobufDict, update_progress_handler: UpdateProgressHandler, workflow_type_name: str
+    input_esdl: str,
+    workflow_config: ProtobufDict,
+    update_progress_handler: UpdateProgressHandler,
+    workflow_type_name: str,
 ) -> Tuple[Optional[str], List[EsdlMessage]]:
     """Run the grow worker task and run configured specific problem type for this worker instance.
 

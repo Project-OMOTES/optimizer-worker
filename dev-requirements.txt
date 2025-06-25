@@ -39,7 +39,7 @@ celery==5.5.3
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-certifi==2025.4.26
+certifi==2025.6.15
     # via
     #   -c requirements.txt
     #   requests
@@ -59,7 +59,7 @@ click-didyoumean==0.3.1
     # via
     #   -c requirements.txt
     #   celery
-click-plugins==1.1.1
+click-plugins==1.1.1.2
     # via
     #   -c requirements.txt
     #   celery
@@ -134,7 +134,7 @@ msgpack==1.1.1
     # via
     #   -c requirements.txt
     #   influxdb
-multidict==6.4.4
+multidict==6.5.1
     # via
     #   -c requirements.txt
     #   yarl
@@ -156,7 +156,7 @@ omotes-sdk-protocol==1.2.0
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-omotes-sdk-python==4.2.1
+omotes-sdk-python==4.3.0
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
@@ -303,7 +303,7 @@ tzdata==2025.2
     # via
     #   -c requirements.txt
     #   kombu
-urllib3==2.4.0
+urllib3==2.5.0
     # via
     #   -c requirements.txt
     #   requests
