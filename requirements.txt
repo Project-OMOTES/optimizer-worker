@@ -50,13 +50,13 @@ influxdb==5.3.2
     # via mesido
 kombu==5.5.4
     # via celery
-lxml==5.4.0
+lxml==6.0.0
     # via pyecore
-mesido==0.1.12
+mesido==0.1.13
     # via omotes-grow-worker (pyproject.toml)
 msgpack==1.1.1
     # via influxdb
-multidict==6.5.1
+multidict==6.6.3
     # via yarl
 numpy==1.25.2
     # via
