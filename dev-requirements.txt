@@ -22,7 +22,7 @@ antlr4-python3-runtime==4.13.2
     #   pymoca
 attrs==25.4.0
     # via flake8-bugbear
-billiard==4.2.2
+billiard==4.2.3
     # via
     #   -c requirements.txt
     #   celery
@@ -47,7 +47,7 @@ charset-normalizer==3.4.4
     # via
     #   -c requirements.txt
     #   requests
-click==8.3.0
+click==8.3.1
     # via
     #   -c requirements.txt
     #   black
@@ -71,7 +71,7 @@ coolprop==6.6.0
     # via
     #   -c requirements.txt
     #   mesido
-coverage[toml]==7.11.3
+coverage[toml]==7.12.0
     # via pytest-cov
 defusedxml==0.7.1
     # via
@@ -126,7 +126,7 @@ lxml==6.0.2
     #   pyecore
 mccabe==0.7.0
     # via flake8
-mesido==0.1.14
+mesido==0.1.15
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
