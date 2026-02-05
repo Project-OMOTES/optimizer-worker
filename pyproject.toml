@@ -25,7 +25,7 @@ requires-python = ">=3.10"
 
 dependencies = [
     "python-dotenv ~= 1.0.0",
-    "mesido ~= 0.1.15",
+    "mesido ~= 0.1.16",
     "omotes-sdk-python ~= 4.3.1"
 ]
 
@@ -69,7 +69,7 @@ enabled = true
 starting_version = "0.0.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 15"
+addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 35"
 
 [tool.coverage.run]
 source = ["src"]
