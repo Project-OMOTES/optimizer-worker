@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 from typing import cast, Dict, List, Tuple, Optional
 
-from mesido.esdl.esdl_mixin import DBAccesType
+from mesido.esdl.esdl_mixin import DBAccessType
 from mesido.exceptions import MesidoAssetIssueError
 from omotes_sdk.internal.orchestrator_worker_events.esdl_messages import (
     EsdlMessage,
@@ -83,7 +83,7 @@ def grow_worker_task(
             write_result_db_profiles=write_result_db_profiles,
             database_connections=[
                 {
-                    "access_type": DBAccesType.READ_WRITE,
+                    "access_type": DBAccessType.READ_WRITE,
                     "influxdb_host": influxdb_host,
                     "influxdb_port": influxdb_port,
                     "influxdb_username": os.environ.get("INFLUXDB_USERNAME"),
