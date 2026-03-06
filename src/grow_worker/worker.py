@@ -73,6 +73,9 @@ def grow_worker_task(
         influxdb_host,
         influxdb_port,
     )
+
+    esdl_str = None
+    esdl_messages = []
     try:
         solution: GROWProblem = mesido_func(
             mesido_workflow,
@@ -96,15 +99,16 @@ def grow_worker_task(
             profile_reader=InfluxDBProfileReader,
         )
         esdl_str = cast(str, solution.optimized_esdl_string)
-        # TODO get esdl_messages from solution after mesido update.
-        esdl_messages = []
+        # TODO get esdl_messages from successful run after mesido update.
     except MesidoAssetIssueError as mesido_issues_error:
-        esdl_str = None
         esdl_messages = parse_mesido_esdl_messages(
             mesido_issues_error.general_issue, mesido_issues_error.message_per_asset_id
         )
     except SystemExit as e:
         raise EarlySystemExit(e)
+    except Exception:
+        # in case of general mesido error, make sure to return esdl_str and esdl_messages
+        pass
 
     return esdl_str, esdl_messages
 
