@@ -11,7 +11,7 @@ local_test/
 unit_test/
 .env
 .env.local
-.env-template
+.env.template
 .gitignore
 .taplo.toml
 CHANGELOG.md

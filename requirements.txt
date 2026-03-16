@@ -22,7 +22,7 @@ celery==5.6.2
     # via omotes-sdk-python
 certifi==2026.2.25
     # via requests
-charset-normalizer==3.4.4
+charset-normalizer==3.4.6
     # via requests
 click==8.3.1
     # via
@@ -54,7 +54,7 @@ kombu==5.6.2
     # via celery
 lxml==6.0.2
     # via pyecore
-mesido==0.1.17
+mesido==0.1.18
     # via omotes-grow-worker (pyproject.toml)
 msgpack==1.1.2
     # via influxdb
@@ -69,7 +69,7 @@ numpy==1.25.2
     #   scipy
 omotes-sdk-protocol==1.2.0
     # via omotes-sdk-python
-omotes-sdk-python==4.3.2
+omotes-sdk-python==4.3.3
     # via omotes-grow-worker (pyproject.toml)
 ordered-set==4.1.0
     # via pyecore
@@ -91,7 +91,7 @@ pyecore==0.13.2
     # via
     #   mesido
     #   pyesdl
-pyesdl==25.7
+pyesdl==26.2
     # via
     #   mesido
     #   omotes-sdk-python
@@ -107,7 +107,7 @@ python-dateutil==2.9.0.post0
     #   pandas
 python-dotenv==1.0.1
     # via omotes-grow-worker (pyproject.toml)
-pytz==2025.2
+pytz==2026.1.post1
     # via
     #   influxdb
     #   pandas
@@ -147,7 +147,7 @@ vine==5.1.0
     #   kombu
 wcwidth==0.6.0
     # via prompt-toolkit
-yarl==1.22.0
+yarl==1.23.0
     # via
     #   aio-pika
     #   aiormq
