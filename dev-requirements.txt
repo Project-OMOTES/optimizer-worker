@@ -43,7 +43,7 @@ certifi==2026.2.25
     # via
     #   -c requirements.txt
     #   requests
-charset-normalizer==3.4.4
+charset-normalizer==3.4.6
     # via
     #   -c requirements.txt
     #   requests
@@ -129,7 +129,7 @@ lxml==6.0.2
     #   pyecore
 mccabe==0.7.0
     # via flake8
-mesido==0.1.17
+mesido==0.1.18
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
@@ -159,7 +159,7 @@ omotes-sdk-protocol==1.2.0
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-omotes-sdk-python==4.3.2
+omotes-sdk-python==4.3.3
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
@@ -186,7 +186,7 @@ pandas==1.5.3
     #   mesido
 pathspec==1.0.4
     # via black
-platformdirs==4.9.2
+platformdirs==4.9.4
     # via black
 pluggy==1.6.0
     # via pytest
@@ -211,7 +211,7 @@ pyecore==0.13.2
     #   -c requirements.txt
     #   mesido
     #   pyesdl
-pyesdl==25.7
+pyesdl==26.2
     # via
     #   -c requirements.txt
     #   mesido
@@ -242,7 +242,7 @@ python-dotenv==1.0.1
     # via
     #   -c requirements.txt
     #   omotes-grow-worker (pyproject.toml)
-pytz==2025.2
+pytz==2026.1.post1
     # via
     #   -c requirements.txt
     #   influxdb
@@ -326,7 +326,7 @@ wcwidth==0.6.0
     #   prompt-toolkit
 wheel==0.45.1
     # via omotes-grow-worker (pyproject.toml)
-yarl==1.22.0
+yarl==1.23.0
     # via
     #   -c requirements.txt
     #   aio-pika
