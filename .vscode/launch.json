@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run worker.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/grow_worker/worker.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/src",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
