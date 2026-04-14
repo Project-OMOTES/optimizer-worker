@@ -20,13 +20,13 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
 ]
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 
 dependencies = [
     "python-dotenv ~= 1.0.0",
-    "mesido ~= 0.1.18",
-    "omotes-sdk-python ~= 4.3.3"
+    "mesido ~= 0.1.18.1",
+    "omotes-sdk-python ~= 4.3.3",
 ]
 
 [project.optional-dependencies]
@@ -83,12 +83,9 @@ ignore = [
     'C408', # Suggestion to use dict() over {}
     'W503', # Starting lines with operators.
     'D104', # Missing docstring in public package
-    'D100'  # Missing docstring in public module
+    'D100', # Missing docstring in public module
 ]
-per-file-ignores = [
-    '__init__.py:F401',
-    './unit_test/*:D100,D101,D102,D103'
-]
+per-file-ignores = ['__init__.py:F401', './unit_test/*:D100,D101,D102,D103']
 max-line-length = 100
 count = true
 
