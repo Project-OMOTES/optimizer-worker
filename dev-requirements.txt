@@ -294,7 +294,7 @@ tomli==2.4.1
     #   mypy
     #   pytest
     #   setuptools-git-versioning
-typing-extensions==4.15.0
+typing-extensions==4.16.0
     # via
     #   -c requirements.txt
     #   black
