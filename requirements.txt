@@ -129,7 +129,7 @@ streamcapture==1.2.7
     # via omotes-sdk-python
 strenum==0.4.15
     # via mesido
-typing-extensions==4.15.0
+typing-extensions==4.16.0
     # via
     #   exceptiongroup
     #   multidict
