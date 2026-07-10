@@ -1,10 +1,7 @@
 [project]
 name = "omotes-grow-worker"
 dynamic = ["version"]
-authors = [
-    { name = "Sebastiaan la Fleur", email = "sebastiaan.lafleur@tno.nl" },
-    { name = "Mark Vrijlandt", email = "mark.vrijlandt@tno.nl" },
-]
+authors = [{ name = "Mark Vrijlandt", email = "mark.vrijlandt@tno.nl" }]
 description = "Nieuwe Warmte Nu - Optimizer Worker"
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -21,12 +18,14 @@ classifiers = [
 ]
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.10"
 
+requires-python = "==3.11.*"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.18.1",
     "omotes-sdk-python ~= 4.3.3",
+    "prefect==3.7.3",
+    "s3fs",
 ]
 
 [project.optional-dependencies]
@@ -34,6 +33,7 @@ dev = [
     "setuptools ~= 75.6.0",
     "wheel ~= 0.45.1",
     "setuptools-git-versioning >= 2.0, < 3",
+    "pip-tools ~= 7.4.0",
     "black ~= 24.10.0",
     "flake8 == 7.1.1",
     "flake8-pyproject ~= 1.2.3",
@@ -74,41 +74,44 @@ addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-f
 [tool.coverage.run]
 source = ["src"]
 
-[tool.flake8]
-exclude = ['.venv/*', 'venv/*', 'doc/*']
-ignore = [
-    'Q000', # Remove bad quotes
-    'D401', # Docstring First line should be imperative
-    'E203', # Space before colon (not PEP-8 compliant, and conflicts with black)
-    'C408', # Suggestion to use dict() over {}
-    'W503', # Starting lines with operators.
-    'D104', # Missing docstring in public package
-    'D100', # Missing docstring in public module
+[tool.ruff]
+line-length = 120
+preview = true
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "W",
+    "F",   # Pyflakes
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "I",   # isort
+    "D",   # pydocstyle
+    "ANN", # flake8-annotations
+    "DOC", # flake8-docstrings
 ]
-per-file-ignores = ['__init__.py:F401', './unit_test/*:D100,D101,D102,D103']
-max-line-length = 100
-count = true
+ignore = [
+    "D100", # Missing docstring in public module
+    "D211", # no-blank-line-before-class
+    "D213", # multi-line-summary-second-line
+    "D203", # 1 blank line required before class docstring
+]
 
-[tool.black]
-line-length = 100
+# [tool.mypy]
+# python_version = "3.10"
+# warn_return_any = true
+# warn_unused_configs = true
+# disallow_untyped_defs = true
+# disallow_incomplete_defs = true
+# exclude = ['.venv/*', 'venv/*', 'doc/*', 'ci/*']
 
-[tool.isort]
-profile = "black"
+# # mypy per-module options:
+# [[tool.mypy.overrides]]
+# module = "unit_test.*"
+# check_untyped_defs = true
+# ignore_missing_imports = true
 
-[tool.mypy]
-python_version = "3.10"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-exclude = ['.venv/*', 'venv/*', 'doc/*', 'ci/*']
-
-# mypy per-module options:
-[[tool.mypy.overrides]]
-module = "unit_test.*"
-check_untyped_defs = true
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "mesido.*"
-ignore_missing_imports = true
+# [[tool.mypy.overrides]]
+# module = "mesido.*"
+# ignore_missing_imports = true

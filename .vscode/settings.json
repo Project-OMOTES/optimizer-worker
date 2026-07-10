@@ -1,11 +1,11 @@
 {
   "flake8.enabled": false,
   "[python]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    },
+      "source.fixAll.ruff": "always",
+      "source.organizeImports.ruff": "explicit"
+    }
   },
   "python.analysis.typeCheckingMode": "basic",
   "python.testing.unittestArgs": [
@@ -26,4 +26,12 @@
   "terminal.integrated.env.windows": {
     "PYTHONPATH": "${workspaceFolder}/src"
   },
+  "python.languageServer": "None", // disable Pylance (ruff/ty is used)
+  "ty.diagnosticMode": "workspace",
+  "ty.importStrategy": "fromEnvironment",
+  "ty.interpreter": [
+    "${workspaceFolder}\\.venv\\Scripts\\python.exe"
+  ],
+  "ruff.organizeImports": true,
+  "ruff.lint.enable": true
 }

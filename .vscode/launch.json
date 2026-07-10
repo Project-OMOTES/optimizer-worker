@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run worker.py",
+            "name": "worker.py",
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/grow_worker/worker.py",
@@ -13,6 +13,39 @@
                 "PYTHONPATH": "${workspaceFolder}/src"
             },
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "prefect_deploy_flow",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/prefect_deploy_flow.py",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "name": "prefect_start_optimizer_run",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/prefect_start_optimizer_run.py",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "name": "prefect_get_flow_run_result",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/prefect_get_flow_run_result.py",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
         }
     ]
 }
