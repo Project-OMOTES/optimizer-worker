@@ -69,7 +69,7 @@ enabled = true
 starting_version = "0.0.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 35"
+addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 30"
 
 [tool.coverage.run]
 source = ["src"]

@@ -78,7 +78,7 @@ def grow_worker_task(
         esdl_output_profiles_type = ESDLOutputProfilesType.POSTGRESQL
 
     db_host = os.environ.get("DB_HOSTNAME")
-    db_port = int(os.environ.get("DB_PORT"))
+    db_port = int(os.environ.get("DB_PORT", "5432"))
     db_username = os.environ.get("DB_USERNAME", "")
     db_password = os.environ.get("DB_PASSWORD", "")
 
