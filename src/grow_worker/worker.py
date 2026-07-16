@@ -4,9 +4,8 @@ import os
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, cast
 
-import esdl
 from dotenv import load_dotenv
-from mesido.esdl.esdl_mixin import DBAccessType
+from mesido.esdl.esdl_mixin import DBAccessType, ESDLOutputProfilesType
 from mesido.esdl.esdl_parser import ESDLStringParser
 from mesido.esdl.profile_parser import ESDLProfileReader
 from mesido.exceptions import MesidoAssetIssueError
@@ -67,60 +66,42 @@ def grow_worker_task(
     mesido_solver = get_solver_class(workflow_type)
 
     base_folder = Path(__file__).resolve().parent.parent
-    write_result_db_profiles = (
-        "INFLUXDB_HOSTNAME" in os.environ or "POSTGRES_HOSTNAME" in os.environ
-    )
-    db_type_output_profiles_name = os.environ.get("DB_TYPE_OUTPUT_PROFILES", "POSTGRESQL").upper()
-    db_type_output_profiles = getattr(esdl.DatabaseTypeEnum, db_type_output_profiles_name, None)
-    if db_type_output_profiles is None:
+    esdl_output_profiles_type_str = os.environ.get(
+        "ESDL_OUTPUT_PROFILES_TYPE", "POSTGRESQL"
+    ).upper()
+    esdl_output_profiles_type = getattr(ESDLOutputProfilesType, esdl_output_profiles_type_str, None)
+    if esdl_output_profiles_type is None:
         logger.warning(
-            "Unknown DB_TYPE_OUTPUT_PROFILES '%s', defaulting to POSTGRESQL",
-            db_type_output_profiles_name,
+            "Unknown ESDL_OUTPUT_PROFILES_TYPE '%s', defaulting to POSTGRESQL",
+            esdl_output_profiles_type_str,
         )
-        db_type_output_profiles = esdl.DatabaseTypeEnum.POSTGRESQL
-    influxdb_host = os.environ.get("INFLUXDB_HOSTNAME")
-    influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
-    postgres_host = os.environ.get("POSTGRES_HOSTNAME")
-    postgres_port = int(os.environ.get("POSTGRES_PORT", "5432"))
+        esdl_output_profiles_type = ESDLOutputProfilesType.POSTGRESQL
+
+    db_host = os.environ.get("DB_HOSTNAME")
+    db_port = int(os.environ.get("DB_PORT", "5432"))
+    db_username = os.environ.get("DB_USERNAME", "")
+    db_password = os.environ.get("DB_PASSWORD", "")
 
     logger.info(
-        "Will write result profiles to influx: %s. At %s:%s",
-        write_result_db_profiles,
-        influxdb_host,
-        influxdb_port,
+        "Will write result profiles to '%s' database at %s:%s",
+        esdl_output_profiles_type_str,
+        db_host,
+        db_port,
     )
 
     database_connection = []
-    if influxdb_host:
-        database_connection.append(
-            {
-                "access_type": (
-                    DBAccessType.READ_WRITE
-                    if db_type_output_profiles == esdl.DatabaseTypeEnum.INFLUXDB
-                    else DBAccessType.READ
-                ),
-                "host": influxdb_host,
-                "port": influxdb_port,
-                "username": os.environ.get("INFLUXDB_USERNAME"),
-                "password": os.environ.get("INFLUXDB_PASSWORD"),
-                "ssl": False,
-                "verify_ssl": False,
-            }
-        )
-    if postgres_host:
-        database_connection.append(
-            {
-                "access_type": (
-                    DBAccessType.READ_WRITE
-                    if db_type_output_profiles == esdl.DatabaseTypeEnum.POSTGRESQL
-                    else DBAccessType.READ
-                ),
-                "host": postgres_host,
-                "port": postgres_port,
-                "username": os.environ.get("POSTGRES_USERNAME"),
-                "password": os.environ.get("POSTGRES_PASSWORD"),
-            }
-        )
+
+    database_connection.append(
+        {
+            "access_type": DBAccessType.READ_WRITE,
+            "host": db_host,
+            "port": db_port,
+            "username": db_username,
+            "password": db_password,
+            "ssl": False,
+            "verify_ssl": False,
+        }
+    )
 
     esdl_str = None
     esdl_messages = []
@@ -131,8 +112,7 @@ def grow_worker_task(
             base_folder=base_folder,
             esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
             esdl_parser=ESDLStringParser,
-            write_result_db_profiles=write_result_db_profiles,
-            db_type_output_profiles=db_type_output_profiles,
+            esdl_output_profiles_type=esdl_output_profiles_type,
             database_connections=database_connection,
             update_progress_function=update_progress_handler,
             profile_reader=ESDLProfileReader,
