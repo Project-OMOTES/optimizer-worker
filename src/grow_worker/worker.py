@@ -2,28 +2,31 @@ import base64
 import logging
 import os
 from pathlib import Path
-from typing import cast, Dict, List, Tuple, Optional
+from typing import Dict, List, Optional, Tuple, cast
 
-from mesido.esdl.esdl_mixin import DBAccessType
+from dotenv import load_dotenv
+from mesido.esdl.esdl_mixin import DBAccessType, ESDLOutputProfilesType
+from mesido.esdl.esdl_parser import ESDLStringParser
+from mesido.esdl.profile_parser import ESDLProfileReader
 from mesido.exceptions import MesidoAssetIssueError
 from omotes_sdk.internal.orchestrator_worker_events.esdl_messages import (
     EsdlMessage,
     MessageSeverity,
 )
-from omotes_sdk.internal.worker.worker import initialize_worker, UpdateProgressHandler
+from omotes_sdk.internal.worker.worker import UpdateProgressHandler, initialize_worker
 from omotes_sdk.types import ProtobufDict
-from mesido.esdl.esdl_parser import ESDLStringParser
-from mesido.esdl.profile_parser import InfluxDBProfileReader
 
 from grow_worker.worker_types import (
-    GrowTaskType,
     GROWProblem,
-    get_problem_type,
+    GrowTaskType,
     get_problem_function,
+    get_problem_type,
     get_solver_class,
 )
 
 logger = logging.getLogger("grow_worker")
+
+load_dotenv()  # Load environment variables from .env file
 
 GROW_TASK_TYPES = [GrowTaskType(task_type) for task_type in os.environ["GROW_TASK_TYPE"].split(",")]
 
@@ -63,15 +66,41 @@ def grow_worker_task(
     mesido_solver = get_solver_class(workflow_type)
 
     base_folder = Path(__file__).resolve().parent.parent
-    write_result_db_profiles = "INFLUXDB_HOSTNAME" in os.environ
-    influxdb_host = os.environ.get("INFLUXDB_HOSTNAME", "localhost")
-    influxdb_port = int(os.environ.get("INFLUXDB_PORT", "8086"))
+    esdl_output_profiles_type_str = os.environ.get(
+        "ESDL_OUTPUT_PROFILES_TYPE", "POSTGRESQL"
+    ).upper()
+    esdl_output_profiles_type = getattr(ESDLOutputProfilesType, esdl_output_profiles_type_str, None)
+    if esdl_output_profiles_type is None:
+        logger.warning(
+            "Unknown ESDL_OUTPUT_PROFILES_TYPE '%s', defaulting to POSTGRESQL",
+            esdl_output_profiles_type_str,
+        )
+        esdl_output_profiles_type = ESDLOutputProfilesType.POSTGRESQL
+
+    db_host = os.environ.get("DB_HOSTNAME")
+    db_port = int(os.environ.get("DB_PORT", "5432"))
+    db_username = os.environ.get("DB_USERNAME", "")
+    db_password = os.environ.get("DB_PASSWORD", "")
 
     logger.info(
-        "Will write result profiles to influx: %s. At %s:%s",
-        write_result_db_profiles,
-        influxdb_host,
-        influxdb_port,
+        "Will write result profiles to '%s' database at %s:%s",
+        esdl_output_profiles_type_str,
+        db_host,
+        db_port,
+    )
+
+    database_connection = []
+
+    database_connection.append(
+        {
+            "access_type": DBAccessType.READ_WRITE,
+            "host": db_host,
+            "port": db_port,
+            "username": db_username,
+            "password": db_password,
+            "ssl": False,
+            "verify_ssl": False,
+        }
     )
 
     esdl_str = None
@@ -83,20 +112,10 @@ def grow_worker_task(
             base_folder=base_folder,
             esdl_string=base64.encodebytes(input_esdl.encode("utf-8")),
             esdl_parser=ESDLStringParser,
-            write_result_db_profiles=write_result_db_profiles,
-            database_connections=[
-                {
-                    "access_type": DBAccessType.READ_WRITE,
-                    "influxdb_host": influxdb_host,
-                    "influxdb_port": influxdb_port,
-                    "influxdb_username": os.environ.get("INFLUXDB_USERNAME"),
-                    "influxdb_password": os.environ.get("INFLUXDB_PASSWORD"),
-                    "influxdb_ssl": False,
-                    "influxdb_verify_ssl": False,
-                },
-            ],
+            esdl_output_profiles_type=esdl_output_profiles_type,
+            database_connections=database_connection,
             update_progress_function=update_progress_handler,
-            profile_reader=InfluxDBProfileReader,
+            profile_reader=ESDLProfileReader,
         )
         esdl_str = cast(str, solution.optimized_esdl_string)
         # TODO get esdl_messages from successful run after mesido update.

@@ -7,10 +7,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/src/grow_worker/worker.py",
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}/src",
+            "cwd": "${workspaceFolder}",
             "justMyCode": true,
             "env": {
-                "PYTHONPATH": "${workspaceFolder}"
+                "PYTHONPATH": "${workspaceFolder}/src"
             },
             "envFile": "${workspaceFolder}/.env"
         }
