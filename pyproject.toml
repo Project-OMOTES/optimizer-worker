@@ -22,7 +22,7 @@ license = { file = "LICENSE" }
 requires-python = "==3.11.*"
 dependencies = [
     "python-dotenv ~= 1.0.0",
-    "mesido ~= 0.1.18.1",
+    "mesido ~= 0.1.20.3",
     "omotes-sdk-python ~= 4.3.3",
     "prefect==3.7.3",
     "s3fs",

@@ -564,7 +564,6 @@ async def trigger_flow_run(
     job_variables: dict | None = None,
     type: str | None = None,
     username: str | None = None,
-    company: str | None = None,
 ):
     deployment_name = f"{deployment_base_name}:{deployment_version}"
     async with get_client() as client:
@@ -584,8 +583,6 @@ async def trigger_flow_run(
             run_tags.append(f"type:{type}")
         if username:
             run_tags.append(f"user:{username}")
-        if company:
-            run_tags.append(f"company:{company}")
 
         deployment_id = deployments[0].id
         flow_run = await client.create_flow_run_from_deployment(
@@ -600,20 +597,16 @@ async def trigger_flow_run(
 
 async def list_flow_runs_by_tags(
     username: str | None = None,
-    company: str | None = None,
     limit: int = 20,
 ):
     """List recent flow runs filtered by run tags.
 
     Tags follow the trigger_run_by_name convention:
       - user:<username>
-      - company:<company>
     """
     required_tags: list[str] = []
     if username:
         required_tags.append(f"user:{username}")
-    if company:
-        required_tags.append(f"company:{company}")
 
     async with get_client() as client:
         flow_runs = await client.read_flow_runs(

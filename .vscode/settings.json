@@ -29,9 +29,7 @@
   "python.languageServer": "None", // disable Pylance (ruff/ty is used)
   "ty.diagnosticMode": "workspace",
   "ty.importStrategy": "fromEnvironment",
-  "ty.interpreter": [
-    "${workspaceFolder}\\.venv\\Scripts\\python.exe"
-  ],
+  "ty.interpreter": "${workspaceFolder}/.venv/bin/python",
   "ruff.organizeImports": true,
   "ruff.lint.enable": true
 }

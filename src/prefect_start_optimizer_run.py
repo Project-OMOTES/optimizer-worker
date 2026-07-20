@@ -26,6 +26,5 @@ asyncio.run(
         memory_limit=os.getenv("PREFECT_RUN_MEMORY_LIMIT"),
         type=wf_parameters["workflow_type_name"],
         username="mark",
-        company="tno",
     )
 )

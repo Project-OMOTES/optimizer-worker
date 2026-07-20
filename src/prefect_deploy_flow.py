@@ -29,6 +29,7 @@ job_variables = {
         "PREFECT_USER_NAME": os.getenv("PREFECT_USER_NAME"),
         "PREFECT_PASSWORD": os.getenv("PREFECT_PASSWORD"),
         "PREFECT_API_URL": os.getenv("PREFECT_SERVER_API_URL"),
+        "ESDL_OUTPUT_PROFILES_TYPE": os.getenv("ESDL_OUTPUT_PROFILES_TYPE"),
         "POSTGRES_HOST": os.getenv("POSTGRES_HOST"),
         "POSTGRES_PORT": os.getenv("POSTGRES_PORT"),
         "POSTGRES_DB": os.getenv("POSTGRES_DB"),

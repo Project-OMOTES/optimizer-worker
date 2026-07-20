@@ -683,6 +683,15 @@ wheels = [
 ]
 
 [[package]]
+name = "et-xmlfile"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d3/38/af70d7ab1ae9d4da450eeec1fa3918940a5fafb9055e934af8d6eb0c2313/et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54", size = 17234, upload-time = "2024-10-25T17:25:40.039Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa", size = 18059, upload-time = "2024-10-25T17:25:39.051Z" },
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -968,7 +977,7 @@ wheels = [
 
 [[package]]
 name = "influxdb"
-version = "5.3.2"
+version = "5.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "msgpack" },
@@ -977,9 +986,9 @@ dependencies = [
     { name = "requests" },
     { name = "six" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/d4/4c1bd3a8f85403fad3137a7e44f7882b0366586b7c27d12713493516f1c7/influxdb-5.3.2.tar.gz", hash = "sha256:58c647f6043712dd86e9aee12eb4ccfbbb5415467bc9910a48aa8c74c1108970", size = 70792, upload-time = "2024-04-18T21:45:09.163Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/86/4f/a9c524576677c1694b149e09d4fd6342e4a1d9a5f409e437168a14d6d150/influxdb-5.3.1.tar.gz", hash = "sha256:46f85e7b04ee4b3dee894672be6a295c94709003a7ddea8820deec2ac4d8b27a", size = 67385, upload-time = "2020-11-11T21:23:44.167Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0e/00/d0ea35f823c46a5cd4fa80d933176d251573601d920737ce8a85df7664db/influxdb-5.3.2-py2.py3-none-any.whl", hash = "sha256:00d86b18a968d011b2eee39ec3b2ae941b1dcf7086bc7211e675914623caffcd", size = 79391, upload-time = "2024-04-18T21:45:06.471Z" },
+    { url = "https://files.pythonhosted.org/packages/01/95/3a72ea5e19df828d27af0a50092f2b24114a5f89922efb4d8a0960bf13ef/influxdb-5.3.1-py2.py3-none-any.whl", hash = "sha256:65040a1f53d1a2a4f88a677e89e3a98189a7d30cf2ab61c318aaa89733280747", size = 77906, upload-time = "2020-11-11T21:23:41.567Z" },
 ]
 
 [[package]]
@@ -1199,7 +1208,7 @@ wheels = [
 
 [[package]]
 name = "mesido"
-version = "0.1.18.1"
+version = "0.1.20.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "casadi-gil-comp" },
@@ -1207,15 +1216,15 @@ dependencies = [
     { name = "influxdb" },
     { name = "pandas" },
     { name = "pyecore" },
-    { name = "pyesdl" },
+    { name = "pyesdl", extra = ["profiles"] },
     { name = "pymoca" },
     { name = "rtc-tools-gil-comp" },
     { name = "setuptools" },
     { name = "strenum" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d1/f7/555e51cac6133fba3b995d6c7ced67903f3fd003b8a77d48eb1cffb26e2d/mesido-0.1.18.1.tar.gz", hash = "sha256:33ffd1f8a35061b940a4e9f62bf06d1dc0fd67667721fe9f5e68b2b9157f42b4", size = 422863, upload-time = "2026-04-13T14:51:05.62Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1b/ca/071cb7540708108f3f72f5f692d4df80f91d327314861873383b869761ae/mesido-0.1.20.3.tar.gz", hash = "sha256:82302e5b4a7c09cf2353facbd48a8000ee94420f5ad8461d15fe117150f83b93", size = 441829, upload-time = "2026-07-15T14:33:04.584Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/80/df/a73e500f3eb36fbd66bd30e6e210213b9865e2c7253d225d5c33a6cc7809/mesido-0.1.18.1-py3-none-any.whl", hash = "sha256:705df2eb8ffdb33bfb0d7d5b21fbc1238d0418fbc848074ff15503172e61b75c", size = 375406, upload-time = "2026-04-13T14:51:03.56Z" },
+    { url = "https://files.pythonhosted.org/packages/91/14/f54fe73742a29c7ac97473c964db40d2ca1fe3a5d44229dd0082a199d582/mesido-0.1.20.3-py3-none-any.whl", hash = "sha256:a2f87495cd9f32964ebf3ed3b8651261568fe33d834bc66c3b4531e39e60007d", size = 384963, upload-time = "2026-07-15T14:33:03.281Z" },
 ]
 
 [[package]]
@@ -1357,7 +1366,7 @@ requires-dist = [
     { name = "flake8-quotes", marker = "extra == 'dev'", specifier = "~=3.4.0" },
     { name = "flake8-tuple", marker = "extra == 'dev'", specifier = "~=0.4.1" },
     { name = "isort", marker = "extra == 'dev'", specifier = "==5.13.2" },
-    { name = "mesido", specifier = "~=0.1.18.1" },
+    { name = "mesido", specifier = "~=0.1.20.3" },
     { name = "mypy", marker = "extra == 'dev'", specifier = "~=1.13.0" },
     { name = "omotes-sdk-python", specifier = "~=4.3.3" },
     { name = "pip-tools", marker = "extra == 'dev'", specifier = "~=7.4.0" },
@@ -1400,6 +1409,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/af/cc/3727665ba56d774f893908d38c0a11e3e0f7ab67e43aa97aa4496dfa1127/omotes_sdk_python-4.3.3.tar.gz", hash = "sha256:41d17ade63612e9f1e56c689aa40583844cfa812a88b2bcf3ee7cac1a89e73e9", size = 36306, upload-time = "2026-03-16T10:14:15.275Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/05/65/e8813bbddedde1f6897bcc292044fec4d428e69219345350995e334f40ea/omotes_sdk_python-4.3.3-py3-none-any.whl", hash = "sha256:15037314cb6263ed8438b80ca24f5ce5da9f65700b5b3a717d58df4b9fc21329", size = 38919, upload-time = "2026-03-16T10:14:14.159Z" },
+]
+
+[[package]]
+name = "openpyxl"
+version = "3.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "et-xmlfile" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/42/e8/af028681d493814ca9c2ff8106fc62a4a32e4e0ae14602c2a98fc7b741c8/openpyxl-3.1.2.tar.gz", hash = "sha256:a6f5977418eff3b2d5500d54d9db50c8277a368436f4e4f8ddb1be3422870184", size = 185977, upload-time = "2023-03-11T16:58:38.78Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6a/94/a59521de836ef0da54aaf50da6c4da8fb4072fb3053fa71f052fd9399e7a/openpyxl-3.1.2-py2.py3-none-any.whl", hash = "sha256:f91456ead12ab3c6c2e9491cf33ba6d08357d802192379bb482f1033ade496f5", size = 249985, upload-time = "2023-03-11T16:58:36.257Z" },
 ]
 
 [[package]]
@@ -1695,6 +1716,42 @@ wheels = [
 ]
 
 [[package]]
+name = "psycopg"
+version = "3.3.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d3/b6/379d0a960f8f435ec78720462fd94c4863e7a31237cf81bf76d0af5883bf/psycopg-3.3.3.tar.gz", hash = "sha256:5e9a47458b3c1583326513b2556a2a9473a1001a56c9efe9e587245b43148dd9", size = 165624, upload-time = "2026-02-18T16:52:16.546Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c8/5b/181e2e3becb7672b502f0ed7f16ed7352aca7c109cfb94cf3878a9186db9/psycopg-3.3.3-py3-none-any.whl", hash = "sha256:f96525a72bcfade6584ab17e89de415ff360748c766f0106959144dcbb38c698", size = 212768, upload-time = "2026-02-18T16:46:27.365Z" },
+]
+
+[package.optional-dependencies]
+binary = [
+    { name = "psycopg-binary", marker = "implementation_name != 'pypy'" },
+]
+
+[[package]]
+name = "psycopg-binary"
+version = "3.3.3"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/be/c0/b389119dd754483d316805260f3e73cdcad97925839107cc7a296f6132b1/psycopg_binary-3.3.3-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:a89bb9ee11177b2995d87186b1d9fa892d8ea725e85eab28c6525e4cc14ee048", size = 4609740, upload-time = "2026-02-18T16:47:51.093Z" },
+    { url = "https://files.pythonhosted.org/packages/cf/e3/9976eef20f61840285174d360da4c820a311ab39d6b82fa09fbb545be825/psycopg_binary-3.3.3-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:9f7d0cf072c6fbac3795b08c98ef9ea013f11db609659dcfc6b1f6cc31f9e181", size = 4676837, upload-time = "2026-02-18T16:47:55.523Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/f2/d28ba2f7404fd7f68d41e8a11df86313bd646258244cb12a8dd83b868a97/psycopg_binary-3.3.3-cp311-cp311-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:90eecd93073922f085967f3ed3a98ba8c325cbbc8c1a204e300282abd2369e13", size = 5497070, upload-time = "2026-02-18T16:47:59.929Z" },
+    { url = "https://files.pythonhosted.org/packages/de/2f/6c5c54b815edeb30a281cfcea96dc93b3bb6be939aea022f00cab7aa1420/psycopg_binary-3.3.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:dac7ee2f88b4d7bb12837989ca354c38d400eeb21bce3b73dac02622f0a3c8d6", size = 5172410, upload-time = "2026-02-18T16:48:05.665Z" },
+    { url = "https://files.pythonhosted.org/packages/51/75/8206c7008b57de03c1ada46bd3110cc3743f3fd9ed52031c4601401d766d/psycopg_binary-3.3.3-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:b62cf8784eb6d35beaee1056d54caf94ec6ecf2b7552395e305518ab61eb8fd2", size = 6763408, upload-time = "2026-02-18T16:48:13.541Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/5a/ea1641a1e6c8c8b3454b0fcb43c3045133a8b703e6e824fae134088e63bd/psycopg_binary-3.3.3-cp311-cp311-manylinux_2_38_riscv64.manylinux_2_39_riscv64.whl", hash = "sha256:a39f34c9b18e8f6794cca17bfbcd64572ca2482318db644268049f8c738f35a6", size = 5006255, upload-time = "2026-02-18T16:48:22.176Z" },
+    { url = "https://files.pythonhosted.org/packages/aa/fb/538df099bf55ae1637d52d7ccb6b9620b535a40f4c733897ac2b7bb9e14c/psycopg_binary-3.3.3-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:883d68d48ca9ff3cb3d10c5fdebea02c79b48eecacdddbf7cce6e7cdbdc216b8", size = 4532694, upload-time = "2026-02-18T16:48:27.338Z" },
+    { url = "https://files.pythonhosted.org/packages/a1/d1/00780c0e187ea3c13dfc53bd7060654b2232cd30df562aac91a5f1c545ac/psycopg_binary-3.3.3-cp311-cp311-musllinux_1_2_ppc64le.whl", hash = "sha256:cab7bc3d288d37a80aa8c0820033250c95e40b1c2b5c57cf59827b19c2a8b69d", size = 4222833, upload-time = "2026-02-18T16:48:31.221Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/34/a07f1ff713c51d64dc9f19f2c32be80299a2055d5d109d5853662b922cb4/psycopg_binary-3.3.3-cp311-cp311-musllinux_1_2_riscv64.whl", hash = "sha256:56c767007ca959ca32f796b42379fc7e1ae2ed085d29f20b05b3fc394f3715cc", size = 3952818, upload-time = "2026-02-18T16:48:35.869Z" },
+    { url = "https://files.pythonhosted.org/packages/d3/67/d33f268a7759b4445f3c9b5a181039b01af8c8263c865c1be7a6444d4749/psycopg_binary-3.3.3-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:da2f331a01af232259a21573a01338530c6016dcfad74626c01330535bcd8628", size = 4258061, upload-time = "2026-02-18T16:48:41.365Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/3b/0d8d2c5e8e29ccc07d28c8af38445d9d9abcd238d590186cac82ee71fc84/psycopg_binary-3.3.3-cp311-cp311-win_amd64.whl", hash = "sha256:19f93235ece6dbfc4036b5e4f6d8b13f0b8f2b3eeb8b0bd2936d406991bcdd40", size = 3558915, upload-time = "2026-02-18T16:48:46.679Z" },
+]
+
+[[package]]
 name = "py-key-value-aio"
 version = "0.4.5"
 source = { registry = "https://pypi.org/simple" }
@@ -1866,14 +1923,22 @@ wheels = [
 
 [[package]]
 name = "pyesdl"
-version = "26.2"
+version = "26.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyecore" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a8/7f/f428285145f80e878666b6bcf313be525be6b059413811741026129124b9/pyesdl-26.2.tar.gz", hash = "sha256:109dc64fe5e4592169bf62937aae5ec4501b8197a6ad04026c0a1cf1b5e99c28", size = 95282, upload-time = "2026-02-06T12:55:43.701Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b4/62/a9cb17f916eb2ee7c12b50f363a1457eccf879888ecd3ce2a0dc2904e561/pyesdl-26.7.tar.gz", hash = "sha256:7b685ab7ef57d07178178e54c20cc61962cc1c5ff901ea5efc0669f3d6c78eb8", size = 114922, upload-time = "2026-07-13T09:49:10.629Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/54/46b763c31062df21bd125abb5314f2ab484a58a65b7e7ce20da5324bdc7b/pyesdl-26.2-py3-none-any.whl", hash = "sha256:eb10d411f9d4f41c40a11cb7bb9470f09235142f2182367d05bb94278af8e4b1", size = 85674, upload-time = "2026-02-06T12:55:42.304Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/5b/1b913d6fbb904d5fdc45f5e67cdb285dc71c096070db0fe9dd9563c9a1de/pyesdl-26.7-py3-none-any.whl", hash = "sha256:30b512ee34a1ca4ffd2e58982208a75926eda67010a7e6b8a05b737cd9d0a127", size = 108848, upload-time = "2026-07-13T09:49:09.107Z" },
+]
+
+[package.optional-dependencies]
+profiles = [
+    { name = "influxdb" },
+    { name = "openpyxl" },
+    { name = "psycopg", extra = ["binary"] },
+    { name = "psycopg-binary" },
 ]
 
 [[package]]
