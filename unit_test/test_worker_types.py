@@ -1,13 +1,17 @@
 import unittest
-from grow_worker.worker_types import (
-    get_problem_type,
-    GrowTaskType,
+
+from worker_types import (
     EndScenarioSizingStaged,
+    GrowTaskType,
+    get_problem_type,
 )
 
 
 class TestModule(unittest.TestCase):
+    """Tests for worker type conversion helpers."""
+
     def test__get_problem_type__is_correct_grow_optimizer(self) -> None:
+        """Verify optimizer default task maps to the staged sizing problem class."""
         # Arrange
         task_type = GrowTaskType.GROW_OPTIMIZER_DEFAULT
 

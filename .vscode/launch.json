@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "worker.py",
+            "name": "prefect_flow.py",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/grow_worker/worker.py",
+            "program": "${workspaceFolder}/src/prefect_flow.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "justMyCode": true,
@@ -26,26 +26,16 @@
             }
         },
         {
-            "name": "prefect_start_optimizer_run",
+            "name": "run_optimizer_flow_function",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/src/prefect_start_optimizer_run.py",
-            "cwd": "${workspaceFolder}/src",
+            "program": "${workspaceFolder}/local_test/run_optimizer_flow_function.py",
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/src"
-            }
-        },
-        {
-            "name": "prefect_get_flow_run_result",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${workspaceFolder}/src/prefect_get_flow_run_result.py",
-            "cwd": "${workspaceFolder}/src",
-            "console": "integratedTerminal",
-            "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
-            }
+            },
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

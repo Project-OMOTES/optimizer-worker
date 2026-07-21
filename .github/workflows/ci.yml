@@ -6,45 +6,41 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ "3.10" ]
     steps:
-      - uses: actions/checkout@v3
-      - name: setup python
+      - uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-      - name: create and activate venv
-        run: |
-          ./ci/linux/create_venv.sh
-          ./ci/linux/install_dependencies.sh
-      - name: run lint
-        run: |
-          ./ci/linux/lint.sh
+          python-version: "3.10"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+      - name: Install just
+        uses: taiki-e/install-action@just
+      - name: Install dependencies
+        run: just install
+      - name: Run linter
+        run: just lint
+      - name: Check formatting
+        run: ruff format --check ./src ./unit_test
 
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ "3.10" ]
     steps:
-      - uses: actions/checkout@v3
-      - name: setup python
+      - uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-      - name: create and activate venv
-        run: |
-          ./ci/linux/create_venv.sh
-          ./ci/linux/install_dependencies.sh
-      - name: run unit tests
-        run: |
-          ./ci/linux/test_unit.sh
-      - name: surface failing tests
+          python-version: "3.10"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+      - name: Install just
+        uses: taiki-e/install-action@just
+      - name: Install dependencies
+        run: just install
+      - name: Run unit tests
+        run: just test
+      - name: Publish test results
         if: always()
         uses: pmeier/pytest-results-action@main
         with:
@@ -54,22 +50,19 @@ jobs:
           fail-on-empty: true
 
   typecheck:
-    name: Typecheck
+    name: Type Check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ "3.10" ]
     steps:
-      - uses: actions/checkout@v3
-      - name: setup python
+      - uses: actions/checkout@v4
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-      - name: create and activate venv
-        run: |
-          ./ci/linux/create_venv.sh
-          ./ci/linux/install_dependencies.sh
-      - name: run typechecker
-        run: |
-          ./ci/linux/typecheck.sh
+          python-version: "3.10"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+      - name: Install just
+        uses: taiki-e/install-action@just
+      - name: Install dependencies
+        run: just install
+      - name: Run type checker
+        run: just typecheck

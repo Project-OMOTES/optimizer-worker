@@ -23,29 +23,22 @@ requires-python = "==3.11.*"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.20.3",
-    "omotes-sdk-python ~= 4.3.3",
     "prefect==3.7.3",
+    "pyesdl~=26.7",
     "s3fs",
+    "streamcapture ~= 1.2.5",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "setuptools ~= 75.6.0",
     "wheel ~= 0.45.1",
     "setuptools-git-versioning >= 2.0, < 3",
     "pip-tools ~= 7.4.0",
-    "black ~= 24.10.0",
-    "flake8 == 7.1.1",
-    "flake8-pyproject ~= 1.2.3",
-    "flake8-docstrings ~= 1.7.0",
-    "flake8-quotes ~= 3.4.0",
-    "flake8-bugbear ~= 24.10.31",
-    "flake8-mock ~= 0.4",
-    "flake8-tuple ~= 0.4.1",
+    "ruff",
+    "ty",
     "pytest ~= 8.3.4",
     "pytest-cov ~= 6.0.0",
-    "mypy ~= 1.13.0",
-    "isort == 5.13.2",
     "build ~= 1.2.2",
 ]
 
@@ -69,7 +62,8 @@ enabled = true
 starting_version = "0.0.1"
 
 [tool.pytest.ini_options]
-addopts = "--cov=grow_worker --cov-report html --cov-report term-missing --cov-fail-under 35"
+pythonpath = ["src"]
+addopts = "--cov=src --cov-report html --cov-report term-missing --cov-fail-under 50"
 
 [tool.coverage.run]
 source = ["src"]
@@ -93,25 +87,14 @@ select = [
 ]
 ignore = [
     "D100", # Missing docstring in public module
-    "D211", # no-blank-line-before-class
-    "D213", # multi-line-summary-second-line
-    "D203", # 1 blank line required before class docstring
+    "D104", # Missing docstring in public package
 ]
+exclude = ["justfile", ".editorconfig"]
 
-# [tool.mypy]
-# python_version = "3.10"
-# warn_return_any = true
-# warn_unused_configs = true
-# disallow_untyped_defs = true
-# disallow_incomplete_defs = true
-# exclude = ['.venv/*', 'venv/*', 'doc/*', 'ci/*']
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
-# # mypy per-module options:
-# [[tool.mypy.overrides]]
-# module = "unit_test.*"
-# check_untyped_defs = true
-# ignore_missing_imports = true
-
-# [[tool.mypy.overrides]]
-# module = "mesido.*"
-# ignore_missing_imports = true
+[tool.ruff.lint.per-file-ignores]
+"src/env.py" = [
+    "DOC201", # Simple getter methods in EnvSettings use concise one-line docstrings.
+]
