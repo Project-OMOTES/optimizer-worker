@@ -2,9 +2,6 @@ name: Build-Test-Lint-Typecheck
 
 on: [push]
 
-env:
-  JUSTFILE: ${{ github.workspace }}/justfile
-
 jobs:
   lint:
     name: Lint
@@ -20,11 +17,11 @@ jobs:
       - name: Install just
         uses: taiki-e/install-action@just
       - name: Install dependencies
-        run: just --justfile "$JUSTFILE" install
+        run: just install
       - name: Run linter
-        run: just --justfile "$JUSTFILE" lint
+        run: just lint
       - name: Check formatting
-        run: just --justfile "$JUSTFILE" format-check
+        run: just format-check
 
   test:
     name: Unit Tests
@@ -40,9 +37,9 @@ jobs:
       - name: Install just
         uses: taiki-e/install-action@just
       - name: Install dependencies
-        run: just --justfile "$JUSTFILE" install
+        run: just install
       - name: Run unit tests
-        run: just --justfile "$JUSTFILE" test
+        run: just test
       - name: Publish test results
         if: always()
         uses: pmeier/pytest-results-action@main
@@ -66,6 +63,6 @@ jobs:
       - name: Install just
         uses: taiki-e/install-action@just
       - name: Install dependencies
-        run: just --justfile "$JUSTFILE" install
+        run: just install
       - name: Run type checker
-        run: just --justfile "$JUSTFILE" typecheck
+        run: just typecheck
