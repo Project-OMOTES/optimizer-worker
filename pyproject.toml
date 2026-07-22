@@ -23,6 +23,7 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 
+# TODO: update mesido and omotes-sdk-python versions when release
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.20.3",
