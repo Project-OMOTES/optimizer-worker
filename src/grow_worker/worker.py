@@ -96,7 +96,10 @@ def grow_worker_task(
         "verify_ssl": False,
     }
 
-    msg = f"Will write result profiles to '{esdl_output_profiles_type_str}' database at {db_host}:{db_port}"
+    msg = (
+        f"Will write result profiles to '{esdl_output_profiles_type_str}' "
+        f"database at {db_host}:{db_port}"
+    )
 
     if pg_db_timeseries:
         db_connection["database"] = pg_db_timeseries
