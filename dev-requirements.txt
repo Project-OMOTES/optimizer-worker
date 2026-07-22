@@ -39,7 +39,7 @@ celery==5.6.3
     # via
     #   -c requirements.txt
     #   omotes-sdk-python
-certifi==2026.6.17
+certifi==2026.7.22
     # via
     #   -c requirements.txt
     #   requests
@@ -195,7 +195,7 @@ pandas==1.5.3
     #   mesido
 pathspec==1.1.1
     # via black
-platformdirs==4.10.0
+platformdirs==4.11.0
     # via black
 pluggy==1.6.0
     # via pytest
@@ -345,7 +345,7 @@ wcwidth==0.8.2
     #   prompt-toolkit
 wheel==0.45.1
     # via omotes-grow-worker (pyproject.toml)
-yarl==1.24.2
+yarl==1.24.5
     # via
     #   -c requirements.txt
     #   aio-pika

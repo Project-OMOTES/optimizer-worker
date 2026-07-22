@@ -5,4 +5,5 @@ if [[ "$OSTYPE" != "win32" && "$OSTYPE" != "msys" ]]; then
   echo "Activating .venv first."
   . .venv/bin/activate
 fi
-pip3 install pip-tools
+# install the missing dep alongside pip-tools
+pip3 install pip-tools typing_extensions
