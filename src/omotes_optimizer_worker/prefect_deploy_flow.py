@@ -1,16 +1,18 @@
 import asyncio
 import subprocess
+from pathlib import Path
 
-from grow_worker.env import EnvSettings
-from grow_worker.prefect_util import deploy_flow
-from prefect_flow import optimizer_flow
+from omotes_sdk.prefect_util import deploy_flow
+
+from omotes_optimizer_worker.env import EnvSettings
+from omotes_optimizer_worker.prefect_flow import optimizer_flow
 
 deployment_base_name = "omotes-optimizer"
 
-use_local_prefect_code_and_image = EnvSettings.prefect_use_local_code_and_image()
+prefect_use_local_code_and_image = EnvSettings.prefect_use_local_code_and_image()
 optimizer_version = EnvSettings.optimizer_worker_version()
-if use_local_prefect_code_and_image:
-    optimizer_version = "local2"
+if prefect_use_local_code_and_image:
+    optimizer_version = "local"
     optimizer_image = f"{deployment_base_name}:{optimizer_version}"
 else:
     optimizer_image = f"ghcr.io/project-omotes/{deployment_base_name}:{optimizer_version}"
@@ -22,9 +24,8 @@ job_variables = {
         "PREFECT_LOGGING_LEVEL": EnvSettings.log_level(),
         "PREFECT_LOGGING_ROOT_LEVEL": EnvSettings.log_level(),
         "LOG_LEVEL": EnvSettings.log_level(),
-        "PREFECT_USER_NAME": EnvSettings.prefect_user_name(),
-        "PREFECT_PASSWORD": EnvSettings.prefect_password(),
-        "PREFECT_API_URL": EnvSettings.prefect_server_api_url(),
+        "PREFECT_API_AUTH_STRING": EnvSettings.prefect_api_auth_string(),
+        "PREFECT_API_URL": EnvSettings.prefect_api_url_for_worker(),
         "ESDL_OUTPUT_PROFILES_TYPE": EnvSettings.esdl_output_profiles_type(),
         "DB_HOSTNAME": EnvSettings.db_hostname(),
         "DB_PORT": EnvSettings.db_port(),
@@ -47,18 +48,37 @@ job_variables = {
 
 async def main() -> None:
     """Deploy training and prediction flows to Prefect."""
-    if use_local_prefect_code_and_image:
+    if prefect_use_local_code_and_image:
         # create/update local classification docker image
-        cmd_build_classification_image = f"docker build --provenance=false -t {optimizer_image} .."
-        subprocess.run(cmd_build_classification_image, shell=True, check=True)
-    # When not using local code and image, a ci.tno.nl image is used (created on push to ci.tno.nl repo) with the tag
-    #   specified as env var OPTIMIZER_WORKER_IMAGE_TAG.
+        if EnvSettings.prefect_use_local_sdk_and_mesido():
+            repo_root = Path(__file__).resolve().parents[2]
+            monorepo_root = repo_root.parent
+            subprocess.run(
+                [
+                    "docker",
+                    "build",
+                    "-f",
+                    "optimizer-worker/dev.Dockerfile",
+                    "--provenance=false",
+                    "-t",
+                    optimizer_image,
+                    ".",
+                ],
+                check=True,
+                cwd=monorepo_root,
+            )
+        else:
+            cmd_build_classification_image = f"docker build --provenance=false -t {optimizer_image} .."
+            subprocess.run(cmd_build_classification_image, shell=True, check=True)
+    # When not using local code and image, a publised image is used with tag OPTIMIZER_WORKER_IMAGE_TAG.
 
     await deploy_flow(
         flow_function=optimizer_flow,
         deployment_name=f"{deployment_base_name}:{optimizer_version}",
         image_name=optimizer_image,
         job_variables=job_variables,
+        prefect_work_pool_name=EnvSettings.prefect_work_pool_name(),
+        max_concurrent_runs=EnvSettings.prefect_flow_max_concurrent_runs(),
     )
 
     print("Omotes optimizer deployment registered successfully")

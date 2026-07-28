@@ -24,7 +24,7 @@ jobs:
         run: just format-check
 
   test:
-    name: Unit Tests
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

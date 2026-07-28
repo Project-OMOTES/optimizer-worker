@@ -1,10 +1,3 @@
-try:  # dotenv is not used/installed by all developers
-    from dotenv import load_dotenv  # noqa
-
-    load_dotenv()
-except ImportError:
-    pass
-
 import os
 
 
@@ -63,14 +56,9 @@ class EnvSettings:
         return require_env("PREFECT_API_URL")
 
     @staticmethod
-    def prefect_user_name() -> str:
-        """Return Prefect user name."""
-        return require_env("PREFECT_USER_NAME")
-
-    @staticmethod
-    def prefect_password() -> str:
-        """Return Prefect password."""
-        return require_env("PREFECT_PASSWORD")
+    def prefect_api_url_for_worker() -> str:
+        """Return Prefect API URL to be used inside worker."""
+        return require_env("PREFECT_API_URL_FOR_WORKER")
 
     @staticmethod
     def prefect_work_pool_name() -> str:
@@ -83,14 +71,19 @@ class EnvSettings:
         return os.getenv("PREFECT_USE_LOCAL_CODE_AND_IMAGE", "false").lower() == "true"
 
     @staticmethod
-    def prefect_classification_image_tag() -> str | None:
-        """Return optional Prefect image tag override."""
-        return os.getenv("PREFECT_CLASSIFICATION_IMAGE_TAG", None)
+    def prefect_use_local_sdk_and_mesido() -> bool:
+        """Return whether local code for sdk and mesido should be used for deployment."""
+        return os.getenv("PREFECT_USE_LOCAL_SDK_AND_MESIDO", "false").lower() == "true"
 
     @staticmethod
-    def prefect_server_api_url() -> str:
+    def prefect_api_auth_string() -> str:
         """Return Prefect server API URL."""
-        return require_env("PREFECT_SERVER_API_URL")
+        return require_env("PREFECT_API_AUTH_STRING")
+
+    @staticmethod
+    def prefect_flow_max_concurrent_runs() -> int:
+        """Return the maximum number of concurrent Prefect flow runs."""
+        return int(require_env("PREFECT_FLOW_MAX_CONCURRENT_RUNS"))
 
     @staticmethod
     def minio_host() -> str:

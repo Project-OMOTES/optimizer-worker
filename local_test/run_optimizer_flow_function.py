@@ -1,4 +1,4 @@
-from prefect_flow import optimizer_flow
+from omotes_optimizer_worker.prefect_flow import optimizer_flow
 
 input_esdl_file = "./local_test/Delft_T.esdl"
 # input_esdl_file = "./local_test/Delft_T feedback.esdl"

@@ -5,38 +5,34 @@ from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, cast
 
-from dotenv import load_dotenv
 from esdl import EnergySystem
 from esdl.esdl_handler import EnergySystemHandler
 from mesido.esdl.esdl_mixin import DBAccessType, ESDLOutputProfilesType
 from mesido.esdl.esdl_parser import ESDLStringParser
 from mesido.esdl.profile_parser import ESDLProfileReader
 from mesido.exceptions import MesidoAssetIssueError
-from pydantic import BaseModel, Field
-
-from grow_worker.esdl_messages import (
+from omotes_sdk.esdl_messages import (
     EsdlMessage,
     MessageSeverity,
 )
-from grow_worker.log_forwarding import StdCaptureToLogSession
-from grow_worker.prefect_util import (
-    Failed,
-    State,
+from omotes_sdk.log_forwarding import StdCaptureToLogSession
+from omotes_sdk.prefect_util import (
     create_flow_progress_updater,
-    flow,
-    flow_run,
     in_prefect_flow_context,
     load_gurobi_license,
     write_flow_return_artifact_to_minio,
 )
-from worker_types import (
+from prefect import flow
+from prefect.runtime import flow_run
+from prefect.states import Failed, State
+from pydantic import BaseModel, Field
+
+from omotes_optimizer_worker.worker_types import (
     GrowTaskType,
     get_problem_function,
     get_problem_type,
     get_solver_class,
 )
-
-load_dotenv()  # Load environment variables from .env file
 
 
 class OptimizerFlowResult(BaseModel):
@@ -63,6 +59,9 @@ def optimizer_flow(
         OptimizerFlowResult | State[Any] | None: Failed state when execution fails; otherwise no value is
         returned from this flow function.
 
+    Raises:
+        ValueError: If MinIO credentials are not fully set.
+
     """
     logging.info("Starting optimizer flow with workflow type: %s", workflow_type_name)
     _update_flow_progress = create_flow_progress_updater(
@@ -73,6 +72,20 @@ def optimizer_flow(
     # Capture and forward solver output only during orchestrated Prefect flow runs.
     capture_session = StdCaptureToLogSession() if in_prefect_flow_context() else nullcontext()
     with capture_session:
+        minio_host = os.environ.get("MINIO_HOST")
+        minio_access_key = os.environ.get("MINIO_ACCESS_KEY")
+        minio_secret = os.environ.get("MINIO_SECRET")
+
+        db_host = os.environ.get("DB_HOSTNAME")
+        db_port = int(os.environ.get("DB_PORT", "5432"))
+        db_username = os.environ.get("DB_USERNAME", "")
+        db_password = os.environ.get("DB_PASSWORD", "")
+
+        if minio_host is None or minio_access_key is None or minio_secret is None:
+            raise ValueError(
+                f"MinIO credentials are not fully set. MinIO host: {minio_host}, "
+                f"access key: {minio_access_key}, secret key: {minio_secret}"
+            )
         try:
             workflow_type = GrowTaskType(workflow_type_name)
             mesido_func = get_problem_function(workflow_type)
@@ -91,11 +104,6 @@ def optimizer_flow(
                     esdl_output_profiles_type_str,
                 )
                 esdl_output_profiles_type = ESDLOutputProfilesType.POSTGRESQL
-
-            db_host = os.environ.get("DB_HOSTNAME")
-            db_port = int(os.environ.get("DB_PORT", "5432"))
-            db_username = os.environ.get("DB_USERNAME", "")
-            db_password = os.environ.get("DB_PASSWORD", "")
 
             logging.info(
                 "Will write result profiles to '%s' database at %s:%s",
@@ -149,7 +157,8 @@ def optimizer_flow(
                 output_esdl=output_esh.to_string(),
                 esdl_messages=esdl_messages_as_dicts,
             )
-            write_flow_return_artifact_to_minio(success_result)
+
+            write_flow_return_artifact_to_minio(success_result, minio_host, minio_access_key, minio_secret)
 
             # return only for local runs and testing, not persisted for containerized runs: artifacts are used
             return success_result
@@ -165,7 +174,7 @@ def optimizer_flow(
                 output_esdl=None,
                 esdl_messages=[message.model_dump(mode="json") for message in esdl_messages],
             )
-            write_flow_return_artifact_to_minio(failed_result)
+            write_flow_return_artifact_to_minio(failed_result, minio_host, minio_access_key, minio_secret)
 
             return Failed(message=f"Optimizer flow failed: {e}")
 

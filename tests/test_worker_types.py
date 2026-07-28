@@ -1,6 +1,6 @@
 import unittest
 
-from worker_types import (
+from omotes_optimizer_worker.worker_types import (
     EndScenarioSizingStaged,
     GrowTaskType,
     get_problem_type,

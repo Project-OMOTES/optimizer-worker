@@ -19,7 +19,7 @@ test-results.xml
 ci/
 doc/
 local_test/
-unit_test/
+tests/
 gurobi/
 
 .env

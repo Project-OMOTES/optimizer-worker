@@ -1,6 +1,6 @@
 [project]
-name = "omotes-grow-worker"
-dynamic = ["version"]
+name = "omotes-optimizer-worker"
+version = "0.0.1"
 authors = [{ name = "Mark Vrijlandt", email = "mark.vrijlandt@tno.nl" }]
 description = "Nieuwe Warmte Nu - Optimizer Worker"
 classifiers = [
@@ -23,20 +23,17 @@ requires-python = "==3.11.*"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.20.3",
-    "prefect==3.7.3",
+    "omotes-sdk-python==5.0.1",
     "pyesdl~=26.7",
-    "s3fs",
-    "streamcapture ~= 1.2.5",
 ]
 
 [dependency-groups]
 dev = [
     "setuptools ~= 75.6.0",
     "wheel ~= 0.45.1",
-    "setuptools-git-versioning >= 2.0, < 3",
     "pip-tools ~= 7.4.0",
-    "ruff",
-    "ty",
+    "ruff ~= 0.15.22",
+    "ty ~= 0.0.61",
     "pytest ~= 8.3.4",
     "pytest-cov ~= 6.0.0",
     "build ~= 1.2.2",
@@ -50,16 +47,11 @@ repository = "https://github.com/Nieuwe-Warmte-Nu/optimizer-worker"
 changelog = "https://github.com/Nieuwe-Warmte-Nu/optimizer-worker/blob/main/CHANGELOG.md"
 
 [build-system]
-build-backend = "setuptools.build_meta"
-requires = [
-    "setuptools ~= 75.6.0",
-    "wheel ~= 0.45.1",
-    "setuptools-git-versioning >= 2.0, < 3",
-]
+requires = ["uv_build>=0.11.29,<0.12"]
+build-backend = "uv_build"
 
-[tool.setuptools-git-versioning]
-enabled = true
-starting_version = "0.0.1"
+[tool.uv.build-backend]
+module-name = "omotes_optimizer_worker"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
