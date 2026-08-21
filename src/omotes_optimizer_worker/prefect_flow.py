@@ -99,8 +99,12 @@ def optimizer_flow(
 
             base_folder = Path(__file__).resolve().parent.parent
             esdl_output_profiles_type_str = os.environ.get("ESDL_OUTPUT_PROFILES_TYPE", "POSTGRESQL").upper()
-            esdl_output_profiles_type = getattr(ESDLOutputProfilesType, esdl_output_profiles_type_str, None)
-            if esdl_output_profiles_type is None:
+            esdl_output_profiles_type = (
+                None
+                if esdl_output_profiles_type_str == "NO_DB_WRITE_FOR_TEST"
+                else getattr(ESDLOutputProfilesType, esdl_output_profiles_type_str, None)
+            )
+            if esdl_output_profiles_type is None and esdl_output_profiles_type_str != "NO_DB_WRITE_FOR_TEST":
                 logging.warning(
                     "Unknown ESDL_OUTPUT_PROFILES_TYPE '%s', defaulting to POSTGRESQL",
                     esdl_output_profiles_type_str,

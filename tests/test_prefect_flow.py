@@ -1,3 +1,4 @@
+from os import environ
 from pathlib import Path
 from unittest.mock import patch
 
@@ -5,15 +6,25 @@ from prefect.states import State
 
 from omotes_optimizer_worker.prefect_flow import OptimizerFlowResult, optimizer_flow
 
+MINIO_TEST_ENV = {
+    "MINIO_HOST": "minio",
+    "MINIO_PORT": "9000",
+    "MINIO_ACCESS_KEY": "access",
+    "MINIO_SECRET": "secret",
+    "ESDL_OUTPUT_PROFILES_TYPE": "NO_DB_WRITE_FOR_TEST",
+}
+
 
 def test_optimizer_flow_runs_delft_esdl() -> None:
     """Run the optimizer flow with the same fixture as the local runner."""
     # Arrange
     fixture_path = Path(__file__).parent / "data" / "esdl" / "Delft_T.esdl"
     input_esdl = fixture_path.read_text()
-
     # Act
-    with patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"):
+    with (
+        patch.dict(environ, MINIO_TEST_ENV, clear=False),
+        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"),
+    ):
         result = optimizer_flow.fn(
             input_esdl=input_esdl,
             workflow_config={},
@@ -32,7 +43,10 @@ def test_optimizer_flow_returns_delft_feedback_messages() -> None:
     input_esdl = fixture_path.read_text()
 
     # Act
-    with patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio") as write_artifact:
+    with (
+        patch.dict(environ, MINIO_TEST_ENV, clear=False),
+        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio") as write_artifact,
+    ):
         result = optimizer_flow.fn(
             input_esdl=input_esdl,
             workflow_config={},
