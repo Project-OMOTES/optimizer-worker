@@ -1,7 +1,9 @@
-from omotes_optimizer_worker.prefect_flow import optimizer_flow
+from pathlib import Path
 
-input_esdl_file = "./local_test/Delft_T.esdl"
-# input_esdl_file = "./local_test/Delft_T feedback.esdl"
+from omotes_optimizer_worker.prefect_flow import OptimizerFlowResult, optimizer_flow
+
+input_esdl_file = Path(__file__).parents[1] / "tests" / "data" / "esdl" / "Delft_T.esdl"
+# input_esdl_file = Path(__file__).parent / "Delft_T feedback.esdl"
 
 workflow_type_name = "grow_optimizer_no_heat_losses"
 
@@ -13,6 +15,11 @@ optimizer_flow_result = optimizer_flow.fn(
     workflow_config={},
     workflow_type_name=workflow_type_name,
 )
+if not isinstance(optimizer_flow_result, OptimizerFlowResult):
+    raise RuntimeError(f"Optimizer flow did not return a result: {optimizer_flow_result}")
+if optimizer_flow_result.output_esdl is None:
+    raise RuntimeError("Optimizer flow did not produce output ESDL")
+
 print("--------------ESDL messages:")
 print(optimizer_flow_result.esdl_messages)
 print("--------------Result")

@@ -1,5 +1,5 @@
 import asyncio
-import subprocess
+import shutil
 from pathlib import Path
 
 from omotes_sdk.prefect_util import deploy_flow
@@ -8,6 +8,14 @@ from omotes_optimizer_worker.env import EnvSettings
 from omotes_optimizer_worker.prefect_flow import optimizer_flow
 
 deployment_base_name = "omotes-optimizer"
+
+
+async def _build_docker_image(command: list[str], cwd: Path | None = None) -> None:
+    process = await asyncio.create_subprocess_exec(*command, cwd=cwd)
+    return_code = await process.wait()
+    if return_code != 0:
+        raise RuntimeError(f"Docker build failed with exit code {return_code}")
+
 
 prefect_use_local_code_and_image = EnvSettings.prefect_use_local_code_and_image()
 optimizer_version = EnvSettings.optimizer_worker_version()
@@ -32,30 +40,35 @@ job_variables = {
         "DB_USERNAME": EnvSettings.db_username(),
         "DB_PASSWORD": EnvSettings.db_password(),
         "MINIO_HOST": EnvSettings.minio_host(),
+        "MINIO_PORT": EnvSettings.minio_port(),
         "MINIO_EXTERNAL_HOST": EnvSettings.minio_external_host(),
         "MINIO_ACCESS_KEY": EnvSettings.minio_access_key(),
         "MINIO_SECRET": EnvSettings.minio_secret(),
-        "PREFECT_MINIO_HOST": EnvSettings.minio_host(),
-        "PREFECT_MINIO_EXTERNAL_HOST": EnvSettings.minio_external_host(),
-        "PREFECT_MINIO_ACCESS_KEY": EnvSettings.minio_access_key(),
-        "PREFECT_MINIO_SECRET": EnvSettings.minio_secret(),
+        "PREFECT_FLOW_TIMEOUT_SECONDS": str(EnvSettings.prefect_flow_timeout_seconds()),
     },
-    "pod_watch_timeout_seconds": 24 * 3600,
-    "networks": ["omotes"],  # for docker worker
+    "networks": [EnvSettings.docker_worker_network()],  # for docker worker
     "auto_remove": True,  # for docker worker, uncomment for debugging
 }
 
 
 async def main() -> None:
-    """Deploy training and prediction flows to Prefect."""
+    """Deploy training and prediction flows to Prefect.
+
+    Raises:
+        FileNotFoundError: If Docker is unavailable for a local image build.
+    """
     if prefect_use_local_code_and_image:
-        # create/update local classification docker image
+        # create/update local docker image
+        docker_executable = shutil.which("docker")
+        if docker_executable is None:
+            raise FileNotFoundError("Docker executable not found on PATH")
+
         if EnvSettings.prefect_use_local_sdk_and_mesido():
             repo_root = Path(__file__).resolve().parents[2]
             monorepo_root = repo_root.parent
-            subprocess.run(
+            await _build_docker_image(
                 [
-                    "docker",
+                    docker_executable,
                     "build",
                     "-f",
                     "optimizer-worker/dev.Dockerfile",
@@ -64,12 +77,19 @@ async def main() -> None:
                     optimizer_image,
                     ".",
                 ],
-                check=True,
                 cwd=monorepo_root,
             )
         else:
-            cmd_build_classification_image = f"docker build --provenance=false -t {optimizer_image} .."
-            subprocess.run(cmd_build_classification_image, shell=True, check=True)
+            await _build_docker_image(
+                [
+                    docker_executable,
+                    "build",
+                    "--provenance=false",
+                    "-t",
+                    optimizer_image,
+                    "..",
+                ],
+            )
     # When not using local code and image, a publised image is used with tag OPTIMIZER_WORKER_IMAGE_TAG.
 
     await deploy_flow(

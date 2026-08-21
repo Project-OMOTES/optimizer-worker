@@ -17,7 +17,7 @@
             "name": "run_optimizer_flow_function",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/local_test/run_optimizer_flow_function.py",
+            "program": "${workspaceFolder}/local_run/run_optimizer_flow_function.py",
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "env": {

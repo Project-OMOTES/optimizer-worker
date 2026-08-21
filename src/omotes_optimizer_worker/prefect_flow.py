@@ -27,6 +27,7 @@ from prefect.runtime import flow_run
 from prefect.states import Failed, State
 from pydantic import BaseModel, Field
 
+from omotes_optimizer_worker.env import EnvSettings
 from omotes_optimizer_worker.worker_types import (
     GrowTaskType,
     get_problem_function,
@@ -42,7 +43,7 @@ class OptimizerFlowResult(BaseModel):
     esdl_messages: list[dict[str, Any]] = Field(default_factory=list, json_schema_extra={"file_extension": ".json"})
 
 
-@flow
+@flow(timeout_seconds=EnvSettings.prefect_flow_timeout_seconds())
 def optimizer_flow(
     input_esdl: str,
     workflow_config: dict,
@@ -73,6 +74,7 @@ def optimizer_flow(
     capture_session = StdCaptureToLogSession() if in_prefect_flow_context() else nullcontext()
     with capture_session:
         minio_host = os.environ.get("MINIO_HOST")
+        minio_port = os.environ.get("MINIO_PORT")
         minio_access_key = os.environ.get("MINIO_ACCESS_KEY")
         minio_secret = os.environ.get("MINIO_SECRET")
 
@@ -81,9 +83,9 @@ def optimizer_flow(
         db_username = os.environ.get("DB_USERNAME", "")
         db_password = os.environ.get("DB_PASSWORD", "")
 
-        if minio_host is None or minio_access_key is None or minio_secret is None:
+        if minio_host is None or minio_port is None or minio_access_key is None or minio_secret is None:
             raise ValueError(
-                f"MinIO credentials are not fully set. MinIO host: {minio_host}, "
+                f"MinIO credentials are not fully set. MinIO host: {minio_host}, port: {minio_port}, "
                 f"access key: {minio_access_key}, secret key: {minio_secret}"
             )
         try:
@@ -143,13 +145,13 @@ def optimizer_flow(
             input_esh = EnergySystemHandler()
             input_esh.load_from_string(input_esdl)
 
-            new_name = input_esh.energy_system.name + "_"
-            new_name += flow_run.name if flow_run and flow_run.name else workflow_type_name
+            output_esdl_name = input_esh.energy_system.name + "_"
+            output_esdl_name += flow_run.name if flow_run and flow_run.name else workflow_type_name
 
             output_esh = EnergySystemHandler()
             output_esh.load_from_string(output_esdl)
             output_energy_system: EnergySystem = output_esh.energy_system
-            output_energy_system.name = new_name
+            output_energy_system.name = output_esdl_name
 
             # TODO get esdl_messages from successful run after mesido update.
             esdl_messages_as_dicts = [message.model_dump(mode="json") for message in esdl_messages]
@@ -158,7 +160,7 @@ def optimizer_flow(
                 esdl_messages=esdl_messages_as_dicts,
             )
 
-            write_flow_return_artifact_to_minio(success_result, minio_host, minio_access_key, minio_secret)
+            write_flow_return_artifact_to_minio(success_result, minio_host, minio_port, minio_access_key, minio_secret)
 
             # return only for local runs and testing, not persisted for containerized runs: artifacts are used
             return success_result
@@ -174,7 +176,7 @@ def optimizer_flow(
                 output_esdl=None,
                 esdl_messages=[message.model_dump(mode="json") for message in esdl_messages],
             )
-            write_flow_return_artifact_to_minio(failed_result, minio_host, minio_access_key, minio_secret)
+            write_flow_return_artifact_to_minio(failed_result, minio_host, minio_port, minio_access_key, minio_secret)
 
             return Failed(message=f"Optimizer flow failed: {e}")
 

@@ -51,11 +51,6 @@ class EnvSettings:
         return require_env("DB_PASSWORD")
 
     @staticmethod
-    def prefect_api_url() -> str:
-        """Return Prefect API URL."""
-        return require_env("PREFECT_API_URL")
-
-    @staticmethod
     def prefect_api_url_for_worker() -> str:
         """Return Prefect API URL to be used inside worker."""
         return require_env("PREFECT_API_URL_FOR_WORKER")
@@ -77,7 +72,7 @@ class EnvSettings:
 
     @staticmethod
     def prefect_api_auth_string() -> str:
-        """Return Prefect server API URL."""
+        """Return Prefect auth string."""
         return require_env("PREFECT_API_AUTH_STRING")
 
     @staticmethod
@@ -86,9 +81,23 @@ class EnvSettings:
         return int(require_env("PREFECT_FLOW_MAX_CONCURRENT_RUNS"))
 
     @staticmethod
+    def prefect_flow_timeout_seconds() -> int:
+        """Return Prefect flow timeout in seconds."""
+        timeout_seconds = os.getenv(
+            "PREFECT_FLOW_TIMEOUT_SECONDS",
+            str(24 * 3600 * 2),  # default to 2 days
+        )
+        return int(timeout_seconds)
+
+    @staticmethod
     def minio_host() -> str:
         """Return MinIO host."""
         return require_env("MINIO_HOST")
+
+    @staticmethod
+    def minio_port() -> str:
+        """Return MinIO port."""
+        return require_env("MINIO_PORT")
 
     @staticmethod
     def minio_external_host() -> str | None:
@@ -109,3 +118,8 @@ class EnvSettings:
     def optimizer_worker_version() -> str | None:
         """Return optional optimizer worker version."""
         return os.getenv("OPTIMIZER_WORKER_VERSION", None)
+
+    @staticmethod
+    def docker_worker_network() -> str:
+        """Return the Docker network the docker-type worker attaches flow-run containers to."""
+        return os.getenv("PREFECT_DOCKER_WORKER_NETWORK", "omotes")

@@ -1,12 +1,15 @@
 [project]
 name = "omotes-optimizer-worker"
 version = "0.0.1"
-authors = [{ name = "Mark Vrijlandt", email = "mark.vrijlandt@tno.nl" }]
+authors = [
+    { name = "Mark Vrijlandt", email = "mark.vrijlandt@tno.nl" },
+    { name = "Cheng-Kai Wang", email = "cheng-kai.wang@tno.nl" },
+    { name = "Sebastiaan la Fleur", email = "sebastiaan.lafleur@tno.nl" }
+]
 description = "Nieuwe Warmte Nu - Optimizer Worker"
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Operating System :: OS Independent",
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -23,7 +26,7 @@ requires-python = "==3.11.*"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.20.3",
-    "omotes-sdk-python==5.0.1",
+    "omotes-sdk-python==5.0.2",
     "pyesdl~=26.7",
 ]
 
@@ -38,7 +41,6 @@ dev = [
     "pytest-cov ~= 6.0.0",
     "build ~= 1.2.2",
 ]
-
 
 [project.urls]
 homepage = "https://www.nwn.nu"
@@ -76,6 +78,7 @@ select = [
     "D",   # pydocstyle
     "ANN", # flake8-annotations
     "DOC", # flake8-docstrings
+    "S",   # flake8-bandit
 ]
 ignore = [
     "D100", # Missing docstring in public module
@@ -90,3 +93,4 @@ convention = "google"
 "src/env.py" = [
     "DOC201", # Simple getter methods in EnvSettings use concise one-line docstrings.
 ]
+"tests/**" = ["S101"]  # assert statements are standard in tests
