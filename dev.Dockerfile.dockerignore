@@ -1,0 +1,14 @@
+# The dev image is built from the common parent directory so sibling repositories
+# can be copied. Exclude Mesido development-only files from that build context.
+**/.git
+**/.pytest_cache
+**/.tox
+**/.venv
+**/.vscode
+**/__pycache__
+mesido/.github
+mesido/.idea
+mesido/docs
+mesido/examples
+mesido/manual_run
+mesido/tests

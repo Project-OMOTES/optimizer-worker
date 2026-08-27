@@ -38,7 +38,8 @@ ENV PATH="/src/.venv/bin:$PATH"
 # install omotes-sdk-python and mesido from local code
 COPY omotes-sdk-python/ /omotes-sdk-python/
 RUN uv pip install --python /src/.venv/bin/python /omotes-sdk-python/
-COPY mesido/ /mesido/
+COPY mesido/setup.py mesido/setup.cfg mesido/README.md mesido/versioneer.py /mesido/
+COPY mesido/src/ /mesido/src/
 RUN uv pip install --python /src/.venv/bin/python /mesido/
 
 COPY optimizer-worker/src .
