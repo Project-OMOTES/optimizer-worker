@@ -1,17 +1,18 @@
+from collections.abc import Callable
 from enum import Enum
-from typing import Type, Union, Callable
+from typing import Any
 
-from mesido.workflows import NetworkSimulatorHIGHSWeeklyTimeStep
-from mesido.workflows.grow_workflow import (
-    EndScenarioSizingHeadLossStaged,
-    EndScenarioSizingStaged,
-    EndScenarioSizingDiscountedStaged,
-    SolverGurobi,
-    SolverHIGHS,
-)
 from mesido.workflows import (
+    NetworkSimulatorHIGHSWeeklyTimeStep,
     run_end_scenario_sizing,
     run_end_scenario_sizing_no_heat_losses,
+)
+from mesido.workflows.grow_workflow import (
+    EndScenarioSizingDiscountedStaged,
+    EndScenarioSizingHeadLossStaged,
+    EndScenarioSizingStaged,
+    SolverGurobi,
+    SolverHIGHS,
 )
 
 
@@ -41,18 +42,28 @@ class GrowTaskType(Enum):
     """Run the Grow Optimizer with minimum equivalent annual cost goal with Gurobi solver."""
 
 
-GROWProblem = Union[
-    Type[EndScenarioSizingHeadLossStaged],
-    Type[EndScenarioSizingStaged],
-    Type[NetworkSimulatorHIGHSWeeklyTimeStep],
-]
+GROWProblem = (
+    type[EndScenarioSizingHeadLossStaged]
+    | type[EndScenarioSizingStaged]
+    | type[EndScenarioSizingDiscountedStaged]
+    | type[NetworkSimulatorHIGHSWeeklyTimeStep]
+)
+
+GROWProblemFunction = Callable[..., Any]
 
 
 def get_problem_type(task_type: GrowTaskType) -> GROWProblem:
     """Convert the Grow task type to the Grow problem that should be run.
 
-    :param task_type: Grow task type.
-    :return: Grow problem class.
+    Args:
+        task_type: Grow task type.
+
+    Returns:
+        GROWProblem: Grow problem class.
+
+    Raises:
+        RuntimeError: If the task type is unknown.
+
     """
     result: GROWProblem
     if task_type in [
@@ -88,13 +99,20 @@ def get_problem_type(task_type: GrowTaskType) -> GROWProblem:
 
 def get_problem_function(
     task_type: GrowTaskType,
-) -> Callable[..., GROWProblem]:
+) -> GROWProblemFunction:
     """Convert the Grow task type to the Grow function that should be run.
 
-    :param task_type: Grow task type.
-    :return: Grow problem function.
+    Args:
+        task_type: Grow task type.
+
+    Returns:
+        GROWProblemFunction: Grow problem function.
+
+    Raises:
+        RuntimeError: If the task type is unknown.
+
     """
-    result: GROWProblem
+    result: GROWProblemFunction
     if task_type in [
         GrowTaskType.GROW_OPTIMIZER_DEFAULT,
         GrowTaskType.GROW_SIMULATOR,
@@ -117,13 +135,20 @@ def get_problem_function(
     return result
 
 
-def get_solver_class(task_type: GrowTaskType) -> Union[Type[SolverHIGHS], Type[SolverGurobi]]:
+def get_solver_class(task_type: GrowTaskType) -> type[SolverHIGHS] | type[SolverGurobi]:
     """Convert the Grow task type to the Grow solver that should be run.
 
-    :param task_type: Grow task type.
-    :return: Grow solver class.
+    Args:
+        task_type: Grow task type.
+
+    Returns:
+        type[SolverHIGHS] | type[SolverGurobi]: Grow solver class.
+
+    Raises:
+        RuntimeError: If the task type is unknown.
+
     """
-    result: Union[Type[SolverHIGHS], Type[SolverGurobi]]
+    result: type[SolverHIGHS] | type[SolverGurobi]
     if task_type in [
         GrowTaskType.GROW_OPTIMIZER_DEFAULT,
         GrowTaskType.GROW_SIMULATOR,

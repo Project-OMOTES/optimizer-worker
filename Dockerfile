@@ -1,4 +1,4 @@
-FROM python:3.10-slim-bookworm
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 RUN apt update && \
@@ -18,13 +18,21 @@ ENV GUROBI_VERSION="$CASADI_GUROBI_VERSION"
 # This env var is for gurobi
 ENV GRB_LICENSE_FILE="/app/gurobi/gurobi.lic"
 
-
 RUN mkdir -p /app/gurobi && \
     wget -qO- https://packages.gurobi.com/${GUROBI_VERSION_URL_MAJOR}/gurobi${GUROBI_VERSION_URL}_linux64.tar.gz | tar xvz --strip-components=2 -C /app/gurobi
 
-COPY requirements.txt /app/grow_worker/requirements.txt
-RUN pip install -r /app/grow_worker/requirements.txt --no-cache-dir
+# install uv
+COPY --from=ghcr.io/astral-sh/uv:0.8.22 /uv /uvx /bin/
 
-COPY src/grow_worker                 /app/grow_worker/
+WORKDIR /src
 
-CMD ["python3", "-m", "grow_worker.worker"]
+# install dependencies, avoid using Gurobi's embedded python
+ENV UV_PYTHON=/usr/local/bin/python3.11
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --locked --no-install-project --no-dev
+# enable running commands without 'uv run'
+ENV PATH="/src/.venv/bin:$PATH"
+
+COPY src .
