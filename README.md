@@ -34,9 +34,10 @@ In vscode go to the debug view and run `run_optimizer_flow_function`. This runs 
 Run via just (also used in in github actions):
 
 ```bash
-just ci            # run all CI checks (lint, format-check, typecheck, test)
+just ci            # run all CI checks (lint, security, format-check, typecheck, test)
 
 just lint          # ruff checks
+just security      # ruff security
 just format        # ruff format
 just format-check  # verify formatting
 just typecheck     # ty type checking
@@ -52,7 +53,7 @@ In vscode go to the debug view and run `prefect_deploy_flow`.\
 This will create a deployment on prefect (to the prefect instance on `PREFECT_API_URL`).\
 
 During development you may want to deploy local code of this repo instead of an already published image, then set `PREFECT_USE_LOCAL_CODE_AND_IMAGE=true` in `.env`.
-To also use local code for the omoted-sdk-python and mesido set `PREFECT_USE_LOCAL_SDK_AND_MESIDO=true` as well.
+To also use local code for the omotes-sdk-python and mesido set `PREFECT_USE_LOCAL_SDK_AND_MESIDO=true` as well.
 
 ## Project Structure
 
@@ -67,10 +68,13 @@ optimizer-worker/
 │       └── worker_types.py         # Workflow/solver mapping utilities
 ├── tests/
 │   ├── test_prefect_deploy_flow.py # Tests for deploy flow module behavior
-│   └── test_worker_types.py        # Tests for worker type mapping logic
-├── local_test/
-│   ├── Delft_T.esdl                # Local test input ESDL
-│   ├── Delft_T feedback.esdl       # Local test output/feedback ESDL
+│   ├── test_prefect_flow.py        # Tests for optimizer flow behavior
+│   ├── data/
+│   │   └── esdl/
+│   │       ├── Delft_T.esdl         # Successful optimizer flow input
+│   │       └── Delft_T_feedback.esdl # Feedback/error flow input
+│   └── test_worker_types.py         # Tests for worker type mapping logic
+├── local_run/
 │   └── run_optimizer_flow_function.py # Run flow function locally without Prefect
 ├── doc/                            # Project documentation assets
 ├── gurobi/

@@ -28,7 +28,7 @@ typecheck:
 test:
     uv run pytest --junit-xml=test-results.xml tests/
 
-# Run all checks (install, lint, security, format-check, typecheck, test)
+# Run all CI checks (install, lint, security, format-check, typecheck, test)
 ci: install lint security format-check typecheck test
 
 # Show this help message

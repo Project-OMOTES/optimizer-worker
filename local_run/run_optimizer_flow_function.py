@@ -3,7 +3,7 @@ from pathlib import Path
 from omotes_optimizer_worker.prefect_flow import OptimizerFlowResult, optimizer_flow
 
 input_esdl_file = Path(__file__).parents[1] / "tests" / "data" / "esdl" / "Delft_T.esdl"
-# input_esdl_file = Path(__file__).parent / "Delft_T feedback.esdl"
+# input_esdl_file = Path(__file__).parents[1] / "tests" / "data" / "esdl" / "Delft_T_feedback.esdl"
 
 workflow_type_name = "grow_optimizer_no_heat_losses"
 
