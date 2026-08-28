@@ -70,7 +70,7 @@ def optimizer_flow(
     capture_session = StdCaptureToLogSession() if in_prefect_flow_context() else nullcontext()
     with capture_session:
         minio_host = EnvSettings.minio_host()
-        minio_host_external = EnvSettings.minio_host_external()
+        minio_external_url = EnvSettings.minio_external_url()
         minio_port = EnvSettings.minio_port()
         minio_access_key = EnvSettings.minio_access_key()
         minio_secret = EnvSettings.minio_secret()
@@ -161,7 +161,7 @@ def optimizer_flow(
                 minio_port,
                 minio_access_key,
                 minio_secret,
-                minio_host_external,
+                minio_external_url,
             )
 
             # return only for local runs and testing, not persisted for containerized runs: artifacts are used
@@ -184,7 +184,7 @@ def optimizer_flow(
                 minio_port,
                 minio_access_key,
                 minio_secret,
-                minio_host_external,
+                minio_external_url,
             )
 
             return Failed(message=f"Optimizer flow failed: {e}")
