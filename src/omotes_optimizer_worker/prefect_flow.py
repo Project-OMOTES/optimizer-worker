@@ -1,6 +1,5 @@
 import base64
 import logging
-import os
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, cast
@@ -60,9 +59,6 @@ def optimizer_flow(
         OptimizerFlowResult | State[Any] | None: Failed state when execution fails; otherwise no value is
         returned from this flow function.
 
-    Raises:
-        ValueError: If MinIO credentials are not fully set.
-
     """
     logging.info("Starting optimizer flow with workflow type: %s", workflow_type_name)
     _update_flow_progress = create_flow_progress_updater(
@@ -73,21 +69,16 @@ def optimizer_flow(
     # Capture and forward solver output only during orchestrated Prefect flow runs.
     capture_session = StdCaptureToLogSession() if in_prefect_flow_context() else nullcontext()
     with capture_session:
-        minio_host = os.environ.get("MINIO_HOST")
-        minio_port = os.environ.get("MINIO_PORT")
-        minio_access_key = os.environ.get("MINIO_ACCESS_KEY")
-        minio_secret = os.environ.get("MINIO_SECRET")
+        minio_host = EnvSettings.minio_host()
+        minio_host_external = EnvSettings.minio_host_external()
+        minio_port = EnvSettings.minio_port()
+        minio_access_key = EnvSettings.minio_access_key()
+        minio_secret = EnvSettings.minio_secret()
 
-        db_host = os.environ.get("DB_HOSTNAME")
-        db_port = int(os.environ.get("DB_PORT", "5432"))
-        db_username = os.environ.get("DB_USERNAME", "")
-        db_password = os.environ.get("DB_PASSWORD", "")
-
-        if minio_host is None or minio_port is None or minio_access_key is None or minio_secret is None:
-            raise ValueError(
-                f"MinIO credentials are not fully set. MinIO host: {minio_host}, port: {minio_port}, "
-                f"access key: {minio_access_key}, secret key: {minio_secret}"
-            )
+        db_host = EnvSettings.db_hostname()
+        db_port = int(EnvSettings.db_port())
+        db_username = EnvSettings.db_username()
+        db_password = EnvSettings.db_password()
         try:
             workflow_type = GrowTaskType(workflow_type_name)
             mesido_func = get_problem_function(workflow_type)
@@ -98,7 +89,7 @@ def optimizer_flow(
                 load_gurobi_license()
 
             base_folder = Path(__file__).resolve().parent.parent
-            esdl_output_profiles_type_str = os.environ.get("ESDL_OUTPUT_PROFILES_TYPE", "POSTGRESQL").upper()
+            esdl_output_profiles_type_str = EnvSettings.esdl_output_profiles_type().upper()
             esdl_output_profiles_type = (
                 None
                 if esdl_output_profiles_type_str == "NO_DB_WRITE_FOR_TEST"
@@ -164,7 +155,14 @@ def optimizer_flow(
                 esdl_messages=esdl_messages_as_dicts,
             )
 
-            write_flow_return_artifact_to_minio(success_result, minio_host, minio_port, minio_access_key, minio_secret)
+            write_flow_return_artifact_to_minio(
+                success_result,
+                minio_host,
+                minio_port,
+                minio_access_key,
+                minio_secret,
+                minio_host_external,
+            )
 
             # return only for local runs and testing, not persisted for containerized runs: artifacts are used
             return success_result
@@ -180,7 +178,14 @@ def optimizer_flow(
                 output_esdl=None,
                 esdl_messages=[message.model_dump(mode="json") for message in esdl_messages],
             )
-            write_flow_return_artifact_to_minio(failed_result, minio_host, minio_port, minio_access_key, minio_secret)
+            write_flow_return_artifact_to_minio(
+                failed_result,
+                minio_host,
+                minio_port,
+                minio_access_key,
+                minio_secret,
+                minio_host_external,
+            )
 
             return Failed(message=f"Optimizer flow failed: {e}")
 

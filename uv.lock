@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = "==3.11.*"
 
 [[package]]
@@ -1102,7 +1102,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "mesido", specifier = "~=0.1.20.3" },
-    { name = "omotes-sdk-python", specifier = "==5.0.2" },
+    { name = "omotes-sdk-python", specifier = "~=5.0.3" },
     { name = "pyesdl", specifier = "~=26.7" },
     { name = "python-dotenv", specifier = "~=1.0.0" },
 ]
@@ -1121,7 +1121,7 @@ dev = [
 
 [[package]]
 name = "omotes-sdk-python"
-version = "5.0.2"
+version = "5.0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "prefect" },
@@ -1129,9 +1129,9 @@ dependencies = [
     { name = "streamcapture" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/53/ec/c5370556a6d0f83bfd5b6c01a7a3a62f917a501ec71f14de7870e53335ad/omotes_sdk_python-5.0.2.tar.gz", hash = "sha256:aee40f2a54fb67513f9ccdd17f8f002c05493369a4d7553bd4e504f67455bb67", size = 25929, upload-time = "2026-08-21T14:52:08.326Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/4f/95319d471e503d739e8e2ad52ea4ee59fe5ecf31459bb9d5efe24f95f834/omotes_sdk_python-5.0.3.tar.gz", hash = "sha256:bca6b25b01f30d2c0e2ac06e1e823d4c8de405970591a6157463d05d7217a51d", size = 26906, upload-time = "2026-08-28T17:09:49.682Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/34/e5/7a866c755dc136c84270702efd29d3c65656f2499dd3a4dbb15f80279fae/omotes_sdk_python-5.0.2-py3-none-any.whl", hash = "sha256:cb0036a7e5c4731addd9964b8297c175ef51ed8e57e5fd2eb2eb857efc58b6bb", size = 22520, upload-time = "2026-08-21T14:52:06.865Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/66/137c831866c0ca95d1f18ee98fec0356dcda02da3dcd0817d7c0463e4a50/omotes_sdk_python-5.0.3-py3-none-any.whl", hash = "sha256:0b180d26a83448a6610442d47f363885035fc69cad6acfab9ebeff00867a77d7", size = 23042, upload-time = "2026-08-28T17:09:48.481Z" },
 ]
 
 [[package]]
