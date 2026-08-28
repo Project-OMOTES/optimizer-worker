@@ -100,9 +100,9 @@ class EnvSettings:
         return require_env("MINIO_PORT")
 
     @staticmethod
-    def minio_external_host() -> str | None:
-        """Return optional external MinIO host."""
-        return os.getenv("MINIO_EXTERNAL_HOST", None)
+    def minio_host_external() -> str:
+        """Return external MinIO host."""
+        return require_env("MINIO_HOST_EXTERNAL")
 
     @staticmethod
     def minio_access_key() -> str:

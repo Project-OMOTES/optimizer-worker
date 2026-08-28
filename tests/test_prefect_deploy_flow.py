@@ -19,6 +19,7 @@ class TestDeployFlowJobVariables(TestCase):
             "PREFECT_API_AUTH_STRING": "token",
             "PREFECT_API_URL_FOR_WORKER": "http://prefect:4200/api",
             "MINIO_HOST": "minio:9000",
+            "MINIO_HOST_EXTERNAL": "localhost:9000",
             "MINIO_PORT": "9000",
             "MINIO_ACCESS_KEY": "access",
             "MINIO_SECRET": "secret",
