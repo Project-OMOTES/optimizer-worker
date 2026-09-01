@@ -46,3 +46,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Save published image tag
+        run: echo "${GITHUB_REF_NAME}" > image_tag.txt
+
+      - name: Upload deployment metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-metadata
+          path: image_tag.txt
+          retention-days: 1
+
