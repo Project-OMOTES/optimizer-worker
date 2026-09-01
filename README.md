@@ -2,7 +2,8 @@
 
 Prefect flow repo for the NWN optimizer.\
 This defines the prefect flow function which is the entry function for prefect runs.\
-There is a `prefect_deploy_flow` script to create/update a prefect deployment which can be used for runs.
+There is a [prefect_deploy_flow.py](src/omotes_optimizer_worker/prefect_deploy_flow.py) script to create/update a
+prefect deployment which can be used for runs.
 
 ## Development
 
@@ -11,7 +12,8 @@ There is a `prefect_deploy_flow` script to create/update a prefect deployment wh
 This project uses:
 
 - **uv**: Fast Python package manager and resolver. Install via [https://docs.astral.sh/uv/](https://docs.astral.sh/uv/)
-- **just**: Command runner for common tasks (similar to Make). Install via [https://github.com/casey/just](https://github.com/casey/just)
+- **just**: Command runner for common tasks (similar to Make). Install via
+  [https://github.com/casey/just](https://github.com/casey/just)
 
 ### Setup
 
@@ -21,7 +23,7 @@ This project uses:
    uv sync
    ```
 
-2. Copy `.env.template` to `.env`
+2. Copy [.env.template](.env.template) to [.env](.env)
 
 **Note** to use local code for sdk run `.venv/bin/pip install -e ../omotes-sdk-python/`.
 
@@ -49,11 +51,47 @@ When using an editable install of the sdk, don't use the just command as `uv run
 
 ### Deploy flow to prefect
 
+There are different ways to deploy prefect flow.
+
+- to a local prefect instance using local code
+- automatic on github CI
+- manual via omotes-system repo: https://github.com/Project-OMOTES/omotes-system
+
+#### local prefect deployment
+
 In vscode go to the debug view and run `prefect_deploy_flow`.\
 This will create a deployment on prefect (to the prefect instance on `PREFECT_API_URL`).\
 
-During development you may want to deploy local code of this repo instead of an already published image, then set `PREFECT_USE_LOCAL_CODE_AND_IMAGE=true` in `.env`.
-To also use local code for the omotes-sdk-python and mesido set `PREFECT_USE_LOCAL_SDK_AND_MESIDO=true` as well.
+During development you may want to deploy local code of this repo instead of an already published image, then set
+`PREFECT_USE_LOCAL_CODE_AND_IMAGE=true` in [.env](.env). To also use local code for the omotes-sdk-python and mesido set
+`PREFECT_USE_LOCAL_SDK_AND_MESIDO=true` as well.
+
+#### deployment via Github CI
+
+On git tag the prefect flow is deployed to the NWN TEST MapEditor. The deployment to the NWN PROD MapEditor needs
+confirmation which can be set on clicking the deploy action: https://github.com/Project-OMOTES/optimizer-worker/actions.
+
+### Update mesido version and deploy flow on NWN MapEditor environments
+
+Update the mesido version in [pyproject.toml](pyproject.toml), then update [uv.lock](uv.lock) and run the checks:
+
+```bash
+uv lock
+uv sync --locked --group dev
+just ci
+```
+
+Commit both [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock) to a PR and merge into main.
+
+Next create a new release on https://github.com/Project-OMOTES/optimizer-worker/releases:
+
+1. Tag: Select tag: Create new tag
+2. Previous tag: Select previous
+3. Generate release notes
+4. Publish release
+
+This will publish a new docker image and deploy to NWN MapEditor TEST, approval is needed to deploy to PROD:
+https://github.com/Project-OMOTES/optimizer-worker/actions.
 
 ## Project Structure
 
