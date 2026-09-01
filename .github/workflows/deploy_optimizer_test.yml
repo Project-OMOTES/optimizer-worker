@@ -1,4 +1,5 @@
 name: Deploy Optimizer to NWN ME
+run-name: Deploy Optimizer ${{ github.event.workflow_run.head_branch }} to NWN ME
 
 on:
   workflow_run:
