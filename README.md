@@ -73,7 +73,11 @@ confirmation which can be set on clicking the deploy action: https://github.com/
 
 ### Update mesido version and deploy flow on NWN MapEditor environments
 
-Update the mesido version in [pyproject.toml](pyproject.toml), then update [uv.lock](uv.lock) and run the checks:
+Make sure to have the required [Tools](#tools) installed.
+
+Start with creating an issue: https://github.com/Project-OMOTES/optimizer-worker/issues, create a branch of that issue
+and pull locally. Then update the mesido version in [pyproject.toml](pyproject.toml) and run (on windows run in
+`Git Bash` terminal):
 
 ```bash
 uv lock
@@ -81,14 +85,19 @@ uv sync --locked --group dev
 just ci
 ```
 
-Commit both [pyproject.toml](pyproject.toml) and [uv.lock](uv.lock) to a PR and merge into main.
+This updates the package versions and installs them locally. And runs all the ci checks locally.
+
+Commit changes ([pyproject.toml](pyproject.toml) and [uv.lock](uv.lock)) and push to github. Optionally create a PR and
+merge into main.
 
 Next create a new release on https://github.com/Project-OMOTES/optimizer-worker/releases:
 
 1. Tag: Select tag: Create new tag
-2. Previous tag: Select previous
-3. Generate release notes
-4. Publish release
+2. Select target branch: `main` or dev branch.
+3. Previous tag: Select previous tag, don't leave auto
+4. Generate release notes
+5. Optionally select `Pre-release`
+6. Publish release
 
 This will publish a new docker image and deploy to NWN MapEditor TEST, approval is needed to deploy to PROD:
 https://github.com/Project-OMOTES/optimizer-worker/actions.
