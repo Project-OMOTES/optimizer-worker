@@ -989,7 +989,7 @@ wheels = [
 
 [[package]]
 name = "mesido"
-version = "0.1.20.3"
+version = "0.1.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "casadi-gil-comp" },
@@ -1003,9 +1003,9 @@ dependencies = [
     { name = "setuptools" },
     { name = "strenum" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1b/ca/071cb7540708108f3f72f5f692d4df80f91d327314861873383b869761ae/mesido-0.1.20.3.tar.gz", hash = "sha256:82302e5b4a7c09cf2353facbd48a8000ee94420f5ad8461d15fe117150f83b93", size = 441829, upload-time = "2026-07-15T14:33:04.584Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/a6/05d2f6f37c21c10d0d3eba7f9caff66ad5fa0debf12de02b7a7da27fae71/mesido-0.1.21.tar.gz", hash = "sha256:e9f53bc15dbd16ee0af3e5258091b8e20b3069fe459ebe0a9246bb54d9f3c1e9", size = 447122, upload-time = "2026-09-03T07:53:14.47Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/91/14/f54fe73742a29c7ac97473c964db40d2ca1fe3a5d44229dd0082a199d582/mesido-0.1.20.3-py3-none-any.whl", hash = "sha256:a2f87495cd9f32964ebf3ed3b8651261568fe33d834bc66c3b4531e39e60007d", size = 384963, upload-time = "2026-07-15T14:33:03.281Z" },
+    { url = "https://files.pythonhosted.org/packages/48/a6/11b2e16bb9a36b01f58ece5d7189c20da92e2d8ef3733b84083d7cc71022/mesido-0.1.21-py3-none-any.whl", hash = "sha256:115e6473fe7a45b9e04ce2cd10755cb095754fcf7551d64764dff0a810b5818b", size = 387749, upload-time = "2026-09-03T07:53:12.775Z" },
 ]
 
 [[package]]
@@ -1101,9 +1101,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mesido", specifier = "~=0.1.20.3" },
+    { name = "mesido", specifier = "~=0.1.21" },
     { name = "omotes-sdk-python", specifier = "~=5.0.4" },
-    { name = "pyesdl", specifier = "~=26.7" },
+    { name = "pyesdl", specifier = "~=26.7.1" },
     { name = "python-dotenv", specifier = "~=1.0.0" },
 ]
 
@@ -1581,14 +1581,14 @@ wheels = [
 
 [[package]]
 name = "pyesdl"
-version = "26.7"
+version = "26.7.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pyecore" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b4/62/a9cb17f916eb2ee7c12b50f363a1457eccf879888ecd3ce2a0dc2904e561/pyesdl-26.7.tar.gz", hash = "sha256:7b685ab7ef57d07178178e54c20cc61962cc1c5ff901ea5efc0669f3d6c78eb8", size = 114922, upload-time = "2026-07-13T09:49:10.629Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/10/66/5c4ace1b331b066e79bf6369d5dd3be91e5e5e64bd04b26130a71edc9953/pyesdl-26.7.1.tar.gz", hash = "sha256:e66de01dec8c1a6b461b8de0dc29cc4bcc7f53b783bdb9e0425a1123db8b6232", size = 114886, upload-time = "2026-07-27T13:00:12.861Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fd/5b/1b913d6fbb904d5fdc45f5e67cdb285dc71c096070db0fe9dd9563c9a1de/pyesdl-26.7-py3-none-any.whl", hash = "sha256:30b512ee34a1ca4ffd2e58982208a75926eda67010a7e6b8a05b737cd9d0a127", size = 108848, upload-time = "2026-07-13T09:49:09.107Z" },
+    { url = "https://files.pythonhosted.org/packages/36/93/d76dab2283883098d68d2a189110dad2023a5fc90cab7ec4e77321918312/pyesdl-26.7.1-py3-none-any.whl", hash = "sha256:24e1d263616c9e5969ff5142ce672785bc8206e8f3f649de818a7df7535753ca", size = 108874, upload-time = "2026-07-27T13:00:11.334Z" },
 ]
 
 [package.optional-dependencies]
