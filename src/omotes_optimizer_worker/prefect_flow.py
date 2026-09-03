@@ -102,16 +102,11 @@ def optimizer_flow(
                 )
                 esdl_output_profiles_type = ESDLOutputProfilesType.POSTGRESQL
 
-            logging.info(
-                "Will write result profiles to '%s' database at %s:%s",
-                esdl_output_profiles_type_str,
-                db_host,
-                db_port,
-            )
+            pg_db_timeseries = None
+            if esdl_output_profiles_type == ESDLOutputProfilesType.POSTGRESQL:
+                pg_db_timeseries = EnvSettings.pg_db_timeseries()
 
-            database_connection = []
-
-            database_connection.append({
+            db_connection = {
                 "access_type": DBAccessType.READ_WRITE,
                 "host": db_host,
                 "port": db_port,
@@ -119,7 +114,17 @@ def optimizer_flow(
                 "password": db_password,
                 "ssl": False,
                 "verify_ssl": False,
-            })
+            }
+
+            msg = f"Will write result profiles to '{esdl_output_profiles_type_str}' database at {db_host}:{db_port}"
+
+            if pg_db_timeseries:
+                db_connection["database"] = pg_db_timeseries
+                msg += f"/{db_connection['database']}"
+
+            logging.info(msg)
+
+            database_connection = [db_connection]
 
             esdl_messages: list[EsdlMessage] = []
 

@@ -69,6 +69,7 @@ jobs:
             -e DB_PORT=6432 \
             -e DB_USERNAME=omotes_timeseries_rw \
             -e DB_PASSWORD \
+            -e PG_DB_TIMESERIES=omotes_timeseries \
             -e MINIO_HOST=omotes-minio \
             -e MINIO_PORT=9000 \
             -e MINIO_EXTERNAL_URL \

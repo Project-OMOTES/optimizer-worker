@@ -1,5 +1,5 @@
 name: Publish Container Image
-run-name: Releasing next version 🚀
+run-name: Publish Container Image
 
 on:
   push:
