@@ -51,6 +51,11 @@ class EnvSettings:
         return require_env("DB_PASSWORD")
 
     @staticmethod
+    def pg_db_timeseries() -> str:
+        """Return PostgreSQL timeseries database name."""
+        return os.getenv("PG_DB_TIMESERIES", "omotes_timeseries")
+
+    @staticmethod
     def prefect_api_url_for_worker() -> str:
         """Return Prefect API URL to be used inside worker."""
         return require_env("PREFECT_API_URL_FOR_WORKER")
