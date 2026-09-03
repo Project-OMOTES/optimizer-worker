@@ -39,6 +39,7 @@ job_variables = {
         "DB_PORT": EnvSettings.db_port(),
         "DB_USERNAME": EnvSettings.db_username(),
         "DB_PASSWORD": EnvSettings.db_password(),
+        "PG_DB_TIMESERIES": EnvSettings.pg_db_timeseries(),
         "MINIO_HOST": EnvSettings.minio_host(),
         "MINIO_PORT": EnvSettings.minio_port(),
         "MINIO_EXTERNAL_URL": EnvSettings.minio_external_url(),
