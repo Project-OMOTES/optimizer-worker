@@ -989,7 +989,7 @@ wheels = [
 
 [[package]]
 name = "mesido"
-version = "0.1.21"
+version = "0.1.22"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "casadi-gil-comp" },
@@ -1003,9 +1003,9 @@ dependencies = [
     { name = "setuptools" },
     { name = "strenum" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/a6/05d2f6f37c21c10d0d3eba7f9caff66ad5fa0debf12de02b7a7da27fae71/mesido-0.1.21.tar.gz", hash = "sha256:e9f53bc15dbd16ee0af3e5258091b8e20b3069fe459ebe0a9246bb54d9f3c1e9", size = 447122, upload-time = "2026-09-03T07:53:14.47Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b4/9e/74a4a1d6506f7eb76b22bce7152e5ea787d6b320a23e84464fec65aa4cc7/mesido-0.1.22.tar.gz", hash = "sha256:6139a225a7fb0ce430ad0f49d521bd239d2cc6d28f730a87bb1cf364dbd87b9c", size = 447348, upload-time = "2026-09-07T09:16:59.726Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/48/a6/11b2e16bb9a36b01f58ece5d7189c20da92e2d8ef3733b84083d7cc71022/mesido-0.1.21-py3-none-any.whl", hash = "sha256:115e6473fe7a45b9e04ce2cd10755cb095754fcf7551d64764dff0a810b5818b", size = 387749, upload-time = "2026-09-03T07:53:12.775Z" },
+    { url = "https://files.pythonhosted.org/packages/d6/66/ca8c2de3857423dbfcdb3682f001cfa2a247b1b683df379dce347dae28f8/mesido-0.1.22-py3-none-any.whl", hash = "sha256:a43e1b19b95a4d11caf8c8c3498d361c39db8e746440c744bfdfbc95e2e7ed8c", size = 387785, upload-time = "2026-09-07T09:16:58.274Z" },
 ]
 
 [[package]]
@@ -1101,7 +1101,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "mesido", specifier = "~=0.1.21" },
+    { name = "mesido", specifier = "~=0.1.22" },
     { name = "omotes-sdk-python", specifier = "~=5.0.4" },
     { name = "pyesdl", specifier = "~=26.7.1" },
     { name = "python-dotenv", specifier = "~=1.0.0" },
