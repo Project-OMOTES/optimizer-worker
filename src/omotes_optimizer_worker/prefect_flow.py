@@ -16,9 +16,11 @@ from omotes_sdk.esdl_messages import (
 )
 from omotes_sdk.log_forwarding import StdCaptureToLogSession
 from omotes_sdk.prefect_util import (
+    TimeseriesResource,
     create_flow_progress_updater,
     in_prefect_flow_context,
     load_gurobi_license,
+    publish_job_cleanup_resource,
     write_flow_return_artifact_to_minio,
 )
 from prefect import flow
@@ -40,6 +42,42 @@ class OptimizerFlowResult(BaseModel):
 
     output_esdl: str | None = Field(default=None, json_schema_extra={"file_extension": ".esdl"})
     esdl_messages: list[dict[str, Any]] = Field(default_factory=list, json_schema_extra={"file_extension": ".json"})
+
+
+def publish_optimizer_timeseries_cleanup_resource(
+    db_host: str,
+    db_port: int,
+    output_energy_system_id: str,
+    output_profiles_type: ESDLOutputProfilesType,
+    pg_database: str | None = None,
+) -> None:
+    """Attach the timeseries resource created by Mesido to the Prefect flow run, for cleanup purposes.
+
+    Raises:
+        ValueError: If PostgreSQL output is missing its database name.
+
+    """
+    if output_profiles_type == ESDLOutputProfilesType.POSTGRESQL:
+        if pg_database is None:
+            raise ValueError("PostgreSQL resource metadata requires a database name")
+        resource = TimeseriesResource(
+            type="postgresql",
+            host=db_host,
+            port=db_port,
+            database=pg_database,
+            schema_name=output_energy_system_id,
+        )
+    elif output_profiles_type == ESDLOutputProfilesType.INFLUXDB:
+        resource = TimeseriesResource(
+            type="influxdb",
+            host=db_host,
+            port=db_port,
+            database=output_energy_system_id,
+        )
+    else:
+        return
+
+    publish_job_cleanup_resource(resource)
 
 
 @flow(timeout_seconds=EnvSettings.prefect_flow_timeout_seconds())
@@ -151,6 +189,14 @@ def optimizer_flow(
             output_esh = EnergySystemHandler()
             output_esh.load_from_string(output_esdl)
             output_energy_system: EnergySystem = output_esh.energy_system
+            if esdl_output_profiles_type is not None:
+                publish_optimizer_timeseries_cleanup_resource(
+                    db_host=db_host,
+                    db_port=db_port,
+                    output_energy_system_id=output_energy_system.id,
+                    output_profiles_type=esdl_output_profiles_type,
+                    pg_database=pg_db_timeseries,
+                )
             output_energy_system.name = output_esdl_name
 
             # TODO get esdl_messages from successful run after mesido update.

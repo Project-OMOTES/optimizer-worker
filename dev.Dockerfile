@@ -5,6 +5,9 @@ RUN apt update && \
     apt install -y wget && \
     apt-get clean
 
+COPY --from=docker:27-cli /usr/local/bin/docker /usr/local/bin/docker
+COPY --from=docker:27-cli /usr/local/libexec/docker/cli-plugins/docker-buildx /usr/local/libexec/docker/cli-plugins/docker-buildx
+
 ENV GUROBI_HOME=/app/gurobi/
 ENV PATH="/app/gurobi/bin:$PATH"
 ENV LD_LIBRARY_PATH="/app/gurobi/lib"
