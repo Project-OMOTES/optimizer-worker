@@ -100,7 +100,7 @@ def test_optimizer_flow_configures_influxdb_output() -> None:
         patch("omotes_optimizer_worker.prefect_flow.get_problem_type"),
         patch("omotes_optimizer_worker.prefect_flow.get_solver_class"),
         patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"),
-        patch("omotes_optimizer_worker.prefect_flow.publish_optimizer_database_cleanup_resource") as publish_resource,
+        patch("omotes_optimizer_worker.prefect_flow.publish_optimizer_timeseries_cleanup_resource") as publish_resource,
     ):
         result = optimizer_flow.fn(
             input_esdl=input_esdl,
