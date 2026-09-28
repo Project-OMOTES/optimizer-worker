@@ -57,6 +57,7 @@ jobs:
         run: |
           docker run --rm \
             -e LOG_LEVEL=INFO \
+            -e ORCHESTRATOR_API_URL=http://omotes-orchestrator:9200 \
             -e PREFECT_API_URL \
             -e PREFECT_API_AUTH_STRING \
             -e PREFECT_API_URL_FOR_WORKER=http://omotes-prefect-server:4200/api \
@@ -109,6 +110,7 @@ jobs:
         run: |
           docker run --rm \
             -e LOG_LEVEL=INFO \
+            -e ORCHESTRATOR_API_URL=http://omotes-orchestrator:9200 \
             -e PREFECT_API_URL \
             -e PREFECT_API_AUTH_STRING \
             -e PREFECT_API_URL_FOR_WORKER=http://omotes-prefect-server:4200/api \
