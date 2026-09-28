@@ -61,6 +61,11 @@ class EnvSettings:
         return require_env("PREFECT_API_URL_FOR_WORKER")
 
     @staticmethod
+    def orchestrator_api_url() -> str:
+        """Return the optional orchestrator API URL used inside workers."""
+        return os.getenv("ORCHESTRATOR_API_URL", "")
+
+    @staticmethod
     def prefect_work_pool_name() -> str:
         """Return Prefect work pool name."""
         return require_env("PREFECT_WORK_POOL_NAME")

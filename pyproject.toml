@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = [
     { name = "Mark Vrijlandt", email = "mark.vrijlandt@tno.nl" },
     { name = "Cheng-Kai Wang", email = "cheng-kai.wang@tno.nl" },
-    { name = "Sebastiaan la Fleur", email = "sebastiaan.lafleur@tno.nl" }
+    { name = "Sebastiaan la Fleur", email = "sebastiaan.lafleur@tno.nl" },
 ]
 description = "Nieuwe Warmte Nu - Optimizer Worker"
 classifiers = [
@@ -26,7 +26,7 @@ requires-python = "==3.11.*"
 dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.22",
-    "omotes-sdk-python ~= 5.1.0",
+    "omotes-sdk-python ~= 5.1.1",
     "pyesdl ~= 26.7.1",
 ]
 
@@ -93,4 +93,4 @@ convention = "google"
 "src/env.py" = [
     "DOC201", # Simple getter methods in EnvSettings use concise one-line docstrings.
 ]
-"tests/**" = ["S101"]  # assert statements are standard in tests
+"tests/**" = ["S101"] # assert statements are standard in tests

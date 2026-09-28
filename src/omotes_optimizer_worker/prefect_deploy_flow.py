@@ -34,6 +34,7 @@ job_variables = {
         "LOG_LEVEL": EnvSettings.log_level(),
         "PREFECT_API_AUTH_STRING": EnvSettings.prefect_api_auth_string(),
         "PREFECT_API_URL": EnvSettings.prefect_api_url_for_worker(),
+        "ORCHESTRATOR_API_URL": EnvSettings.orchestrator_api_url(),
         "ESDL_OUTPUT_PROFILES_TYPE": EnvSettings.esdl_output_profiles_type(),
         "DB_HOSTNAME": EnvSettings.db_hostname(),
         "DB_PORT": EnvSettings.db_port(),

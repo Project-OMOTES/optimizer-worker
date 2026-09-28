@@ -183,9 +183,6 @@ def optimizer_flow(
             input_esh = EnergySystemHandler()
             input_esh.load_from_string(input_esdl)
 
-            output_esdl_name = input_esh.energy_system.name + "_"
-            output_esdl_name += flow_run.name if flow_run and flow_run.name else workflow_type_name
-
             output_esh = EnergySystemHandler()
             output_esh.load_from_string(output_esdl)
             output_energy_system: EnergySystem = output_esh.energy_system
@@ -197,6 +194,9 @@ def optimizer_flow(
                     output_profiles_type=esdl_output_profiles_type,
                     pg_database=pg_db_timeseries,
                 )
+
+            output_esdl_name = input_esh.energy_system.name + "_"
+            output_esdl_name += flow_run.name if flow_run and flow_run.name else workflow_type_name
             output_energy_system.name = output_esdl_name
 
             # TODO get esdl_messages from successful run after mesido update.
