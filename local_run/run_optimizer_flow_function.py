@@ -11,9 +11,10 @@ with open(input_esdl_file) as open_file:
     input_esdl = open_file.read()
 
 optimizer_flow_result = optimizer_flow.fn(
-    input_esdl=input_esdl,
+    input_esdl_minio_path=input_esdl,
     workflow_config={},
     workflow_type_name=workflow_type_name,
+    flow_results_folder="local-run-20261001-13h06m05.123",
 )
 if not isinstance(optimizer_flow_result, OptimizerFlowResult):
     raise RuntimeError(f"Optimizer flow did not return a result: {optimizer_flow_result}")
