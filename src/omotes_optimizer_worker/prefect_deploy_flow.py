@@ -3,32 +3,12 @@ import shutil
 from pathlib import Path
 
 from omotes_sdk.prefect_util import deploy_flow
-from prefect.client.orchestration import get_client
-from prefect.client.schemas.actions import DeploymentUpdate
-from prefect.exceptions import ObjectNotFound
 
 from omotes_optimizer_worker.env import EnvSettings
 from omotes_optimizer_worker.prefect_flow import optimizer_flow
 
 deployment_base_name = "omotes-optimizer"
 gurobi_deployment_base_name = f"{deployment_base_name}-gurobi"
-gurobi_work_queue_name = "gurobi"
-
-
-async def _ensure_work_queue(name: str, work_pool_name: str, concurrency_limit: int) -> None:
-    async with get_client() as client:
-        try:
-            queue = await client.read_work_queue_by_name(name, work_pool_name=work_pool_name)
-            await client.update_work_queue(queue.id, concurrency_limit=concurrency_limit)
-        except ObjectNotFound:
-            await client.create_work_queue(name, work_pool_name=work_pool_name, concurrency_limit=concurrency_limit)
-
-
-async def _assign_work_queue(deployment_name: str, work_queue_name: str) -> None:
-    # The SDK deploy_flow has no work_queue_name argument, so the queue is set afterwards.
-    async with get_client() as client:
-        deployment = await client.read_deployment_by_name(f"{optimizer_flow.name}/{deployment_name}")
-        await client.update_deployment(deployment.id, DeploymentUpdate(work_queue_name=work_queue_name))
 
 
 async def _build_docker_image(command: list[str], cwd: Path | None = None) -> None:
@@ -36,6 +16,19 @@ async def _build_docker_image(command: list[str], cwd: Path | None = None) -> No
     return_code = await process.wait()
     if return_code != 0:
         raise RuntimeError(f"Docker build failed with exit code {return_code}")
+
+
+async def _deploy_on_work_queue(base_name: str, concurrency_limit: int) -> None:
+    """Deploy the flow on a work queue named after the deployment, limiting runs across all versions."""
+    await deploy_flow(
+        flow_function=optimizer_flow,
+        deployment_name=f"{base_name}:{optimizer_version}",
+        image_name=optimizer_image,
+        job_variables=job_variables,
+        prefect_work_pool_name=EnvSettings.prefect_work_pool_name(),
+        max_concurrent_runs=concurrency_limit,
+        work_queue_name=base_name,
+    )
 
 
 prefect_use_local_code_and_image = EnvSettings.prefect_use_local_code_and_image()
@@ -115,30 +108,9 @@ async def main() -> None:
             )
     # When not using local code and image, a publised image is used with tag OPTIMIZER_WORKER_IMAGE_TAG.
 
-    await deploy_flow(
-        flow_function=optimizer_flow,
-        deployment_name=f"{deployment_base_name}:{optimizer_version}",
-        image_name=optimizer_image,
-        job_variables=job_variables,
-        prefect_work_pool_name=EnvSettings.prefect_work_pool_name(),
-        max_concurrent_runs=EnvSettings.prefect_flow_max_concurrent_runs(),
-    )
-
-    # Queue-level limit applies across all gurobi deployment versions; runs wait without starting a container.
-    await _ensure_work_queue(
-        gurobi_work_queue_name,
-        EnvSettings.prefect_work_pool_name(),
-        EnvSettings.prefect_gurobi_max_concurrent_runs(),
-    )
-    gurobi_deployment_name = f"{gurobi_deployment_base_name}:{optimizer_version}"
-    await deploy_flow(
-        flow_function=optimizer_flow,
-        deployment_name=gurobi_deployment_name,
-        image_name=optimizer_image,
-        job_variables=job_variables,
-        prefect_work_pool_name=EnvSettings.prefect_work_pool_name(),
-    )
-    await _assign_work_queue(gurobi_deployment_name, gurobi_work_queue_name)
+    # Queue limits apply across all deployment versions; waiting runs don't start a container.
+    await _deploy_on_work_queue(deployment_base_name, EnvSettings.prefect_flow_max_concurrent_runs())
+    await _deploy_on_work_queue(gurobi_deployment_base_name, EnvSettings.prefect_gurobi_max_concurrent_runs())
 
     print("Omotes optimizer deployments registered successfully")
 

@@ -41,8 +41,8 @@ class TestDeployFlowJobVariables(TestCase):
 class TestDeployFlowMain(TestCase):
     """Tests for the deployments registered by main()."""
 
-    def test_main_deploys_gurobi_deployment_on_limited_work_queue(self) -> None:
-        """A separate gurobi deployment is registered and assigned to the limited gurobi work queue."""
+    def test_main_deploys_each_deployment_on_its_limited_work_queue(self) -> None:
+        """Both deployments are registered on their own work queue with the configured concurrency limit."""
         env = {
             "LOG_LEVEL": "INFO",
             "ESDL_OUTPUT_PROFILES_TYPE": "POSTGRESQL",
@@ -65,14 +65,16 @@ class TestDeployFlowMain(TestCase):
         }
         with patch.dict(environ, env, clear=False):
             m = reload(import_module("omotes_optimizer_worker.prefect_deploy_flow"))
-            with (
-                patch.object(m, "deploy_flow", new=AsyncMock()) as deploy_mock,
-                patch.object(m, "_ensure_work_queue", new=AsyncMock()) as queue_mock,
-                patch.object(m, "_assign_work_queue", new=AsyncMock()) as assign_mock,
-            ):
+            with patch.object(m, "deploy_flow", new=AsyncMock()) as deploy_mock:
                 asyncio.run(m.main())
 
-        deployment_names = [c.kwargs["deployment_name"] for c in deploy_mock.await_args_list]
-        self.assertEqual(deployment_names, ["omotes-optimizer:1.2.3", "omotes-optimizer-gurobi:1.2.3"])
-        queue_mock.assert_awaited_once_with("gurobi", "pool", 1)
-        assign_mock.assert_awaited_once_with("omotes-optimizer-gurobi:1.2.3", "gurobi")
+        self.assertEqual(
+            [
+                (c.kwargs["deployment_name"], c.kwargs["work_queue_name"], c.kwargs["max_concurrent_runs"])
+                for c in deploy_mock.await_args_list
+            ],
+            [
+                ("omotes-optimizer:1.2.3", "omotes-optimizer", 4),
+                ("omotes-optimizer-gurobi:1.2.3", "omotes-optimizer-gurobi", 1),
+            ],
+        )
