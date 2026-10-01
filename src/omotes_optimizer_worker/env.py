@@ -91,6 +91,11 @@ class EnvSettings:
         return int(require_env("PREFECT_FLOW_MAX_CONCURRENT_RUNS"))
 
     @staticmethod
+    def prefect_gurobi_max_concurrent_runs() -> int:
+        """Return the maximum number of concurrent Gurobi flow runs (number of Gurobi licenses)."""
+        return int(os.getenv("PREFECT_GUROBI_MAX_CONCURRENT_RUNS", "1"))
+
+    @staticmethod
     def prefect_flow_timeout_seconds() -> int:
         """Return Prefect flow timeout in seconds."""
         timeout_seconds = os.getenv(

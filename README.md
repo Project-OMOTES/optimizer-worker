@@ -57,6 +57,12 @@ There are different ways to deploy prefect flow.
 - automatic on github CI
 - manual via omotes-system repo: https://github.com/Project-OMOTES/omotes-system
 
+Two deployments are registered: `omotes-optimizer:<version>` and `omotes-optimizer-gurobi:<version>`. Each runs on its
+own work queue with the same name as the deployment, so the limit applies to all versions together:
+`PREFECT_FLOW_MAX_CONCURRENT_RUNS` for `omotes-optimizer` and `PREFECT_GUROBI_MAX_CONCURRENT_RUNS` (default 1, the
+number of Gurobi licenses) for `omotes-optimizer-gurobi`. Runs wait in the queue without starting a container. The
+limits are visible in the Prefect UI (Work Pools > queue), but are reset to these values on each deploy.
+
 #### local prefect deployment
 
 In vscode go to the debug view and run `prefect_deploy_flow`.\

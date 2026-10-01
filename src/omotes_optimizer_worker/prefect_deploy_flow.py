@@ -8,6 +8,7 @@ from omotes_optimizer_worker.env import EnvSettings
 from omotes_optimizer_worker.prefect_flow import optimizer_flow
 
 deployment_base_name = "omotes-optimizer"
+gurobi_deployment_base_name = f"{deployment_base_name}-gurobi"
 
 
 async def _build_docker_image(command: list[str], cwd: Path | None = None) -> None:
@@ -15,6 +16,19 @@ async def _build_docker_image(command: list[str], cwd: Path | None = None) -> No
     return_code = await process.wait()
     if return_code != 0:
         raise RuntimeError(f"Docker build failed with exit code {return_code}")
+
+
+async def _deploy_on_work_queue(base_name: str, concurrency_limit: int) -> None:
+    """Deploy the flow on a work queue named after the deployment, limiting runs across all versions."""
+    await deploy_flow(
+        flow_function=optimizer_flow,
+        deployment_name=f"{base_name}:{optimizer_version}",
+        image_name=optimizer_image,
+        job_variables=job_variables,
+        prefect_work_pool_name=EnvSettings.prefect_work_pool_name(),
+        max_concurrent_runs=concurrency_limit,
+        work_queue_name=base_name,
+    )
 
 
 prefect_use_local_code_and_image = EnvSettings.prefect_use_local_code_and_image()
@@ -94,16 +108,11 @@ async def main() -> None:
             )
     # When not using local code and image, a publised image is used with tag OPTIMIZER_WORKER_IMAGE_TAG.
 
-    await deploy_flow(
-        flow_function=optimizer_flow,
-        deployment_name=f"{deployment_base_name}:{optimizer_version}",
-        image_name=optimizer_image,
-        job_variables=job_variables,
-        prefect_work_pool_name=EnvSettings.prefect_work_pool_name(),
-        max_concurrent_runs=EnvSettings.prefect_flow_max_concurrent_runs(),
-    )
+    # Queue limits apply across all deployment versions; waiting runs don't start a container.
+    await _deploy_on_work_queue(deployment_base_name, EnvSettings.prefect_flow_max_concurrent_runs())
+    await _deploy_on_work_queue(gurobi_deployment_base_name, EnvSettings.prefect_gurobi_max_concurrent_runs())
 
-    print("Omotes optimizer deployment registered successfully")
+    print("Omotes optimizer deployments registered successfully")
 
 
 if __name__ == "__main__":
