@@ -65,6 +65,7 @@ jobs:
             -e OPTIMIZER_WORKER_VERSION="${IMAGE_TAG}" \
             -e ESDL_OUTPUT_PROFILES_TYPE=POSTGRESQL \
             -e PREFECT_FLOW_MAX_CONCURRENT_RUNS=4 \
+            -e PREFECT_GUROBI_MAX_CONCURRENT_RUNS=1 \
             -e PREFECT_FLOW_TIMEOUT_SECONDS=172800 \
             -e DB_HOSTNAME=omotes_postgres \
             -e DB_PORT=6432 \
@@ -118,6 +119,7 @@ jobs:
             -e OPTIMIZER_WORKER_VERSION="${IMAGE_TAG}" \
             -e ESDL_OUTPUT_PROFILES_TYPE=POSTGRESQL \
             -e PREFECT_FLOW_MAX_CONCURRENT_RUNS=4 \
+            -e PREFECT_GUROBI_MAX_CONCURRENT_RUNS=1 \
             -e PREFECT_FLOW_TIMEOUT_SECONDS=172800 \
             -e DB_HOSTNAME=omotes_postgres \
             -e DB_PORT=6432 \

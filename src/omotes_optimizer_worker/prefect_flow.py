@@ -3,6 +3,7 @@ import logging
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, cast
+from urllib.parse import urlsplit
 
 from esdl import EnergySystem
 from esdl.esdl_handler import EnergySystemHandler
@@ -16,6 +17,7 @@ from omotes_sdk.esdl_messages import (
 )
 from omotes_sdk.log_forwarding import StdCaptureToLogSession
 from omotes_sdk.prefect_util import (
+    MinioResource,
     TimeseriesResource,
     create_flow_progress_updater,
     in_prefect_flow_context,
@@ -24,6 +26,7 @@ from omotes_sdk.prefect_util import (
     write_flow_return_artifact_to_minio,
 )
 from prefect import flow
+from prefect.filesystems import RemoteFileSystem
 from prefect.runtime import flow_run
 from prefect.states import Failed, State
 from pydantic import BaseModel, Field
@@ -42,6 +45,47 @@ class OptimizerFlowResult(BaseModel):
 
     output_esdl: str | None = Field(default=None, json_schema_extra={"file_extension": ".esdl"})
     esdl_messages: list[dict[str, Any]] = Field(default_factory=list, json_schema_extra={"file_extension": ".json"})
+
+
+def _load_input_esdl(input_esdl: str, minio_host: str, minio_port: str, access_key: str, secret_key: str) -> str:
+    """Load an input ESDL from MinIO when the orchestrator passed an object reference.
+
+    Returns:
+        The input ESDL XML string.
+
+    Raises:
+        TypeError: If the MinIO filesystem does not return bytes synchronously.
+        ValueError: If the object is outside one flow-results folder.
+    """
+    parsed = urlsplit(input_esdl)
+    if parsed.scheme != "s3" or not parsed.netloc or not parsed.path.strip("/"):
+        return input_esdl
+
+    object_path = parsed.path.lstrip("/")
+    run_folder = object_path.rsplit("/", 1)[0]
+    if not run_folder.startswith("flow-results/") or "/" in run_folder.removeprefix("flow-results/"):
+        raise ValueError(f"Input ESDL MinIO path must be inside one flow-results folder: {object_path}")
+
+    publish_job_cleanup_resource(
+        MinioResource(
+            host=minio_host,
+            port=int(minio_port),
+            bucket=parsed.netloc,
+            path=run_folder,
+        )
+    )
+    minio_block = RemoteFileSystem(
+        basepath=f"s3://{parsed.netloc}",
+        settings={
+            "key": access_key,
+            "secret": secret_key,
+            "client_kwargs": {"endpoint_url": f"http://{minio_host}:{minio_port}"},
+        },
+    )
+    input_bytes = minio_block.read_path(object_path)
+    if not isinstance(input_bytes, bytes):
+        raise TypeError("MinIO input ESDL must be read synchronously")
+    return input_bytes.decode("utf-8")
 
 
 def publish_optimizer_timeseries_cleanup_resource(
@@ -118,6 +162,7 @@ def optimizer_flow(
         db_username = EnvSettings.db_username()
         db_password = EnvSettings.db_password()
         try:
+            input_esdl = _load_input_esdl(input_esdl, minio_host, minio_port, minio_access_key, minio_secret)
             workflow_type = GrowTaskType(workflow_type_name)
             mesido_func = get_problem_function(workflow_type)
             mesido_workflow = get_problem_type(workflow_type)

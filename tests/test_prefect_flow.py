@@ -9,6 +9,7 @@ from prefect.states import State
 
 from omotes_optimizer_worker.prefect_flow import (
     OptimizerFlowResult,
+    _load_input_esdl,
     optimizer_flow,
     publish_optimizer_timeseries_cleanup_resource,
 )
@@ -75,6 +76,35 @@ def test_optimizer_flow_returns_delft_feedback_messages() -> None:
     assert feedback_result.esdl_messages
     assert all(message["technical_message"] for message in feedback_result.esdl_messages)
     assert all(message["severity"] == "ERROR" for message in feedback_result.esdl_messages)
+
+
+def test_load_input_esdl_reads_minio_reference_and_publishes_cleanup_resource() -> None:
+    """Read orchestrator-uploaded ESDL and publish its MinIO folder for cleanup."""
+    class FakeMinioBlock:
+        def read_path(self, path: str) -> bytes:
+            assert path == "flow-results/input-123/input.esdl"
+            return b"<esdl />"
+
+    with (
+        patch("omotes_optimizer_worker.prefect_flow.RemoteFileSystem", return_value=FakeMinioBlock()),
+        patch("omotes_optimizer_worker.prefect_flow.publish_job_cleanup_resource") as publish_resource,
+    ):
+        result = _load_input_esdl(
+            "s3://prefect-results/flow-results/input-123/input.esdl",
+            "minio",
+            "9000",
+            "access",
+            "secret",
+        )
+
+    assert result == "<esdl />"
+    assert publish_resource.call_args.args[0].model_dump(mode="json") == {
+        "type": "minio",
+        "host": "minio",
+        "port": 9000,
+        "bucket": "prefect-results",
+        "path": "flow-results/input-123",
+    }
 
 
 def test_optimizer_flow_configures_influxdb_output() -> None:
