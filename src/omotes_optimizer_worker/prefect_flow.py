@@ -22,6 +22,7 @@ from omotes_sdk.prefect_util import (
     create_flow_progress_updater,
     in_prefect_flow_context,
     load_gurobi_license,
+    load_input_esdl,
     publish_job_cleanup_resource,
     write_flow_return_artifact_to_minio,
 )
@@ -126,16 +127,18 @@ def publish_optimizer_timeseries_cleanup_resource(
 
 @flow(timeout_seconds=EnvSettings.prefect_flow_timeout_seconds())
 def optimizer_flow(
-    input_esdl: str,
+    input_esdl_minio_path: str,
     workflow_config: dict,
     workflow_type_name: str,
+    flow_results_folder: str,
 ) -> OptimizerFlowResult | State[Any] | None:
     """Prefect flow function for the optimizer worker.
 
     Args:
-        input_esdl: The input ESDL XML string.
+        input_esdl_minio_path: The MinIO path containing the input ESDL XML.
         workflow_config: Extra parameters to configure this run.
         workflow_type_name: Name of the workflow.
+        flow_results_folder: Shared MinIO folder for input and result artifacts.
 
     Returns:
         OptimizerFlowResult | State[Any] | None: Failed state when execution fails; otherwise no value is
@@ -162,7 +165,13 @@ def optimizer_flow(
         db_username = EnvSettings.db_username()
         db_password = EnvSettings.db_password()
         try:
-            input_esdl = _load_input_esdl(input_esdl, minio_host, minio_port, minio_access_key, minio_secret)
+            input_esdl = load_input_esdl(
+                input_esdl_minio_path,
+                minio_host,
+                minio_port,
+                minio_access_key,
+                minio_secret,
+            )
             workflow_type = GrowTaskType(workflow_type_name)
             mesido_func = get_problem_function(workflow_type)
             mesido_workflow = get_problem_type(workflow_type)
@@ -258,6 +267,7 @@ def optimizer_flow(
                 minio_access_key,
                 minio_secret,
                 minio_external_url,
+                flow_results_folder=flow_results_folder,
             )
 
             # return only for local runs and testing, not persisted for containerized runs: artifacts are used
@@ -281,6 +291,7 @@ def optimizer_flow(
                 minio_access_key,
                 minio_secret,
                 minio_external_url,
+                flow_results_folder=flow_results_folder,
             )
 
             return Failed(message=f"Optimizer flow failed: {e}")

@@ -39,9 +39,10 @@ def test_optimizer_flow_runs_delft_esdl() -> None:
         patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"),
     ):
         result = optimizer_flow.fn(
-            input_esdl=input_esdl,
+            input_esdl_minio_path=input_esdl,
             workflow_config={},
             workflow_type_name="grow_optimizer_no_heat_losses",
+            flow_results_folder="test-job-20261001-13h06m05.123",
         )
 
     # Assert
@@ -61,9 +62,10 @@ def test_optimizer_flow_returns_delft_feedback_messages() -> None:
         patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio") as write_artifact,
     ):
         result = optimizer_flow.fn(
-            input_esdl=input_esdl,
+            input_esdl_minio_path=input_esdl,
             workflow_config={},
             workflow_type_name="grow_optimizer_no_heat_losses",
+            flow_results_folder="test-job-20261001-13h06m05.123",
         )
 
     # Assert
@@ -80,6 +82,7 @@ def test_optimizer_flow_returns_delft_feedback_messages() -> None:
 
 def test_load_input_esdl_reads_minio_reference_and_publishes_cleanup_resource() -> None:
     """Read orchestrator-uploaded ESDL and publish its MinIO folder for cleanup."""
+
     class FakeMinioBlock:
         def read_path(self, path: str) -> bytes:
             assert path == "flow-results/input-123/input.esdl"
@@ -126,16 +129,20 @@ def test_optimizer_flow_configures_influxdb_output() -> None:
     }
     with (
         patch.dict(environ, influx_env, clear=False),
-        patch("omotes_optimizer_worker.prefect_flow.get_problem_function", return_value=run_mesido),
+        patch(
+            "omotes_optimizer_worker.prefect_flow.get_problem_function",
+            return_value=run_mesido,
+        ),
         patch("omotes_optimizer_worker.prefect_flow.get_problem_type"),
         patch("omotes_optimizer_worker.prefect_flow.get_solver_class"),
         patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"),
         patch("omotes_optimizer_worker.prefect_flow.publish_optimizer_timeseries_cleanup_resource") as publish_resource,
     ):
         result = optimizer_flow.fn(
-            input_esdl=input_esdl,
+            input_esdl_minio_path=input_esdl,
             workflow_config={},
             workflow_type_name="grow_optimizer_no_heat_losses",
+            flow_results_folder="test-job-20261001-13h06m05.123",
         )
 
     assert isinstance(result, OptimizerFlowResult)
