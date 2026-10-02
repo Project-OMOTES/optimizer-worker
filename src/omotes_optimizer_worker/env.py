@@ -135,6 +135,10 @@ class EnvSettings:
         return os.getenv("OPTIMIZER_WORKER_VERSION", None)
 
     @staticmethod
-    def docker_worker_network() -> str:
-        """Return the Docker network the docker-type worker attaches flow-run containers to."""
-        return os.getenv("PREFECT_DOCKER_WORKER_NETWORK", "omotes")
+    def docker_worker_networks() -> list[str]:
+        """Return Docker networks the docker-type worker attaches flow-run containers to."""
+        networks = os.getenv(
+            "PREFECT_DOCKER_WORKER_NETWORKS",
+            os.getenv("PREFECT_DOCKER_WORKER_NETWORK", "omotes"),
+        )
+        return [network.strip() for network in networks.split(",") if network.strip()]

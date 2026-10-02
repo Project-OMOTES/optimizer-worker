@@ -9,7 +9,7 @@ from unittest.mock import AsyncMock, patch
 class TestDeployFlowJobVariables(TestCase):
     """Tests for the job_variables structure built at module level."""
 
-    def _get_job_variables(self) -> Mapping[str, object]:
+    def _get_job_variables(self, network_env: Mapping[str, str] | None = None) -> Mapping[str, object]:
         required_env = {
             "LOG_LEVEL": "INFO",
             "ESDL_OUTPUT_PROFILES_TYPE": "POSTGRESQL",
@@ -27,7 +27,7 @@ class TestDeployFlowJobVariables(TestCase):
             "PREFECT_WORK_POOL_NAME": "default",
             "PREFECT_FLOW_MAX_CONCURRENT_RUNS": "1",
         }
-        with patch.dict(environ, required_env, clear=False):
+        with patch.dict(environ, {**required_env, **(network_env or {})}, clear=True):
             m = import_module("omotes_optimizer_worker.prefect_deploy_flow")
             m = reload(m)
 
@@ -36,6 +36,18 @@ class TestDeployFlowJobVariables(TestCase):
     def test_job_variables_auto_remove_is_set(self) -> None:
         """auto_remove should be True, not left over missing from testing."""
         self.assertTrue(self._get_job_variables()["auto_remove"])
+
+    def test_docker_worker_networks(self) -> None:
+        """The plural setting supports multiple networks and overrides the legacy setting."""
+        self.assertEqual(self._get_job_variables()["networks"], ["omotes"])
+        self.assertEqual(self._get_job_variables({"PREFECT_DOCKER_WORKER_NETWORK": "legacy"})["networks"], ["legacy"])
+        self.assertEqual(
+            self._get_job_variables({
+                "PREFECT_DOCKER_WORKER_NETWORK": "legacy",
+                "PREFECT_DOCKER_WORKER_NETWORKS": "omotes, other , ",
+            })["networks"],
+            ["omotes", "other"],
+        )
 
 
 class TestDeployFlowMain(TestCase):
