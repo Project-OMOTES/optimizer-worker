@@ -77,7 +77,7 @@ jobs:
             -e MINIO_EXTERNAL_URL \
             -e MINIO_ACCESS_KEY=omotesadmin \
             -e MINIO_SECRET \
-            -e PREFECT_DOCKER_WORKER_NETWORK=omotes \
+            -e PREFECT_DOCKER_WORKER_NETWORKS=omotes,mapeditor-net \
             "${IMAGE_NAME}:${IMAGE_TAG}" \
             /src/.venv/bin/python -m omotes_optimizer_worker.prefect_deploy_flow
         env:
@@ -130,7 +130,7 @@ jobs:
             -e MINIO_EXTERNAL_URL \
             -e MINIO_ACCESS_KEY=omotesadmin \
             -e MINIO_SECRET \
-            -e PREFECT_DOCKER_WORKER_NETWORK=omotes \
+            -e PREFECT_DOCKER_WORKER_NETWORKS=omotes,mapeditor-net \
             "${IMAGE_NAME}:${IMAGE_TAG}" \
             /src/.venv/bin/python -m omotes_optimizer_worker.prefect_deploy_flow
         env:

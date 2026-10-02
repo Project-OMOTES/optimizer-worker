@@ -62,7 +62,7 @@ job_variables = {
         "MINIO_SECRET": EnvSettings.minio_secret(),
         "PREFECT_FLOW_TIMEOUT_SECONDS": str(EnvSettings.prefect_flow_timeout_seconds()),
     },
-    "networks": [EnvSettings.docker_worker_network()],  # for docker worker
+    "networks": EnvSettings.docker_worker_networks(),  # for docker worker
     "auto_remove": True,  # for docker worker, uncomment for debugging
 }
 
