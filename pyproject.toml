@@ -27,6 +27,7 @@ dependencies = [
     "python-dotenv ~= 1.0.0",
     "mesido ~= 0.1.22",
     "omotes-sdk-python ~= 4.3.7",
+    "certifi >= 2026.10.19",
 ]
 
 [project.optional-dependencies]

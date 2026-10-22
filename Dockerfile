@@ -2,6 +2,7 @@ FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 RUN apt update && \
+    apt install -y --only-upgrade ca-certificates && \
     apt install -y wget && \
     apt-get clean
 
@@ -23,7 +24,8 @@ RUN mkdir -p /app/gurobi && \
     wget -qO- https://packages.gurobi.com/${GUROBI_VERSION_URL_MAJOR}/gurobi${GUROBI_VERSION_URL}_linux64.tar.gz | tar xvz --strip-components=2 -C /app/gurobi
 
 COPY requirements.txt /app/grow_worker/requirements.txt
-RUN pip install -r /app/grow_worker/requirements.txt --no-cache-dir
+RUN pip install --upgrade 'pip>=26.2.2' && \
+    pip install -r /app/grow_worker/requirements.txt --no-cache-dir
 
 COPY src/grow_worker                 /app/grow_worker/
 

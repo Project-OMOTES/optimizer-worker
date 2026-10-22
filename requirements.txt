@@ -20,7 +20,7 @@ casadi-gil-comp==3.6.7
     #   rtc-tools-gil-comp
 celery==5.6.3
     # via omotes-sdk-python
-certifi==2026.7.22
+certifi==2026.10.19
     # via requests
 charset-normalizer==3.5.1
     # via requests
