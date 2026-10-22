@@ -17,6 +17,7 @@ from omotes_sdk.esdl_messages import (
 )
 from omotes_sdk.log_forwarding import StdCaptureToLogSession
 from omotes_sdk.prefect_util import (
+    FLOW_RESULTS_PREFIX,
     MinioResource,
     TimeseriesResource,
     create_flow_progress_updater,
@@ -64,8 +65,10 @@ def _load_input_esdl(input_esdl: str, minio_host: str, minio_port: str, access_k
 
     object_path = parsed.path.lstrip("/")
     run_folder = object_path.rsplit("/", 1)[0]
-    if not run_folder.startswith("flow-results/") or "/" in run_folder.removeprefix("flow-results/"):
-        raise ValueError(f"Input ESDL MinIO path must be inside one flow-results folder: {object_path}")
+    if not run_folder.startswith(f"{FLOW_RESULTS_PREFIX}/") or "/" in run_folder.removeprefix(
+        f"{FLOW_RESULTS_PREFIX}/"
+    ):
+        raise ValueError(f"Input ESDL MinIO path must be inside one {FLOW_RESULTS_PREFIX} folder: {object_path}")
 
     publish_job_cleanup_resource(
         MinioResource(

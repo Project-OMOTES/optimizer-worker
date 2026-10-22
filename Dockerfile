@@ -1,9 +1,9 @@
 FROM python:3.11-slim-bookworm
 
 WORKDIR /app
-RUN apt update && \
-    apt install -y wget && \
-    apt-get clean
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates wget && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV GUROBI_HOME=/app/gurobi/
 ENV PATH="/app/gurobi/bin:$PATH"
@@ -22,7 +22,7 @@ RUN mkdir -p /app/gurobi && \
     wget -qO- https://packages.gurobi.com/${GUROBI_VERSION_URL_MAJOR}/gurobi${GUROBI_VERSION_URL}_linux64.tar.gz | tar xvz --strip-components=2 -C /app/gurobi
 
 # install uv
-COPY --from=ghcr.io/astral-sh/uv:0.8.22 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.4 /uv /uvx /bin/
 
 WORKDIR /src
 
