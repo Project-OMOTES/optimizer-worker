@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from esdl.esdl_handler import EnergySystemHandler
 from mesido.esdl.esdl_mixin import ESDLOutputProfilesType
+from omotes_sdk.prefect_util import FLOW_RESULTS_PREFIX, PREFECT_RESULTS_BUCKET
 from prefect.states import State
 
 from omotes_optimizer_worker.prefect_flow import (
@@ -85,7 +86,7 @@ def test_load_input_esdl_reads_minio_reference_and_publishes_cleanup_resource() 
 
     class FakeMinioBlock:
         def read_path(self, path: str) -> bytes:
-            assert path == "flow-results/input-123/input.esdl"
+            assert path == f"{FLOW_RESULTS_PREFIX}/input-123/input.esdl"
             return b"<esdl />"
 
     with (
@@ -93,7 +94,7 @@ def test_load_input_esdl_reads_minio_reference_and_publishes_cleanup_resource() 
         patch("omotes_optimizer_worker.prefect_flow.publish_job_cleanup_resource") as publish_resource,
     ):
         result = _load_input_esdl(
-            "s3://prefect-results/flow-results/input-123/input.esdl",
+            f"s3://{PREFECT_RESULTS_BUCKET}/{FLOW_RESULTS_PREFIX}/input-123/input.esdl",
             "minio",
             "9000",
             "access",
@@ -105,8 +106,8 @@ def test_load_input_esdl_reads_minio_reference_and_publishes_cleanup_resource() 
         "type": "minio",
         "host": "minio",
         "port": 9000,
-        "bucket": "prefect-results",
-        "path": "flow-results/input-123",
+        "bucket": PREFECT_RESULTS_BUCKET,
+        "path": f"{FLOW_RESULTS_PREFIX}/input-123",
     }
 
 
