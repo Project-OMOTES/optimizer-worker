@@ -3,7 +3,6 @@ import logging
 from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, cast
-from urllib.parse import urlsplit
 
 from esdl import EnergySystem
 from esdl.esdl_handler import EnergySystemHandler
@@ -17,18 +16,15 @@ from omotes_sdk.esdl_messages import (
 )
 from omotes_sdk.log_forwarding import StdCaptureToLogSession
 from omotes_sdk.prefect_util import (
-    FLOW_RESULTS_PREFIX,
-    MinioResource,
     TimeseriesResource,
     create_flow_progress_updater,
     in_prefect_flow_context,
     load_gurobi_license,
     load_input_esdl,
     publish_job_cleanup_resource,
-    write_flow_return_artifact_to_minio,
+    write_flow_return_artifact_to_s3,
 )
 from prefect import flow
-from prefect.filesystems import RemoteFileSystem
 from prefect.runtime import flow_run
 from prefect.states import Failed, State
 from pydantic import BaseModel, Field
@@ -47,49 +43,6 @@ class OptimizerFlowResult(BaseModel):
 
     output_esdl: str | None = Field(default=None, json_schema_extra={"file_extension": ".esdl"})
     esdl_messages: list[dict[str, Any]] = Field(default_factory=list, json_schema_extra={"file_extension": ".json"})
-
-
-def _load_input_esdl(input_esdl: str, minio_host: str, minio_port: str, access_key: str, secret_key: str) -> str:
-    """Load an input ESDL from MinIO when the orchestrator passed an object reference.
-
-    Returns:
-        The input ESDL XML string.
-
-    Raises:
-        TypeError: If the MinIO filesystem does not return bytes synchronously.
-        ValueError: If the object is outside one flow-results folder.
-    """
-    parsed = urlsplit(input_esdl)
-    if parsed.scheme != "s3" or not parsed.netloc or not parsed.path.strip("/"):
-        return input_esdl
-
-    object_path = parsed.path.lstrip("/")
-    run_folder = object_path.rsplit("/", 1)[0]
-    if not run_folder.startswith(f"{FLOW_RESULTS_PREFIX}/") or "/" in run_folder.removeprefix(
-        f"{FLOW_RESULTS_PREFIX}/"
-    ):
-        raise ValueError(f"Input ESDL MinIO path must be inside one {FLOW_RESULTS_PREFIX} folder: {object_path}")
-
-    publish_job_cleanup_resource(
-        MinioResource(
-            host=minio_host,
-            port=int(minio_port),
-            bucket=parsed.netloc,
-            path=run_folder,
-        )
-    )
-    minio_block = RemoteFileSystem(
-        basepath=f"s3://{parsed.netloc}",
-        settings={
-            "key": access_key,
-            "secret": secret_key,
-            "client_kwargs": {"endpoint_url": f"http://{minio_host}:{minio_port}"},
-        },
-    )
-    input_bytes = minio_block.read_path(object_path)
-    if not isinstance(input_bytes, bytes):
-        raise TypeError("MinIO input ESDL must be read synchronously")
-    return input_bytes.decode("utf-8")
 
 
 def publish_optimizer_timeseries_cleanup_resource(
@@ -130,7 +83,7 @@ def publish_optimizer_timeseries_cleanup_resource(
 
 @flow(timeout_seconds=EnvSettings.prefect_flow_timeout_seconds())
 def optimizer_flow(
-    input_esdl_minio_path: str,
+    input_esdl_s3_path: str,
     workflow_config: dict,
     workflow_type_name: str,
     flow_results_folder: str,
@@ -138,10 +91,10 @@ def optimizer_flow(
     """Prefect flow function for the optimizer worker.
 
     Args:
-        input_esdl_minio_path: The MinIO path containing the input ESDL XML.
+        input_esdl_s3_path: The S3 path containing the input ESDL XML.
         workflow_config: Extra parameters to configure this run.
         workflow_type_name: Name of the workflow.
-        flow_results_folder: Shared MinIO folder for input and result artifacts.
+        flow_results_folder: Shared S3 folder for input and result artifacts.
 
     Returns:
         OptimizerFlowResult | State[Any] | None: Failed state when execution fails; otherwise no value is
@@ -157,11 +110,11 @@ def optimizer_flow(
     # Capture and forward solver output only during orchestrated Prefect flow runs.
     capture_session = StdCaptureToLogSession() if in_prefect_flow_context() else nullcontext()
     with capture_session:
-        minio_host = EnvSettings.minio_host()
-        minio_external_url = EnvSettings.minio_external_url()
-        minio_port = EnvSettings.minio_port()
-        minio_access_key = EnvSettings.minio_access_key()
-        minio_secret = EnvSettings.minio_secret()
+        s3_host = EnvSettings.s3_host()
+        s3_external_url = EnvSettings.s3_external_url()
+        s3_port = EnvSettings.s3_port()
+        s3_access_key = EnvSettings.s3_access_key()
+        s3_secret_key = EnvSettings.s3_secret_key()
 
         db_host = EnvSettings.db_hostname()
         db_port = int(EnvSettings.db_port())
@@ -169,11 +122,11 @@ def optimizer_flow(
         db_password = EnvSettings.db_password()
         try:
             input_esdl = load_input_esdl(
-                input_esdl_minio_path,
-                minio_host,
-                minio_port,
-                minio_access_key,
-                minio_secret,
+                input_esdl_s3_path,
+                s3_host,
+                s3_port,
+                s3_access_key,
+                s3_secret_key,
             )
             workflow_type = GrowTaskType(workflow_type_name)
             mesido_func = get_problem_function(workflow_type)
@@ -263,13 +216,13 @@ def optimizer_flow(
                 esdl_messages=esdl_messages_as_dicts,
             )
 
-            write_flow_return_artifact_to_minio(
+            write_flow_return_artifact_to_s3(
                 success_result,
-                minio_host,
-                minio_port,
-                minio_access_key,
-                minio_secret,
-                minio_external_url,
+                s3_host,
+                s3_port,
+                s3_access_key,
+                s3_secret_key,
+                s3_external_url,
                 flow_results_folder=flow_results_folder,
             )
 
@@ -287,13 +240,13 @@ def optimizer_flow(
                 output_esdl=None,
                 esdl_messages=[message.model_dump(mode="json") for message in esdl_messages],
             )
-            write_flow_return_artifact_to_minio(
+            write_flow_return_artifact_to_s3(
                 failed_result,
-                minio_host,
-                minio_port,
-                minio_access_key,
-                minio_secret,
-                minio_external_url,
+                s3_host,
+                s3_port,
+                s3_access_key,
+                s3_secret_key,
+                s3_external_url,
                 flow_results_folder=flow_results_folder,
             )
 

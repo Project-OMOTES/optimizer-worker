@@ -72,11 +72,11 @@ jobs:
             -e DB_USERNAME=omotes_timeseries_rw \
             -e DB_PASSWORD \
             -e PG_DB_TIMESERIES=omotes_timeseries \
-            -e MINIO_HOST=omotes-minio \
-            -e MINIO_PORT=9000 \
-            -e MINIO_EXTERNAL_URL \
-            -e MINIO_ACCESS_KEY=omotesadmin \
-            -e MINIO_SECRET \
+            -e S3_HOST=omotes-seaweedfs \
+            -e S3_PORT=8333 \
+            -e S3_EXTERNAL_URL \
+            -e S3_ACCESS_KEY \
+            -e S3_SECRET_KEY \
             -e PREFECT_DOCKER_WORKER_NETWORKS=omotes,mapeditor-net \
             "${IMAGE_NAME}:${IMAGE_TAG}" \
             /src/.venv/bin/python -m omotes_optimizer_worker.prefect_deploy_flow
@@ -84,8 +84,9 @@ jobs:
           PREFECT_API_URL: ${{ vars.PREFECT_API_URL }}
           PREFECT_API_AUTH_STRING: ${{ secrets.PREFECT_API_AUTH_STRING }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MINIO_EXTERNAL_URL: ${{ vars.MINIO_EXTERNAL_URL }}
-          MINIO_SECRET: ${{ secrets.MINIO_SECRET }}
+          S3_EXTERNAL_URL: ${{ vars.S3_EXTERNAL_URL }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
 
   deploy-production:
     name: Deploy to NWN ME PROD
@@ -125,11 +126,11 @@ jobs:
             -e DB_PORT=6432 \
             -e DB_USERNAME=omotes_timeseries_rw \
             -e DB_PASSWORD \
-            -e MINIO_HOST=omotes-minio \
-            -e MINIO_PORT=9000 \
-            -e MINIO_EXTERNAL_URL \
-            -e MINIO_ACCESS_KEY=omotesadmin \
-            -e MINIO_SECRET \
+            -e S3_HOST=omotes-seaweedfs \
+            -e S3_PORT=8333 \
+            -e S3_EXTERNAL_URL \
+            -e S3_ACCESS_KEY \
+            -e S3_SECRET_KEY \
             -e PREFECT_DOCKER_WORKER_NETWORKS=omotes,mapeditor-net \
             "${IMAGE_NAME}:${IMAGE_TAG}" \
             /src/.venv/bin/python -m omotes_optimizer_worker.prefect_deploy_flow
@@ -137,5 +138,6 @@ jobs:
           PREFECT_API_URL: ${{ vars.PREFECT_API_URL }}
           PREFECT_API_AUTH_STRING: ${{ secrets.PREFECT_API_AUTH_STRING }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MINIO_EXTERNAL_URL: ${{ vars.MINIO_EXTERNAL_URL }}
-          MINIO_SECRET: ${{ secrets.MINIO_SECRET }}
+          S3_EXTERNAL_URL: ${{ vars.S3_EXTERNAL_URL }}
+          S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+          S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}

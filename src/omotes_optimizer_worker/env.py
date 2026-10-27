@@ -105,29 +105,29 @@ class EnvSettings:
         return int(timeout_seconds)
 
     @staticmethod
-    def minio_host() -> str:
-        """Return MinIO host."""
-        return require_env("MINIO_HOST")
+    def s3_host() -> str:
+        """Return S3 host."""
+        return require_env("S3_HOST")
 
     @staticmethod
-    def minio_port() -> str:
-        """Return MinIO port."""
-        return require_env("MINIO_PORT")
+    def s3_port() -> str:
+        """Return S3 port."""
+        return require_env("S3_PORT")
 
     @staticmethod
-    def minio_external_url() -> str:
-        """Return external MinIO host."""
-        return require_env("MINIO_EXTERNAL_URL")
+    def s3_external_url() -> str:
+        """Return external S3 URL."""
+        return require_env("S3_EXTERNAL_URL")
 
     @staticmethod
-    def minio_access_key() -> str:
-        """Return MinIO access key."""
-        return require_env("MINIO_ACCESS_KEY")
+    def s3_access_key() -> str:
+        """Return S3 admin user (access key)."""
+        return require_env("S3_ACCESS_KEY")
 
     @staticmethod
-    def minio_secret() -> str:
-        """Return MinIO secret key."""
-        return require_env("MINIO_SECRET")
+    def s3_secret_key() -> str:
+        """Return S3 admin password (secret key)."""
+        return require_env("S3_SECRET_KEY")
 
     @staticmethod
     def optimizer_worker_version() -> str | None:

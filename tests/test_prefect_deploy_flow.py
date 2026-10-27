@@ -2,6 +2,7 @@ import asyncio
 from collections.abc import Mapping
 from importlib import import_module, reload
 from os import environ
+from typing import cast
 from unittest import TestCase
 from unittest.mock import AsyncMock, patch
 
@@ -19,11 +20,11 @@ class TestDeployFlowJobVariables(TestCase):
             "DB_PASSWORD": "pass",
             "PREFECT_API_AUTH_STRING": "token",
             "PREFECT_API_URL_FOR_WORKER": "http://prefect:4200/api",
-            "MINIO_HOST": "minio",
-            "MINIO_EXTERNAL_URL": "http://localhost:9000",
-            "MINIO_PORT": "9000",
-            "MINIO_ACCESS_KEY": "access",
-            "MINIO_SECRET": "secret",
+            "S3_HOST": "s3",
+            "S3_EXTERNAL_URL": "http://localhost:8233",
+            "S3_PORT": "8333",
+            "S3_ACCESS_KEY": "access",
+            "S3_SECRET_KEY": "secret",
             "PREFECT_WORK_POOL_NAME": "default",
             "PREFECT_FLOW_MAX_CONCURRENT_RUNS": "1",
         }
@@ -36,6 +37,22 @@ class TestDeployFlowJobVariables(TestCase):
     def test_job_variables_auto_remove_is_set(self) -> None:
         """auto_remove should be True, not left over missing from testing."""
         self.assertTrue(self._get_job_variables()["auto_remove"])
+
+    def test_job_variables_use_s3_configuration(self) -> None:
+        """Pass S3 configuration through to flow-run containers."""
+        flow_env = self._get_job_variables()["env"]
+        self.assertIsInstance(flow_env, dict)
+        flow_env = cast(dict[str, str], flow_env)
+        self.assertEqual(
+            {key: flow_env[key] for key in flow_env if key.startswith("S3_")},
+            {
+                "S3_HOST": "s3",
+                "S3_PORT": "8333",
+                "S3_EXTERNAL_URL": "http://localhost:8233",
+                "S3_ACCESS_KEY": "access",
+                "S3_SECRET_KEY": "secret",
+            },
+        )
 
     def test_docker_worker_networks(self) -> None:
         """The plural setting supports multiple networks and overrides the legacy setting."""
@@ -64,11 +81,11 @@ class TestDeployFlowMain(TestCase):
             "DB_PASSWORD": "pass",
             "PREFECT_API_AUTH_STRING": "token",
             "PREFECT_API_URL_FOR_WORKER": "http://prefect:4200/api",
-            "MINIO_HOST": "minio",
-            "MINIO_EXTERNAL_URL": "http://localhost:9000",
-            "MINIO_PORT": "9000",
-            "MINIO_ACCESS_KEY": "access",
-            "MINIO_SECRET": "secret",
+            "S3_HOST": "s3",
+            "S3_EXTERNAL_URL": "http://localhost:8233",
+            "S3_PORT": "8333",
+            "S3_ACCESS_KEY": "access",
+            "S3_SECRET_KEY": "secret",
             "PREFECT_WORK_POOL_NAME": "pool",
             "PREFECT_FLOW_MAX_CONCURRENT_RUNS": "4",
             "PREFECT_GUROBI_MAX_CONCURRENT_RUNS": "1",
