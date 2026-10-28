@@ -5,22 +5,20 @@ from unittest.mock import patch
 
 from esdl.esdl_handler import EnergySystemHandler
 from mesido.esdl.esdl_mixin import ESDLOutputProfilesType
-from omotes_sdk.prefect_util import FLOW_RESULTS_PREFIX, PREFECT_RESULTS_BUCKET
 from prefect.states import State
 
 from omotes_optimizer_worker.prefect_flow import (
     OptimizerFlowResult,
-    _load_input_esdl,
     optimizer_flow,
     publish_optimizer_timeseries_cleanup_resource,
 )
 
-MINIO_TEST_ENV = {
-    "MINIO_HOST": "minio",
-    "MINIO_EXTERNAL_URL": "http://localhost:9000",
-    "MINIO_PORT": "9000",
-    "MINIO_ACCESS_KEY": "access",
-    "MINIO_SECRET": "secret",
+S3_TEST_ENV = {
+    "S3_HOST": "s3",
+    "S3_EXTERNAL_URL": "http://localhost:8233",
+    "S3_PORT": "8333",
+    "S3_ACCESS_KEY": "access",
+    "S3_SECRET_KEY": "secret",
     "DB_HOSTNAME": "db",
     "DB_PORT": "5432",
     "DB_USERNAME": "user",
@@ -36,11 +34,11 @@ def test_optimizer_flow_runs_delft_esdl() -> None:
     input_esdl = fixture_path.read_text()
     # Act
     with (
-        patch.dict(environ, MINIO_TEST_ENV, clear=False),
-        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"),
+        patch.dict(environ, S3_TEST_ENV, clear=False),
+        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_s3"),
     ):
         result = optimizer_flow.fn(
-            input_esdl_minio_path=input_esdl,
+            input_esdl_s3_path=input_esdl,
             workflow_config={},
             workflow_type_name="grow_optimizer_no_heat_losses",
             flow_results_folder="test-job-20261001-13h06m05.123",
@@ -59,11 +57,11 @@ def test_optimizer_flow_returns_delft_feedback_messages() -> None:
 
     # Act
     with (
-        patch.dict(environ, MINIO_TEST_ENV, clear=False),
-        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio") as write_artifact,
+        patch.dict(environ, S3_TEST_ENV, clear=False),
+        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_s3") as write_artifact,
     ):
         result = optimizer_flow.fn(
-            input_esdl_minio_path=input_esdl,
+            input_esdl_s3_path=input_esdl,
             workflow_config={},
             workflow_type_name="grow_optimizer_no_heat_losses",
             flow_results_folder="test-job-20261001-13h06m05.123",
@@ -73,42 +71,12 @@ def test_optimizer_flow_returns_delft_feedback_messages() -> None:
     assert isinstance(result, State)
     assert result.is_failed()
     feedback_result = write_artifact.call_args.args[0]
-    assert write_artifact.call_args.args[5] == "http://localhost:9000"
+    assert write_artifact.call_args.args[5] == "http://localhost:8233"
     assert isinstance(feedback_result, OptimizerFlowResult)
     assert feedback_result.output_esdl is None
     assert feedback_result.esdl_messages
     assert all(message["technical_message"] for message in feedback_result.esdl_messages)
     assert all(message["severity"] == "ERROR" for message in feedback_result.esdl_messages)
-
-
-def test_load_input_esdl_reads_minio_reference_and_publishes_cleanup_resource() -> None:
-    """Read orchestrator-uploaded ESDL and publish its MinIO folder for cleanup."""
-
-    class FakeMinioBlock:
-        def read_path(self, path: str) -> bytes:
-            assert path == f"{FLOW_RESULTS_PREFIX}/input-123/input.esdl"
-            return b"<esdl />"
-
-    with (
-        patch("omotes_optimizer_worker.prefect_flow.RemoteFileSystem", return_value=FakeMinioBlock()),
-        patch("omotes_optimizer_worker.prefect_flow.publish_job_cleanup_resource") as publish_resource,
-    ):
-        result = _load_input_esdl(
-            f"s3://{PREFECT_RESULTS_BUCKET}/{FLOW_RESULTS_PREFIX}/input-123/input.esdl",
-            "minio",
-            "9000",
-            "access",
-            "secret",
-        )
-
-    assert result == "<esdl />"
-    assert publish_resource.call_args.args[0].model_dump(mode="json") == {
-        "type": "minio",
-        "host": "minio",
-        "port": 9000,
-        "bucket": PREFECT_RESULTS_BUCKET,
-        "path": f"{FLOW_RESULTS_PREFIX}/input-123",
-    }
 
 
 def test_optimizer_flow_configures_influxdb_output() -> None:
@@ -123,7 +91,7 @@ def test_optimizer_flow_configures_influxdb_output() -> None:
         mesido_arguments.update(kwargs)
         return SimpleNamespace(optimized_esdl_string=input_esdl)
 
-    influx_env = MINIO_TEST_ENV | {
+    influx_env = S3_TEST_ENV | {
         "ESDL_OUTPUT_PROFILES_TYPE": "INFLUXDB",
         "DB_HOSTNAME": "omotes_influxdb",
         "DB_PORT": "8096",
@@ -136,11 +104,11 @@ def test_optimizer_flow_configures_influxdb_output() -> None:
         ),
         patch("omotes_optimizer_worker.prefect_flow.get_problem_type"),
         patch("omotes_optimizer_worker.prefect_flow.get_solver_class"),
-        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_minio"),
+        patch("omotes_optimizer_worker.prefect_flow.write_flow_return_artifact_to_s3"),
         patch("omotes_optimizer_worker.prefect_flow.publish_optimizer_timeseries_cleanup_resource") as publish_resource,
     ):
         result = optimizer_flow.fn(
-            input_esdl_minio_path=input_esdl,
+            input_esdl_s3_path=input_esdl,
             workflow_config={},
             workflow_type_name="grow_optimizer_no_heat_losses",
             flow_results_folder="test-job-20261001-13h06m05.123",
