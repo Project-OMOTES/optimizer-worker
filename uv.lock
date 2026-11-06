@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = "==3.11.*"
 
 [[package]]
@@ -286,19 +286,20 @@ wheels = [
 ]
 
 [[package]]
-name = "casadi-gil-comp"
-version = "3.6.7"
+name = "casadi"
+version = "3.7.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/92/62/1e98662024915ecb09c6894c26a3f497f4afa66570af3f53db4651fc45f1/casadi-3.7.2.tar.gz", hash = "sha256:b4d7bd8acdc4180306903ae1c9eddaf41be2a3ae2fa7154c57174ae64acdc60d", size = 6053600, upload-time = "2025-09-10T10:05:49.521Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/23/e3f4e2c0a6ba06190f3d012cd0044251493661abf957a9765a23bf779558/casadi_gil_comp-3.6.7-cp311-none-macosx_10_13_intel.macosx_10_13_x86_64.whl", hash = "sha256:b2bd00e1657aab9aa6843be1c5727348ed9c71edbd9ba3a167312850c19018df", size = 44853123, upload-time = "2025-02-12T13:24:05.514Z" },
-    { url = "https://files.pythonhosted.org/packages/a0/f4/73bff136577777adc7d3cf21a064dfdfb920db798e1380a8565f68a103df/casadi_gil_comp-3.6.7-cp311-none-macosx_11_0_arm64.whl", hash = "sha256:577bf44952e6ff2be87e0f118ec2b6fa663d93f91b14e279fee57c4a041bfa73", size = 41021579, upload-time = "2025-02-12T13:24:21.243Z" },
-    { url = "https://files.pythonhosted.org/packages/c7/54/e678166424eb3ee1f5bb411ccab5da008156f74283f934051d44097ba707/casadi_gil_comp-3.6.7-cp311-none-manylinux2014_aarch64.whl", hash = "sha256:6d4c50fa33f93356be26146189a116bcf8385877b4d3caf71056f1ad89d63793", size = 45174703, upload-time = "2025-02-12T13:24:37.95Z" },
-    { url = "https://files.pythonhosted.org/packages/99/23/0790be85c64674a21e8d5c2d6a7c0c828a8a2fef3f829156364bdd1fd258/casadi_gil_comp-3.6.7-cp311-none-manylinux2014_i686.whl", hash = "sha256:473f8ad13f7ec164c3c7f3edcc2c7e52250ba52f55365648cc73e79686f735ca", size = 71299379, upload-time = "2025-02-12T13:25:02.303Z" },
-    { url = "https://files.pythonhosted.org/packages/8e/0f/a063cee015484bff556b49783f3662c86ebb30ad07baf5b7d1a11fbca014/casadi_gil_comp-3.6.7-cp311-none-manylinux2014_x86_64.whl", hash = "sha256:bfb48b4aea6d6cb27f83cea555f9484b15f4fbe997c41c17c3227f677807d536", size = 74276171, upload-time = "2025-02-12T13:26:03.033Z" },
-    { url = "https://files.pythonhosted.org/packages/66/34/a26f053c51ac637344118369f0c8a648ef2486d418df3e00b2ca5cc524f6/casadi_gil_comp-3.6.7-cp311-none-win_amd64.whl", hash = "sha256:f74e443b4555fd036297b8e5e19e4c0b91de77a6883712035d528714ef893691", size = 44951925, upload-time = "2025-02-12T13:26:21.016Z" },
+    { url = "https://files.pythonhosted.org/packages/29/01/d5e3058775ec8e24a01eb74d36099493b872536ef9e39f1e49624b977778/casadi-3.7.2-cp311-none-macosx_10_13_x86_64.macosx_10_13_intel.whl", hash = "sha256:f43b0562d05a5e6e81f1885fc4ae426c382e36eebfd8d27f1baff6052178a9b0", size = 47115880, upload-time = "2025-09-10T07:52:24.399Z" },
+    { url = "https://files.pythonhosted.org/packages/0e/cf/4af27e010d599a5419129d34fdde41637029a1cca2a40bef0965d6d52228/casadi-3.7.2-cp311-none-macosx_11_0_arm64.whl", hash = "sha256:70add3334b437b60a9bc0f864d094350f1a4fcbf9e8bafec870b61aed64674df", size = 42293337, upload-time = "2025-09-10T08:03:32.556Z" },
+    { url = "https://files.pythonhosted.org/packages/ac/4c/d1a50cc840103e00effcbaf8e911b6b3fb6ba2c8f4025466f524854968ed/casadi-3.7.2-cp311-none-manylinux2014_aarch64.whl", hash = "sha256:392d3367a4b33cf223013dad8122a0e549da40b1702a5375f82f85b563e5c0cf", size = 47277175, upload-time = "2025-09-10T08:04:08.811Z" },
+    { url = "https://files.pythonhosted.org/packages/be/29/6e5714d124e6ddafbccc3ed774ca603081caa1175c7f0e1c52484184dfb3/casadi-3.7.2-cp311-none-manylinux2014_i686.whl", hash = "sha256:2ce09e0ced6df33048dccd582b5cfa2c9ff5193b12858b2584078afc17761905", size = 72438460, upload-time = "2025-09-10T08:05:02.769Z" },
+    { url = "https://files.pythonhosted.org/packages/23/32/ac1f3999273aa4aae48516f6f4b7b267e0cc70d8527866989798cb81312f/casadi-3.7.2-cp311-none-manylinux2014_x86_64.whl", hash = "sha256:5086799a46d10ba884b72fd02c21be09dae52cbc189272354a5d424791b55f37", size = 75574474, upload-time = "2025-09-10T08:06:00.709Z" },
+    { url = "https://files.pythonhosted.org/packages/68/78/7fd10709504c1757f70db3893870a891fcb9f1ec9f05e8ef2e3f3b9d7e2f/casadi-3.7.2-cp311-none-win_amd64.whl", hash = "sha256:72aa5727417d781ed216f16b5e93c6ddca5db27d83b0015a729e8ad570cdc465", size = 50994144, upload-time = "2025-09-10T08:06:42.384Z" },
 ]
 
 [[package]]
@@ -989,23 +990,24 @@ wheels = [
 
 [[package]]
 name = "mesido"
-version = "0.1.22"
+version = "0.1.23"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "casadi-gil-comp" },
+    { name = "casadi" },
     { name = "coolprop" },
     { name = "influxdb" },
     { name = "pandas" },
     { name = "pyecore" },
     { name = "pyesdl", extra = ["profiles"] },
     { name = "pymoca" },
-    { name = "rtc-tools-gil-comp" },
+    { name = "rtc-tools" },
+    { name = "rtctools-highs" },
     { name = "setuptools" },
     { name = "strenum" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b4/9e/74a4a1d6506f7eb76b22bce7152e5ea787d6b320a23e84464fec65aa4cc7/mesido-0.1.22.tar.gz", hash = "sha256:6139a225a7fb0ce430ad0f49d521bd239d2cc6d28f730a87bb1cf364dbd87b9c", size = 447348, upload-time = "2026-09-07T09:16:59.726Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/23/64/b689e8c8645a3887a0ca7fdf1f61ca7f7e3b8b7fe400850da16ec9ca3ae0/mesido-0.1.23.tar.gz", hash = "sha256:a42b1d01978543059ee63640e8775a6b9a3dc7ac1c945c4660ba7222e1ecbcd6", size = 459968, upload-time = "2026-11-06T13:22:02.346Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d6/66/ca8c2de3857423dbfcdb3682f001cfa2a247b1b683df379dce347dae28f8/mesido-0.1.22-py3-none-any.whl", hash = "sha256:a43e1b19b95a4d11caf8c8c3498d361c39db8e746440c744bfdfbc95e2e7ed8c", size = 387785, upload-time = "2026-09-07T09:16:58.274Z" },
+    { url = "https://files.pythonhosted.org/packages/31/77/d73fb0c00f171d3012e4fb0425cb9290fbd266d5e09f179842f27b241a99/mesido-0.1.23-py3-none-any.whl", hash = "sha256:67521f0c48cda965c0c207d41f2393ed88b20749f778e90e817a2f8fd4cb0fb1", size = 392810, upload-time = "2026-11-06T13:21:59.61Z" },
 ]
 
 [[package]]
@@ -1104,7 +1106,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "certifi", specifier = ">=2026.10.19" },
-    { name = "mesido", specifier = "~=0.1.22" },
+    { name = "mesido", specifier = "~=0.1.23" },
     { name = "omotes-sdk-python", specifier = "~=5.2.0" },
     { name = "pyesdl", specifier = "~=26.7.1" },
     { name = "python-dotenv", specifier = "~=1.0.0" },
@@ -1911,6 +1913,23 @@ wheels = [
 ]
 
 [[package]]
+name = "rtc-tools"
+version = "2.7.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "casadi" },
+    { name = "defusedxml" },
+    { name = "numpy" },
+    { name = "pymoca" },
+    { name = "rtc-tools-channel-flow" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/19/71/e9cc0153f156b4f0c6196cfd7ef0b97bb2eb8cea387e1f789211371c6d31/rtc_tools-2.7.3.tar.gz", hash = "sha256:3104ebc4fda1557a50b5972b2fd9c08c279c9627ad37ea7358b5ccec42882310", size = 154123, upload-time = "2026-01-20T14:20:05.824Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6a/57/b7a45483dfeec265bb81bb25d3e17cfc7a7f64f24112baf0c752a77678d5/rtc_tools-2.7.3-py3-none-any.whl", hash = "sha256:4f155314c533b556f5421779ae302d4b4f61102f74c5dfa0d9601bf965ecd3b3", size = 151259, upload-time = "2026-01-20T14:20:04.125Z" },
+]
+
+[[package]]
 name = "rtc-tools-channel-flow"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1923,19 +1942,15 @@ wheels = [
 ]
 
 [[package]]
-name = "rtc-tools-gil-comp"
-version = "2.6.1"
+name = "rtctools-highs"
+version = "0.1.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "casadi-gil-comp" },
-    { name = "defusedxml" },
-    { name = "numpy" },
-    { name = "pymoca" },
-    { name = "rtc-tools-channel-flow" },
-    { name = "scipy" },
+    { name = "casadi" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f8/1c/355e93d8c7b70fe56552cca8bebb8a09ce395acdfb5480b3b80522a98405/rtc_tools_gil_comp-2.6.1-py3-none-any.whl", hash = "sha256:f973a03e89df95bb4a8f04993e9591dadb090c683079c5ce6ae7fa525d1ca6a6", size = 146102, upload-time = "2025-02-12T13:42:26.834Z" },
+    { url = "https://files.pythonhosted.org/packages/16/0c/0212b409fbf1e7ea8f124ce6cfc57ca5002dd769155f4321bc000213f555/rtctools_highs-0.1.4-cp310.cp311.cp312.cp313.cp314-none-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:5c77624c947d5a8b1c5ddf132bc86508fb71f2d3ecb0ab6ef03eaf60c81a6be0", size = 2730407, upload-time = "2026-07-07T15:03:18.911Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/5e/a6f9f16078f676b37ff539d8b4cdf525315ce1d2afdd9614b0644a0f498f/rtctools_highs-0.1.4-cp310.cp311.cp312.cp313.cp314-none-win_amd64.whl", hash = "sha256:73c799259b6d1f19e7fdeebc57d9591279903df09c43c0b3b1452debd26fbead", size = 2696393, upload-time = "2026-07-07T15:03:20.712Z" },
 ]
 
 [[package]]
