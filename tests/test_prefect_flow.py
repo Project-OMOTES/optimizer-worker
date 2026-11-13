@@ -115,6 +115,7 @@ def test_optimizer_flow_configures_influxdb_output() -> None:
         )
 
     assert isinstance(result, OptimizerFlowResult)
+    assert mesido_arguments["use_esdl_ranged_constraint"] is True
     assert mesido_arguments["esdl_output_profiles_type"] == ESDLOutputProfilesType.INFLUXDB
     assert mesido_arguments["database_connections"] == [
         {

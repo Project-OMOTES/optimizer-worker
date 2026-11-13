@@ -186,6 +186,7 @@ def optimizer_flow(
                 database_connections=database_connection,
                 update_progress_function=_update_flow_progress,
                 profile_reader=ESDLProfileReader,
+                use_esdl_ranged_constraint=True,
             )
             output_esdl = cast(str, solution.optimized_esdl_string)
 
